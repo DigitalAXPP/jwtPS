@@ -7,6 +7,16 @@ class jwtClaimSet {
     [string]$issuedAt
     [string]$jwtId
 
+    SetProperties([hashtable]$properties) {
+        $this.issuer = $properties["issuer"]
+        $this.subject = $properties["subject"]
+        $this.audience = $properties["audience"]
+        $this.expiration = $properties["expiration"]
+        $this.notBefore = $properties["notBefore"]
+        $this.issuedAt = $properties["issuedAt"]
+        $this.jwtId = $properties["jwtId"]
+    }
+
     [string]Create() {
         $set = @{
             'iss'= $this.issuer
