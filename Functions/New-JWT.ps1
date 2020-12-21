@@ -2,9 +2,9 @@ function New-JWT {
     [CmdletBinding()]
     param (
         [Parameter(
-            HelpMessage='Path to the private key.'
+            HelpMessage='The private key to sign the JWT.'
         )]
-        [System.IO.FileInfo]$Path
+        [string]$PrivateKey
     )
     
     begin {
@@ -19,9 +19,10 @@ function New-JWT {
         'audience' = "Piepe"
         }
         $claimSet.SetProperties($hh)
+        $signature = [jwtSignature]::new($PrivateKey, "$header.$($claimSet.Create())")
     }
     
     end {
-        Write-Output -InputObject "$header.$($claimSet.Create())"
+        Write-Output -InputObject $signature.Create()
     }
 }
