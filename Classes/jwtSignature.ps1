@@ -16,7 +16,7 @@ class jwtSignature {
             openssl dgst -sha256 -sign "$env:TEMP\key.pem" -out "$env:TEMP\sig.txt" "$env:TEMP\data.txt"
 
             $rsa_signature = [System.IO.File]::ReadAllBytes("$env:TEMP\sig.txt")
-            $rsa_Base64 = [Convert]::ToBase64String($rsa_signature) -replace '\+','-' -replace '/','_' -replace '='
+            $rsa_Base64 = [Convert]::ToBase64String($rsa_signature)
         }
         catch {
             throw [System.IO.IOException]::new($_.Exception.Message)
@@ -26,6 +26,6 @@ class jwtSignature {
             Remove-Item -Path $env:TEMP\data.txt
             Remove-Item -Path $env:TEMP\sig.txt
         }
-        return $rsa_Base64
+        return "$($this.Data).$rsa_Base64" -replace '\+','-' -replace '/','_' -replace '='
     }
 }
