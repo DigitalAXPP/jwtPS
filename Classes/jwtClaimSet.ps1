@@ -7,14 +7,14 @@ class jwtClaimSet {
     [string]$issuedAt
     [string]$jwtId
 
-    SetProperties([hashtable]$properties) {
-        $this.issuer = $properties["issuer"]
-        $this.subject = $properties["subject"]
-        $this.audience = $properties["audience"]
-        $this.expiration = $properties["expiration"]
-        $this.notBefore = $properties["notBefore"]
-        $this.issuedAt = $properties["issuedAt"]
-        $this.jwtId = $properties["jwtId"]
+    SetProperties([JsonWebToken]$properties) {
+        $this.issuer = $properties.iss
+        $this.subject = $properties.sub
+        $this.audience = $properties.aud
+        $this.expiration = $properties.exp
+        $this.notBefore = $properties.nbf
+        $this.issuedAt = $properties.iat
+        $this.jwtId = $properties.jti
     }
 
     [string]Create() {
