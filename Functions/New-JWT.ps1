@@ -2,9 +2,19 @@ function New-JWT {
     [CmdletBinding()]
     param (
         [Parameter(
-            HelpMessage='Path to the private key.'
+            HelpMessage='The private key to sign the JWT.'
         )]
-        [System.IO.FileInfo]$Path
+        [string]$PrivateKey,
+        
+        [Parameter(
+            HelpMessage='Setting the encryption algorithm.'
+        )]
+        [Algorithm]$Algorithm = [Algorithm]::new(),
+
+        [Parameter(
+            HelpMessage='Provide the payload for the JWT'
+        )]
+        [Hashtable]$Payload
     )
     
     begin {
@@ -12,16 +22,13 @@ function New-JWT {
     }
     
     process {
-        $header = [jwtHeader]::new().Create()
+        $header = [jwtHeader]::new()
+        $header.Algorithm = $Algorithm
         $claimSet = [jwtClaimSet]::new()
-        $hh = @{
-        'issuer' = "Alex"
-        'audience' = "Piepe"
-        }
-        $claimSet.SetProperties($hh)
+        $signature = [jwtSignature]::new($PrivateKey, "$($header.Create()).$($claimSet.Create($Payload))")
     }
     
     end {
-        Write-Output -InputObject "$header.$($claimSet.Create())"
+        Write-Output -InputObject ($signature.Create() -replace '\+','-' -replace '/','_' -replace '=')
     }
 }
