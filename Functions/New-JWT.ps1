@@ -9,7 +9,7 @@ function New-JWT {
         [Parameter(
             HelpMessage='Setting the encryption algorithm.'
         )]
-        [Algorithm]$Algorithm,
+        [Algorithm]$Algorithm = [Algorithm]::new(),
 
         [Parameter(
             HelpMessage='Provide the payload for the JWT'
@@ -24,11 +24,11 @@ function New-JWT {
     process {
         $header = [jwtHeader]::new()
         $header.Algorithm = $Algorithm
-        $claimSet = [jwtClaimSet]::new().SetProperties((ConvertTo-Json -InputObject $Payload))
-        $signature = [jwtSignature]::new($PrivateKey, "$($header.Create()).$($claimSet.Create())")
+        $claimSet = [jwtClaimSet]::new()
+        $signature = [jwtSignature]::new($PrivateKey, "$($header.Create()).$($claimSet.Create($Payload))")
     }
     
     end {
-        Write-Output -InputObject $signature.Create()
+        Write-Output -InputObject ($signature.Create() -replace '\+','-' -replace '/','_' -replace '=')
     }
 }
