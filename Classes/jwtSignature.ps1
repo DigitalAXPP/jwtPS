@@ -3,9 +3,10 @@ class jwtSignature {
     [string]$Data
     [Algorithm]$Algorithm
 
-    jwtSignature ([string]$key, [string]$data) {
+    jwtSignature ([string]$key, [string]$data, [Algorithm]$alg) {
         $this.PrivateKey = $key
         $this.Data = $data
+        $this.Algorithm = $alg
     }
     
     [string]Create() {

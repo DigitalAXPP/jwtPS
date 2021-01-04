@@ -25,7 +25,7 @@ function New-JWT {
         $header = [jwtHeader]::new()
         $header.Algorithm = $Algorithm
         $claimSet = [jwtClaimSet]::new()
-        $signature = [jwtSignature]::new($PrivateKey, "$($header.Create()).$($claimSet.Create($Payload))")
+        $signature = [jwtSignature]::new($PrivateKey, "$($header.Create()).$($claimSet.Create($Payload))", $Algorithm)
     }
     
     end {
