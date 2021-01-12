@@ -1,13 +1,11 @@
 enum Algorithm {
     HS256
-    HS284
+    HS384
     HS512
     RS256
-    RS284
+    RS384
     RS512
     ES256
-    ES284
+    ES384
     ES512
-    PS256
-    PS284
 }
