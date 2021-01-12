@@ -1,7 +1,6 @@
-class jwtSignature {
+class jwtSignature : jwtBase {
     [string]$PrivateKey
     [string]$Data
-    [Algorithm]$Algorithm
 
     jwtSignature ([string]$key, [string]$data, [Algorithm]$alg) {
         $this.PrivateKey = $key
@@ -19,7 +18,7 @@ class jwtSignature {
                 256 {  
                     openssl dgst -sha256 -sign "$env:TEMP\key.pem" -out "$env:TEMP\sig.txt" "$env:TEMP\data.txt"
                 }
-                284 {
+                384 {
                     openssl dgst -sha384 -sign "$env:TEMP\key.pem" -out "$env:TEMP\sig.txt" "$env:TEMP\data.txt"
                 }
                 512 {

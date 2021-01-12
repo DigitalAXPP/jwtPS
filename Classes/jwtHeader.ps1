@@ -1,5 +1,4 @@
-class jwtHeader {
-    [Algorithm]$Algorithm
+class jwtHeader : jwtBase {
     [string]$TokenType = "JWT"
 
     [string]Create(){
