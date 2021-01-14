@@ -3,9 +3,9 @@ class jwtHeader : jwtBase {
 
     [string]Create(){
         $headerContent = @{ 
-            'alg'= $($this.Algorithm)
-            'typ'= $($this.TokenType)
-        } | ConvertTo-Json
+            'alg'= $this.Algorithm
+            'typ'= $this.TokenType
+        } | ConvertTo-Json -EnumsAsStrings
         $base64 = [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($headerContent))
         return $base64
     }
