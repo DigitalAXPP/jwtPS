@@ -1,7 +1,9 @@
 function ConvertFrom-JWT {
     [CmdletBinding()]
+    [OutputType([pscustomobject])]
     param (
         [Parameter(
+            Mandatory,
             HelpMessage='Enter the JWT you want to convert to human readable text.'
         )]
         [string]$JWT
