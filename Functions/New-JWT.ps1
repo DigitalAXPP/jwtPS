@@ -1,7 +1,9 @@
 function New-JWT {
     [CmdletBinding()]
+    [OutputType([string])]
     param (
         [Parameter(
+            Mandatory,
             HelpMessage='The private key to sign the JWT.'
         )]
         [string]$PrivateKey,
@@ -12,6 +14,7 @@ function New-JWT {
         [Algorithm]$Algorithm = [Algorithm]::new(),
 
         [Parameter(
+            Mandatory,
             HelpMessage='Provide the payload for the JWT'
         )]
         [Hashtable]$Payload
