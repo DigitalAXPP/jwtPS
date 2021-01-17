@@ -98,7 +98,7 @@ PrivateData = @{
     PSData = @{
 
         # Tags applied to this module. These help with module discovery in online galleries.
-        Tags = @('JWT', 'Json Web Token', 'Web Authentication')
+        Tags = @('JWT', 'JsonWebToken', 'Authentication')
 
         # A URL to the license for this module.
         LicenseUri = 'https://github.com/DigitalAXPP/jwtPS/blob/main/LICENSE'
