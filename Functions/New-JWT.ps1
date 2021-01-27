@@ -32,6 +32,6 @@ function New-JWT {
     }
     
     end {
-        Write-Output -InputObject ($signature.Create() -replace '\+','-' -replace '/','_' -replace '=')
+        Write-Output -InputObject ($signature.Create())
     }
 }

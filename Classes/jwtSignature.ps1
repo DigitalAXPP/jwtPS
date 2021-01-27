@@ -40,6 +40,6 @@ class jwtSignature : jwtBase {
             Remove-Item -Path $env:TEMP\data.txt
             Remove-Item -Path $env:TEMP\sig.txt
         }
-        return "$($this.Data).$rsa_Base64"
+        return "$($this.Data).$rsa_Base64" -replace '\+','-' -replace '/','_' -replace '='
     }
 }
