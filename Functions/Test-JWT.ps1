@@ -14,11 +14,14 @@ function Test-JWT {
     
     process {
         $header, $payload, $signature = $JWT.Split(".")
-        $bytes = [System.Convert]::FromBase64String($signature)
-        $string = [System.Text.Encoding]::UTF8.GetBytes($bytes)
+        $bytes = [System.Convert]::FromBase64String($signature.Insert($signature.Length), "==")
+
+        #region Verify signature
+        openssl dgst -verify pubkey.pem -signature sigfile datafile
+        #endregion
     }
     
     end {
-        Write-Output -InputObject $string
+        Write-Output -InputObject $bytes
     }
 }
