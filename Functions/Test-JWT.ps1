@@ -5,7 +5,13 @@ function Test-JWT {
             Mandatory,
             HelpMessage='Enter the JWT.'
         )]
-        [string]$JWT
+        [string]$JWT,
+        
+        [Parameter(
+            Mandatory,
+            HelpMessage='Enter the public key'
+        )]
+        [string]$PublicKey
     )
     
     begin {
