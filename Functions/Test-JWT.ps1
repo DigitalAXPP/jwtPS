@@ -13,10 +13,12 @@ function Test-JWT {
     }
     
     process {
-        
+        $header, $payload, $signature = $JWT.Split(".")
+        $bytes = [System.Convert]::FromBase64String($signature)
+        $string = [System.Text.Encoding]::UTF8.GetBytes($bytes)
     }
     
     end {
-        
+        Write-Output -InputObject $string
     }
 }
