@@ -30,7 +30,7 @@ function Test-JWT {
             Set-Content -Path $env:TEMP\sig.txt -Value $bytes -AsByteStream
     
             #region Verify signature
-            $pipe = openssl dgst -verify $PublicKey -signature $env:TEMP\sig.txt $env:TEMP\data.txt
+            $result = openssl dgst -verify $PublicKey -signature $env:TEMP\sig.txt $env:TEMP\data.txt
             #endregion            
         }
         catch [System.Management.Automation.MethodException] {
@@ -43,6 +43,6 @@ function Test-JWT {
     }
     
     end {
-        Write-Output -InputObject $pipe
+        Write-Output -InputObject $result
     }
 }
