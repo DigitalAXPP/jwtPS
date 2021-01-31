@@ -1,5 +1,6 @@
 function Test-JWT {
     [CmdletBinding()]
+    [OutputType([string])]
     param (
         [Parameter(
             Mandatory,
@@ -19,21 +20,29 @@ function Test-JWT {
     }
     
     process {
-        $header, $payload, $signature = $JWT.Split(".")
-        $preparedSignature = $signature.Insert(($signature.Length), "==").Replace('-', '+').Replace('_', '/')
-        $bytes = [System.Convert]::FromBase64String($preparedSignature)
-
-        New-Item -Path $env:TEMP -Name data.txt -Value "$header.$payload" -ItemType File
-        # New-Item -Path $env:TEMP -Name sig.txt -Value $bytes -ItemType File
-        Set-Content -Path $env:TEMP\sig.txt -Value $bytes -AsByteStream
-        # [System.IO.FileInfo]::WriteAllBytes()
-
-        #region Verify signature
-        openssl dgst -verify $PublicKey -signature $env:TEMP\sig.txt $env:TEMP\data.txt
-        #endregion
+        try {
+            #region Reversing and splitting the JWT
+            $header, $payload, $signature = $JWT.Split(".")
+            $preparedSignature = $signature.Insert(($signature.Length), "==").Replace('-', '+').Replace('_', '/')
+            $bytes = [System.Convert]::FromBase64String($preparedSignature)
+            #endregion
+            Set-Content -Path $env:TEMP\data.txt -Value "$header.$payload" -NoNewline
+            Set-Content -Path $env:TEMP\sig.txt -Value $bytes -AsByteStream
+    
+            #region Verify signature
+            $pipe = openssl dgst -verify $PublicKey -signature $env:TEMP\sig.txt $env:TEMP\data.txt
+            #endregion            
+        }
+        catch [System.Management.Automation.MethodException] {
+            throw [System.Management.Automation.MethodException]::new($_.Exception.Message)
+        }
+        finally {
+            Remove-Item -Path $env:TEMP\data.txt -Force
+            Remove-Item -Path $env:TEMP\sig.txt -Force
+        }
     }
     
     end {
-        Write-Output -InputObject $bytes
+        Write-Output -InputObject $pipe
     }
 }
