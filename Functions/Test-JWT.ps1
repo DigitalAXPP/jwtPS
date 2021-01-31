@@ -9,9 +9,9 @@ function Test-JWT {
         
         [Parameter(
             Mandatory,
-            HelpMessage='Enter the public key'
+            HelpMessage='Enter the path of the public key'
         )]
-        [string]$PublicKey
+        [System.IO.FileInfo]$PublicKey
     )
     
     begin {
@@ -20,10 +20,16 @@ function Test-JWT {
     
     process {
         $header, $payload, $signature = $JWT.Split(".")
-        $bytes = [System.Convert]::FromBase64String($signature.Insert($signature.Length), "==")
+        $preparedSignature = $signature.Insert(($signature.Length), "==").Replace('-', '+').Replace('_', '/')
+        $bytes = [System.Convert]::FromBase64String($preparedSignature)
+
+        New-Item -Path $env:TEMP -Name data.txt -Value "$header.$payload" -ItemType File
+        # New-Item -Path $env:TEMP -Name sig.txt -Value $bytes -ItemType File
+        Set-Content -Path $env:TEMP\sig.txt -Value $bytes -AsByteStream
+        # [System.IO.FileInfo]::WriteAllBytes()
 
         #region Verify signature
-        openssl dgst -verify pubkey.pem -signature sigfile datafile
+        openssl dgst -verify $PublicKey -signature $env:TEMP\sig.txt $env:TEMP\data.txt
         #endregion
     }
     
