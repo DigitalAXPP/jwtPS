@@ -6,6 +6,7 @@ function Test-JWT {
             Mandatory,
             HelpMessage='Enter the JWT.'
         )]
+        [ValidatePattern('(^[\w-]*\.[\w-]*\.[\w-]*$)')]
         [string]$JWT,
         
         [Parameter(
@@ -44,8 +45,7 @@ function Test-JWT {
                 Default {
                     throw [System.ArgumentOutOfRangeException]::new("The JWT uses an unsupported algorithm.")
                 }
-            }
-            
+            }            
             #endregion            
         }
         catch [System.Management.Automation.MethodException] {
