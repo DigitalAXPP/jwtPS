@@ -24,6 +24,9 @@ class jwtSignature : jwtBase {
                 512 {
                     openssl dgst -sha512 -sign "$env:TEMP\key.pem" -out "$env:TEMP\sig.txt" "$env:TEMP\data.txt"
                 }
+                # HS256 {
+                #     openssl dgst -sha256 -hmac $Secret -out $env:TEMP\sig.txt $env:TEMP\data.txt
+                # }
                 Default {
                     throw [System.ArgumentException]::new("Unavailable Algorithm length.")
                 }
