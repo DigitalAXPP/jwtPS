@@ -14,19 +14,19 @@ class jwtSignature : jwtBase {
             Set-Content -Path $env:TEMP\key.pem -Value $this.PrivateKey
             Set-Content -Path $env:TEMP\data.txt -Value $this.Data -NoNewline
 
-            switch ($this.Algorithm -replace "[A-Z]") {
-                256 {  
+            switch ($this.Algorithm) { #-replace "[A-Z]") {
+                RS256 {  
                     openssl dgst -sha256 -sign "$env:TEMP\key.pem" -out "$env:TEMP\sig.txt" "$env:TEMP\data.txt"
                 }
-                384 {
+                RS384 {
                     openssl dgst -sha384 -sign "$env:TEMP\key.pem" -out "$env:TEMP\sig.txt" "$env:TEMP\data.txt"
                 }
-                512 {
+                RS512 {
                     openssl dgst -sha512 -sign "$env:TEMP\key.pem" -out "$env:TEMP\sig.txt" "$env:TEMP\data.txt"
                 }
-                # HS256 {
-                #     openssl dgst -sha256 -hmac $Secret -out $env:TEMP\sig.txt $env:TEMP\data.txt
-                # }
+                HS256 {
+                    openssl dgst -sha256 -hmac $this.PrivateKey -out "$env:TEMP\sig.txt" "$env:TEMP\data.txt"
+                }
                 Default {
                     throw [System.ArgumentException]::new("Unavailable Algorithm length.")
                 }
