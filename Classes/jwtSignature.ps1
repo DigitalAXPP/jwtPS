@@ -15,16 +15,16 @@ class jwtSignature : jwtBase {
             Set-Content -Path $env:TEMP\data.txt -Value $this.Data -NoNewline
 
             switch ($this.Algorithm) { #-replace "[A-Z]") {
-                RS256 {  
+                "RS256" {  
                     openssl dgst -sha256 -sign "$env:TEMP\key.pem" -out "$env:TEMP\sig.txt" "$env:TEMP\data.txt"
                 }
-                RS384 {
+                "RS384" {
                     openssl dgst -sha384 -sign "$env:TEMP\key.pem" -out "$env:TEMP\sig.txt" "$env:TEMP\data.txt"
                 }
-                RS512 {
+                "RS512" {
                     openssl dgst -sha512 -sign "$env:TEMP\key.pem" -out "$env:TEMP\sig.txt" "$env:TEMP\data.txt"
                 }
-                HS256 {
+                "HS256" {
                     openssl dgst -sha256 -hmac $this.PrivateKey -out "$env:TEMP\sig.txt" "$env:TEMP\data.txt"
                 }
                 Default {
@@ -34,6 +34,9 @@ class jwtSignature : jwtBase {
 
             $rsa_signature = [System.IO.File]::ReadAllBytes("$env:TEMP\sig.txt")
             $rsa_Base64 = [Convert]::ToBase64String($rsa_signature)
+
+            # $content = Get-Content -Path $env:TEMP\sig.txt | Where-Object { $_ -match '(?<=\= )\w*$' }
+            # $rsa_Base64 = [System.Convert]::ToBase64String($Matches[0])
         }
         catch {
             throw [System.IO.IOException]::new($_.Exception.Message)
