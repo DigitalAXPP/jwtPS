@@ -223,7 +223,7 @@
       <command:verb>Test</command:verb>
       <command:noun>JWT</command:noun>
       <maml:description>
-        <maml:para>This function verifies the JWT signature.</maml:para>
+        <maml:para>This function verifies the JWT RSA signature. It does not verify an HMAC signature.</maml:para>
       </maml:description>
     </command:details>
     <maml:description>
