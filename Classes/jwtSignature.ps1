@@ -25,18 +25,28 @@ class jwtSignature : jwtBase {
                     openssl dgst -sha512 -sign "$env:TEMP\key.pem" -out "$env:TEMP\sig.txt" "$env:TEMP\data.txt"
                 }
                 "HS256" {
-                    openssl dgst -sha256 -hmac $this.PrivateKey -out "$env:TEMP\sig.txt" "$env:TEMP\data.txt"
+                    openssl dgst -sha256 -mac HMAC -macopt key:$this.PrivateKey -out "$env:TEMP\sig.txt" "$env:TEMP\data.txt"
+                }
+                "HS384" {
+                    openssl dgst -sha384 -mac HMAC -macopt key:$this.PrivateKey -out "$env:TEMP\sig.txt" "$env:TEMP\data.txt"
+                }
+                "HS512" {
+                    openssl dgst -sha512 -mac HMAC -macopt key:$this.PrivateKey -out "$env:TEMP\sig.txt" "$env:TEMP\data.txt"
                 }
                 Default {
                     throw [System.ArgumentException]::new("Unavailable Algorithm length.")
                 }
             }
 
-            $rsa_signature = [System.IO.File]::ReadAllBytes("$env:TEMP\sig.txt")
-            $rsa_Base64 = [Convert]::ToBase64String($rsa_signature)
-
-            # $content = Get-Content -Path $env:TEMP\sig.txt | Where-Object { $_ -match '(?<=\= )\w*$' }
-            # $rsa_Base64 = [System.Convert]::ToBase64String($Matches[0])
+            if ($this.Algorithm -replace "[1-9]" -eq "RS") {
+                $rsa_signature = [System.IO.File]::ReadAllBytes("$env:TEMP\sig.txt")
+                $rsa_Base64 = [Convert]::ToBase64String($rsa_signature)
+            }
+            elseif ($this.Algorithm -replace "[1-9]" -eq "HS") {
+                $content = Get-Content -Path $env:TEMP\sig.txt | Where-Object { $_ -match '(?<=\= )\w*$' }
+                $bytes = [System.Text.Encoding]::UTF8.GetBytes($Matches[0])
+                $rsa_Base64 = [System.Convert]::ToBase64String($bytes)
+            }
         }
         catch {
             throw [System.IO.IOException]::new($_.Exception.Message)
