@@ -4,7 +4,7 @@ function New-JWT {
     param (
         [Parameter(
             Mandatory,
-            HelpMessage='The private key to sign the JWT.'
+            HelpMessage='The private key to sign the JWT. This also includes the secret for HS algorithms.'
         )]
         [string]$PrivateKey,
         
