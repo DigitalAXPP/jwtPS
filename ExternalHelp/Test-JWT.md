@@ -8,7 +8,7 @@ schema: 2.0.0
 # Test-JWT
 
 ## SYNOPSIS
-This function verifies the JWT signature.
+This function verifies the JWT RSA signature. It does not verify an HMAC signature.
 
 ## SYNTAX
 

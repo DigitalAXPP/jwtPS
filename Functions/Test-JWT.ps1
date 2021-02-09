@@ -4,16 +4,30 @@ function Test-JWT {
     param (
         [Parameter(
             Mandatory,
+            ParameterSetName='HMAC',
+            HelpMessage='Enter the JWT.'
+        )]
+        [Parameter(
+            Mandatory,
+            ParameterSetName='RSA',
             HelpMessage='Enter the JWT.'
         )]
         [ValidatePattern('(^[\w-]*\.[\w-]*\.[\w-]*$)')]
         [string]$JWT,
+
+        [Parameter(
+            Mandatory,
+            ParameterSetName='RSA',
+            HelpMessage='Enter the path of the public key'
+        )]
+        [System.IO.FileInfo]$PublicKey,
         
         [Parameter(
             Mandatory,
-            HelpMessage='Enter the path of the public key'
+            ParameterSetName='HMAC',
+            HelpMessage='Enter the HMAC secret'
         )]
-        [System.IO.FileInfo]$PublicKey
+        [string]$Secret
     )
     
     begin {
@@ -42,11 +56,29 @@ function Test-JWT {
                 'RS512' {  
                     $result = openssl dgst -sha512 -verify $PublicKey -signature $env:TEMP\sig.txt $env:TEMP\data.txt
                 }
+                'HS256' {
+                    Remove-Item -Path $env:TEMP\sig.txt -Force
+                    $result = openssl dgst -sha256 -mac HMAC -macopt key:$Secret -out "$env:TEMP\sig.txt" "$env:TEMP\data.txt"
+                }
+                'HS384' {
+                    Remove-Item -Path $env:TEMP\sig.txt -Force
+                    $result = openssl dgst -sha384 -mac HMAC -macopt key:$Secret -out "$env:TEMP\sig.txt" "$env:TEMP\data.txt"
+                }
+                'HS512' {
+                    Remove-Item -Path $env:TEMP\sig.txt -Force
+                    $result = openssl dgst -sha512 -mac HMAC -macopt key:$Secret -out "$env:TEMP\sig.txt" "$env:TEMP\data.txt"
+                }
                 Default {
                     throw [System.ArgumentOutOfRangeException]::new("The JWT uses an unsupported algorithm.")
                 }
             }            
-            #endregion            
+            #endregion
+            if ($PSBoundParameters.ContainsKey('Secret')) {
+                $content = Get-Content -Path $env:TEMP\sig.txt | Where-Object { $_ -match '(?<=\= )\w*$' }
+                $bytes = [System.Text.Encoding]::UTF8.GetBytes($Matches[0])
+                $rsa_Base64 = [System.Convert]::ToBase64String($bytes)
+                $result = $preparedSignature -eq $rsa_Base64                    
+            }
         }
         catch [System.Management.Automation.MethodException] {
             throw [System.Management.Automation.MethodException]::new($_.Exception.Message)
