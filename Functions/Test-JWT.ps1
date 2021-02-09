@@ -60,6 +60,14 @@ function Test-JWT {
                     Remove-Item -Path $env:TEMP\sig.txt -Force
                     $result = openssl dgst -sha256 -mac HMAC -macopt key:$Secret -out "$env:TEMP\sig.txt" "$env:TEMP\data.txt"
                 }
+                'HS384' {
+                    Remove-Item -Path $env:TEMP\sig.txt -Force
+                    $result = openssl dgst -sha384 -mac HMAC -macopt key:$Secret -out "$env:TEMP\sig.txt" "$env:TEMP\data.txt"
+                }
+                'HS512' {
+                    Remove-Item -Path $env:TEMP\sig.txt -Force
+                    $result = openssl dgst -sha512 -mac HMAC -macopt key:$Secret -out "$env:TEMP\sig.txt" "$env:TEMP\data.txt"
+                }
                 Default {
                     throw [System.ArgumentOutOfRangeException]::new("The JWT uses an unsupported algorithm.")
                 }
