@@ -6,9 +6,9 @@ Describe "ConvertFrom-JWT" {
         $mandatoryParameter = @(
             @{ parameter = 'JWT' }
         )
-        It "Parameter '{$parameter}' is mandatory" -TestCases $mandatoryParameter {
+        It '<parameter> is mandatory' -TestCases $mandatoryParameter {
             param($parameter)
-            $command = Get-Command -Name New-JWT
+            $command = Get-Command -Name ConvertFrom-JWT
             $command.Parameters[$parameter].Attributes.Mandatory | Should -BeTrue
         }
     }
@@ -25,10 +25,18 @@ Describe "ConvertFrom-JWT" {
             }
         }
         It "Verification of the header" {
-            $jwt = New-JWT -PrivateKey 'P@ssw0rd' -Algorithm HS256 -Payload $claim
+            $jwt = New-JWT -PrivateKey 'S3cuR3$3cR3T' -Algorithm HS256 -Payload $claim
             $conversion = ConvertFrom-JWT -JWT $jwt
             $conversion.Header.alg | Should -BeExactly 'HS256'
-            $conversion.Header.type | Should -BeExactly 'type'
+            $conversion.Header.typ | Should -BeExactly 'JWT'
+        }
+        It "Verification of the payload" {
+            $jwt = New-JWT -PrivateKey 'S3cuR3$3cR3T' -Algorithm HS256 -Payload $claim
+            $conversion = ConvertFrom-JWT -JWT $jwt
+            $conversion.Payload.iss | Should -BeExactly $claim.iss
+            $conversion.Payload.exp | Should -BeExactly $claim.exp
+            $conversion.Payload.iat | Should -BeExactly $claim.iat
+            $conversion.Payload.jti | Should -BeExactly $claim.jti
         }
     }
 }

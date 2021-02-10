@@ -7,7 +7,7 @@ Describe "New-JWT" {
             @{ parameter = 'PrivateKey' },
             @{ parameter = 'Payload' }
         )
-        It "{parameter} is mandatory" -TestCases $mandatoryParameter {
+        It "<parameter> is mandatory" -TestCases $mandatoryParameter {
             param($parameter)
             $command = Get-Command -Name New-JWT
             $command.Parameters[$parameter].Attributes.Mandatory | Should -BeTrue
