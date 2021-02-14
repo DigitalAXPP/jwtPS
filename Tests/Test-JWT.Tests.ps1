@@ -43,18 +43,18 @@ Describe "Test-JWT" {
         }
         It "with SHA 256" {
             $jwt = New-JWT -PrivateKey $key.PrivateKey -Algorithm RS256 -Payload $claim
-            $result = Test-JWT -JWT $jwt -PublicKey $key.publicKey
-            $result | Should -Contain "OK"
+            $result = Test-JWT -JWT $jwt -PublicKey $env:HOMEPATH\Documents\PowerShell\public2048.pem
+            $result | Should -Match "OK"
         }
         It "with SHA 384" {
             $jwt = New-JWT -PrivateKey $key.PrivateKey -Algorithm RS384 -Payload $claim
-            $result = Test-JWT -JWT $jwt -PublicKey $key.publicKey
-            $result | Should -Contain "OK"
+            $result = Test-JWT -JWT $jwt -PublicKey $env:HOMEPATH\Documents\PowerShell\public2048.pem
+            $result | Should -Match "OK"
         }
         It "with SHA 512" {
             $jwt = New-JWT -PrivateKey $key.PrivateKey -Algorithm RS512 -Payload $claim
-            $result = Test-JWT -JWT $jwt -PublicKey $key.publicKey
-            $result | Should -Contain "OK"
+            $result = Test-JWT -JWT $jwt -PublicKey $env:HOMEPATH\Documents\PowerShell\public2048.pem
+            $result | Should -Match "OK"
         }
     }
 }
