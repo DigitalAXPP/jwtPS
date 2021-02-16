@@ -17,7 +17,12 @@ function New-JWT {
             Mandatory,
             HelpMessage='Provide the payload for the JWT'
         )]
-        [Hashtable]$Payload
+        [Hashtable]$Payload,
+        
+        [Parameter(
+            HelpMessage='Use this switch if you want to check for the standard JWT payload input.'
+        )]
+        [switch]$VerifyPayload
     )
     
     begin {
@@ -28,6 +33,10 @@ function New-JWT {
         $header = [jwtHeader]::new()
         $header.Algorithm = $Algorithm
         $claimSet = [jwtClaimSet]::new()
+        if ($VerifyPayload) {
+            $verification = $claimSet.VerifyPayload($Payload)
+            Write-Output -InputObject $verification
+        }
         $signature = [jwtSignature]::new($PrivateKey, "$($header.Create()).$($claimSet.Create($Payload))", $Algorithm)
     }
     

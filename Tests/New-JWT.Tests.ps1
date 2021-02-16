@@ -16,7 +16,7 @@ Describe "New-JWT" {
     Context "Verify payload" {
         $claims = @(
             @{
-                $payload = @{
+                payload = @{
                     aud = "jwtPS"        
                     iss = "DigitalAXPP"        
                     sub = "RS256 Test"        
@@ -25,28 +25,31 @@ Describe "New-JWT" {
                     iat = ([System.DateTimeOffset]::Now).ToUnixTimeSeconds()
                     jti = [guid]::NewGuid()
                 }
-                $total = 7
+                total = 7
+                match = 'aud', 'iss','sub', 'nbf','exp', 'iat', 'jti'
             },
             @{
-                $payload = @{
+                payload = @{
                     aud = "jwtPS"        
                     iss = "DigitalAXPP"        
                     sub = "RS256 Test"        
                     nbf = "0"        
                     exp = ([System.DateTimeOffset]::Now.AddHours(3)).ToUnixTimeSeconds()
                 }
-                $total = 5
+                total = 5
             },
             @{
-                $payload = @{
+                payload = @{
                     aud = "jwtPS"        
                     iss = "DigitalAXPP"
                 }
-                $total = 2
+                total = 2
             }
         )
         It "With <total> properties" -TestCases $claims {
-            Assertion
+            param($payload, $match)
+            $jwt = New-JWT -Algorithm HS256 -PrivateKey "P@ssw0rd" -Payload $payload -VerifyPayload
+            $jwt -match $match | Should -BeFalse
         }
     }
     Context "Creating RSA signature" {
