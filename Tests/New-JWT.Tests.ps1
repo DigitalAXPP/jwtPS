@@ -13,6 +13,50 @@ Describe "New-JWT" {
             $command.Parameters[$parameter].Attributes.Mandatory | Should -BeTrue
         }
     }
+    Context "Verify payload" {
+        $claims = @(
+            @{
+                payload = @{
+                    aud = "jwtPS"        
+                    iss = "DigitalAXPP"        
+                    sub = "RS256 Test"        
+                    nbf = "0"        
+                    exp = ([System.DateTimeOffset]::Now.AddHours(3)).ToUnixTimeSeconds()
+                    iat = ([System.DateTimeOffset]::Now).ToUnixTimeSeconds()
+                }
+                match = 'jti'
+                total = 6
+            },
+            @{
+                payload = @{
+                    aud = "jwtPS"        
+                    iss = "DigitalAXPP"        
+                    sub = "RS256 Test"        
+                    nbf = "0"        
+                    exp = ([System.DateTimeOffset]::Now.AddHours(3)).ToUnixTimeSeconds()
+                }
+                match = 'jti', 'iat'
+                total = 5
+            },
+            @{
+                payload = @{
+                    aud = "jwtPS"        
+                    iss = "DigitalAXPP"
+                    sub = "RS256 Test"        
+                    nbf = "0"
+                }
+                match = 'jti', 'iat', 'exp'
+                total = 4
+            }
+        )
+        It "With <total> properties" -TestCases $claims {
+            param($payload, $match)
+            $jwt = New-JWT -Algorithm HS256 -PrivateKey "P@ssw0rd" -Payload $payload -VerifyPayload
+            $match | ForEach-Object {
+                [bool]($jwt -match $_) | Should -BeTrue
+            }
+        }
+    }
     Context "Creating RSA signature" {
         BeforeEach {
             $key = Get-Content -Path $env:HOMEPATH\Documents\PowerShell\rsa2048.json | ConvertFrom-Json
