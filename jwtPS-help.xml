@@ -15,7 +15,7 @@
     <command:syntax>
       <command:syntaxItem>
         <maml:name>ConvertFrom-JWT</maml:name>
-        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="none">
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="none">
           <maml:name>JWT</maml:name>
           <maml:Description>
             <maml:para>Enter the JWT you want to convert to human readable text.</maml:para>
@@ -30,7 +30,7 @@
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="none">
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="none">
         <maml:name>JWT</maml:name>
         <maml:Description>
           <maml:para>Enter the JWT you want to convert to human readable text.</maml:para>
@@ -89,7 +89,7 @@
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>This function uses the OpenSSL project to smoothly create JWTs.</maml:para>
+      <maml:para>This function uses the OpenSSL project to smoothly create JWTs. If the 'VerifyPayload' switch is used, the returned string contains the missing standard JWT payload parameters.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem>
@@ -141,6 +141,17 @@
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>VerifyPayload</maml:name>
+          <maml:Description>
+            <maml:para>Use this switch if you want to check for the standard JWT payload input.</maml:para>
+          </maml:Description>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
@@ -179,6 +190,18 @@
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>VerifyPayload</maml:name>
+        <maml:Description>
+          <maml:para>Use this switch if you want to check for the standard JWT payload input.</maml:para>
+        </maml:Description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
       </command:parameter>
     </command:parameters>
     <command:inputTypes>
@@ -257,6 +280,33 @@
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
       </command:syntaxItem>
+      <command:syntaxItem>
+        <maml:name>Test-JWT</maml:name>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="none">
+          <maml:name>JWT</maml:name>
+          <maml:Description>
+            <maml:para>Enter the JWT.</maml:para>
+          </maml:Description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Secret</maml:name>
+          <maml:Description>
+            <maml:para>Enter the HMAC secret</maml:para>
+          </maml:Description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
     </command:syntax>
     <command:parameters>
       <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="none">
@@ -279,6 +329,18 @@
         <command:parameterValue required="true" variableLength="false">FileInfo</command:parameterValue>
         <dev:type>
           <maml:name>FileInfo</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Secret</maml:name>
+        <maml:Description>
+          <maml:para>Enter the HMAC secret</maml:para>
+        </maml:Description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>

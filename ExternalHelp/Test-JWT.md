@@ -12,8 +12,14 @@ This function verifies the JWT RSA signature. It does not verify an HMAC signatu
 
 ## SYNTAX
 
+### RSA
 ```
 Test-JWT [-JWT] <String> [-PublicKey] <FileInfo> [<CommonParameters>]
+```
+
+### HMAC
+```
+Test-JWT [-JWT] <String> -Secret <String> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -48,11 +54,26 @@ Enter the path of the public key
 
 ```yaml
 Type: FileInfo
-Parameter Sets: (All)
+Parameter Sets: RSA
 Aliases:
 
 Required: True
 Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Secret
+Enter the HMAC secret
+
+```yaml
+Type: String
+Parameter Sets: HMAC
+Aliases:
+
+Required: True
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

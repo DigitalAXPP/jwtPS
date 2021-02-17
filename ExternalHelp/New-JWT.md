@@ -13,11 +13,12 @@ The function returns a JSON Web Token.
 ## SYNTAX
 
 ```
-New-JWT [-PrivateKey] <String> [[-Algorithm] <Algorithm>] [-Payload] <Hashtable> [<CommonParameters>]
+New-JWT [-PrivateKey] <String> [[-Algorithm] <Algorithm>] [-Payload] <Hashtable> [-VerifyPayload]
+ [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-This function uses the OpenSSL project to smoothly create JWTs.
+This function uses the OpenSSL project to smoothly create JWTs. If the 'VerifyPayload' switch is used, the returned string contains the missing standard JWT payload parameters.
 
 ## EXAMPLES
 
@@ -71,6 +72,21 @@ Aliases:
 
 Required: True
 Position: 0
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -VerifyPayload
+Use this switch if you want to check for the standard JWT payload input.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
