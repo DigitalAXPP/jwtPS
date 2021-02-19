@@ -3,6 +3,12 @@ The primary objective of this module is to generate a JSON Web Token. You can fi
 
 ## Prerequisite
 It uses the [OpenSSL](https://www.openssl.org) project to offer a wider range of encryption algorithms. To install OpenSSL for PowerShell you can follow this [link](https://adamtheautomator.com/install-openssl-powershell/).
+To test whether OpenSSL is installed and available in your terminal, please enter:
+```PowerShell
+PS > openssl version
+OpenSSL 1.1.1  11 Sep 2018
+```
+The command should return the current version of OpenSSL.
 
 ## Introduction
 You can easily install jwtPS from the PSGallery and import the module.
