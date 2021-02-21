@@ -1,6 +1,6 @@
 Describe "ConvertFrom-JWT" {
     BeforeAll {
-        Import-Module -Name ..\jwtPS.psd1
+        Import-Module ..\jwtPS.psd1
     }
     Context "Verify parameter" {
         $mandatoryParameter = @(
