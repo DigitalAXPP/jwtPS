@@ -71,15 +71,15 @@ Describe "New-JWT" {
             }
         }
         It "With SHA256" {
-            $jwt = New-JWT -PrivateKey $key.PrivateKey -Algorithm RS256 -Payload $claim
+            $jwt = New-JWT -PrivateKey $key -Algorithm RS256 -Payload $claim
             $jwt | Should -Match -RegularExpression '(^[\w-]*\.[\w-]*\.[\w-]*$)'
         }
         It "With SHA384" {
-            $jwt = New-JWT -PrivateKey $key.PrivateKey -Algorithm RS384 -Payload $claim
+            $jwt = New-JWT -PrivateKey $key -Algorithm RS384 -Payload $claim
             $jwt | Should -Match -RegularExpression '(^[\w-]*\.[\w-]*\.[\w-]*$)'
         }
         It "With SHA512" {
-            $jwt = New-JWT -PrivateKey $key.PrivateKey -Algorithm RS512 -Payload $claim
+            $jwt = New-JWT -PrivateKey $key -Algorithm RS512 -Payload $claim
             $jwt | Should -Match -RegularExpression '(^[\w-]*\.[\w-]*\.[\w-]*$)'
         }
     }
