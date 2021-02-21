@@ -1,7 +1,6 @@
 Describe "ConvertFrom-JWT" {
     BeforeAll {
-        $path = $PSScriptRoot.Directory.Parent.Parent
-        Import-Module $path\jwtPS.psd1
+        Import-Module D:\a\jwtPS\jwtPS.psd1
     }
     Context "Verify parameter" {
         $mandatoryParameter = @(
