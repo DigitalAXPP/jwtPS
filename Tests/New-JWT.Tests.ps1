@@ -1,6 +1,6 @@
 Describe "New-JWT" {
     BeforeAll {
-        Import-Module -Name jwtPS
+        Import-Module -Name D:\a\jwtPS\jwtPS\jwtPS.psd1
     }
     Context "Verify parameter" {
         $mandatoryParameter = @(
