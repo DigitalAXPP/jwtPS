@@ -7,7 +7,7 @@ class jwtSignature : jwtBase {
         $this.Data = $data
         $this.Algorithm = $alg
     }
-    
+
     [string]Create() {
         $rsa_Base64 = [string]::Empty
         try {
@@ -15,7 +15,7 @@ class jwtSignature : jwtBase {
             Set-Content -Path $env:TEMP\data.txt -Value $this.Data -NoNewline
 
             switch ($this.Algorithm) { #-replace "[A-Z]") {
-                "RS256" {  
+                "RS256" {
                     openssl dgst -sha256 -sign "$env:TEMP\key.pem" -out "$env:TEMP\sig.txt" "$env:TEMP\data.txt"
                 }
                 "RS384" {
@@ -43,7 +43,7 @@ class jwtSignature : jwtBase {
                 $rsa_Base64 = [Convert]::ToBase64String($rsa_signature)
             }
             elseif ($this.Algorithm -replace "[1-9]" -eq "HS") {
-                $content = Get-Content -Path $env:TEMP\sig.txt | Where-Object { $_ -match '(?<=\= )\w*$' }
+                Get-Content -Path $env:TEMP\sig.txt | Where-Object { $_ -match '(?<=\= )\w*$' }
                 $bytes = [System.Text.Encoding]::UTF8.GetBytes($Matches[0])
                 $rsa_Base64 = [System.Convert]::ToBase64String($bytes)
             }

@@ -10,11 +10,10 @@ function ConvertFrom-JWT {
         [ValidatePattern('(^[\w-]*\.[\w-]*\.[\w-]*$)')]
         [string]$JWT
     )
-    
+
     begin {
-        
     }
-    
+
     process {
         $header, $payload, $signature = $JWT.Split('.') -replace '-','+' -replace '_','/'
         $reversedJWT = [PSCustomObject]@{
@@ -22,7 +21,7 @@ function ConvertFrom-JWT {
             'Payload' = ([System.Text.Encoding]::UTF8.GetString([Convert]::FromBase64String("$payload==")) | ConvertFrom-Json)
         }
     }
-    
+
     end {
         Write-Output -InputObject $reversedJWT
     }

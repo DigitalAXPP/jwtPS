@@ -4,7 +4,7 @@ class jwtClaimSet {
         $keys = @('iss', 'sub', 'aud', 'exp', 'nbf', 'iat', 'jti')
         $keys | ForEach-Object {
             if (-Not ($payload.ContainsKey($_))) {
-                $missingKeys.Add($_)                
+                $missingKeys.Add($_)
             }
         }
         return $missingKeys
