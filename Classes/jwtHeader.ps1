@@ -2,7 +2,7 @@ class jwtHeader : jwtBase {
     [string]$TokenType = "JWT"
 
     [string]Create(){
-        $headerContent = @{ 
+        $headerContent = @{
             'alg'= $this.Algorithm
             'typ'= $this.TokenType
         } | ConvertTo-Json -EnumsAsStrings
