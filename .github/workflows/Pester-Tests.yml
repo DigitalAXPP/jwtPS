@@ -21,10 +21,28 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      # Runs a single command using the runners shell
-      - name: Run the Pester tests
+      - name: Install PowerShell modules
         shell: pwsh
         run: |
           Set-PSRepository psgallery -InstallationPolicy trusted
           Install-Module -Name Pester -RequiredVersion 5.0.4 -Confirm:$false -Force
-          Invoke-Pester -Path "Tests"
+          Install-Module -Name PSScriptAnalyzer -Force
+
+      # Runs a single command using the runners shell
+      - name: Run Pester tests
+        shell: pwsh
+        run: Invoke-Pester -Path "Tests"
+      
+      # Runs the PSScriptAnalyzer
+      - name: Run PSScriptAnalyzer
+        shell: pwsh
+        run: |
+          Invoke-ScriptAnalyzer -Path . -Recurse -OutVariable issues
+          $error = $issues.Where( { $_.Severity -eq 'Error' })
+          if ($error) {
+            $error | Export-Clixml -Path ScriptAnalysisErrors.xml
+            Write-Error -Message "The script analysis found at least one error." -ErrorAction Stop
+          }
+          else {
+            $issues | Export-Clixml -Path ScriptAnalysis.xml
+          }
