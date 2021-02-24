@@ -38,8 +38,8 @@ jobs:
         shell: pwsh
         run: |
           Invoke-ScriptAnalyzer -Path . -Recurse -OutVariable issues
-          $error = $issues.Where( { $_.Severity -eq 'Error' })
-          if ($error) {
+          $err = $issues.Where( { $_.Severity -eq 'Error' })
+          if ($err) {
             $error | Export-Clixml -Path ScriptAnalysisErrors.xml
             Write-Error -Message "The script analysis found at least one error." -ErrorAction Stop
           }
