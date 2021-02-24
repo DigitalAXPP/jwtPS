@@ -51,5 +51,5 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: Script Analysis
-          path: ${{ github.workspace }}/.github/workflows/ScriptAnalysis.xml
-          retention-days: 2
+          path: ${{ github.workspace }}/.github/workflows/
+          retention-days: 1
