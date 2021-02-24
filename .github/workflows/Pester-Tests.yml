@@ -40,9 +40,16 @@ jobs:
           Invoke-ScriptAnalyzer -Path . -Recurse -OutVariable issues
           $err = $issues.Where( { $_.Severity -eq 'Error' })
           if ($err) {
-            $error | Export-Clixml -Path ScriptAnalysisErrors.xml
             Write-Error -Message "The script analysis found at least one error." -ErrorAction Stop
           }
           else {
             $issues | Export-Clixml -Path ScriptAnalysis.xml
           }
+          
+      # Uploading the XML report created by the PSScriptAnalyzer
+      - name: Upload Report
+        uses: actions/upload-artifact@v2
+        with:
+          name: Script Analysis
+          path: $GITHUB_WORKSPACE/.github/workflows/ScriptAnalysis.xml
+        
