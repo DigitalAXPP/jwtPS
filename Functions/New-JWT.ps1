@@ -1,5 +1,8 @@
 function New-JWT {
-    [CmdletBinding()]
+    [CmdletBinding(
+        SupportsShouldProcess,
+        ConfirmImpact='Low'
+    )]
     [OutputType([string])]
     param (
         [Parameter(
@@ -29,14 +32,16 @@ function New-JWT {
     }
 
     process {
-        $header = [jwtHeader]::new()
-        $header.Algorithm = $Algorithm
-        $claimSet = [jwtClaimSet]::new()
-        if ($VerifyPayload) {
-            $verification = $claimSet.VerifyPayload($Payload)
-            Write-Output -InputObject $verification
+        if ($PSCmdlet.ShouldProcess("JWT", "Create a new token.")) {
+            $header = [jwtHeader]::new()
+            $header.Algorithm = $Algorithm
+            $claimSet = [jwtClaimSet]::new()
+            if ($VerifyPayload) {
+                $verification = $claimSet.VerifyPayload($Payload)
+                Write-Output -InputObject $verification
+            }
+            $signature = [jwtSignature]::new($PrivateKey, "$($header.Create()).$($claimSet.Create($Payload))", $Algorithm)
         }
-        $signature = [jwtSignature]::new($PrivateKey, "$($header.Create()).$($claimSet.Create($Payload))", $Algorithm)
     }
 
     end {

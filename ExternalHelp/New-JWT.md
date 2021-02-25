@@ -13,8 +13,8 @@ The function returns a JSON Web Token.
 ## SYNTAX
 
 ```
-New-JWT [-PrivateKey] <String> [[-Algorithm] <Algorithm>] [-Payload] <Hashtable> [-VerifyPayload]
- [<CommonParameters>]
+New-JWT [-PrivateKey] <String> [[-Algorithm] <Algorithm>] [-Payload] <Hashtable> [-VerifyPayload] [-WhatIf]
+ [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -84,6 +84,36 @@ Use this switch if you want to check for the standard JWT payload input.
 Type: SwitchParameter
 Parameter Sets: (All)
 Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Confirm
+Prompts you for confirmation before running the cmdlet.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases: cf
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -WhatIf
+Shows what would happen if the cmdlet runs. The cmdlet is not run.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases: wi
 
 Required: False
 Position: Named
