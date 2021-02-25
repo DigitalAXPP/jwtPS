@@ -15,10 +15,10 @@ Describe "ConvertFrom-JWT" {
     Context "Converting a JSON Web Token" {
         BeforeEach {
             $claim = @{
-                aud = "jwtPS"        
-                iss = "DigitalAXPP-$(Get-Random -Maximum 10000)"        
-                sub = "HS256 Test"        
-                nbf = "0"        
+                aud = "jwtPS"
+                iss = "DigitalAXPP-$(Get-Random -Maximum 10000)"
+                sub = "HS256 Test"
+                nbf = "0"
                 exp = ([System.DateTimeOffset]::Now.AddHours(3)).ToUnixTimeSeconds()
                 iat = ([System.DateTimeOffset]::Now).ToUnixTimeSeconds()
                 jti = [guid]::NewGuid()
