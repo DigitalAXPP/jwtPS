@@ -15,13 +15,13 @@ class jwtSignature : jwtBase {
             Set-Content -Path $env:TEMP\data.txt -Value $this.Data -NoNewline
 
             switch ($this.Algorithm) { #-replace "[A-Z]") {
-                "RS256" {
+                { $_ -in @('RS256', 'ES256') } {
                     openssl dgst -sha256 -sign "$env:TEMP\key.pem" -out "$env:TEMP\sig.txt" "$env:TEMP\data.txt"
                 }
-                "RS384" {
+                '((ES)|(RS))384' {
                     openssl dgst -sha384 -sign "$env:TEMP\key.pem" -out "$env:TEMP\sig.txt" "$env:TEMP\data.txt"
                 }
-                "RS512" {
+                '((ES)|(RS))512' {
                     openssl dgst -sha512 -sign "$env:TEMP\key.pem" -out "$env:TEMP\sig.txt" "$env:TEMP\data.txt"
                 }
                 "HS256" {
