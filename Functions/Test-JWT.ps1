@@ -46,7 +46,7 @@ function Test-JWT {
 
             #region Verify signature
             switch ($headerDecoded.alg) {
-                'RS256' {
+                { $_ -in @('RS256', 'ES256') } {
                     $result = openssl dgst -sha256 -verify $PublicKey -signature $env:TEMP\sig.txt $env:TEMP\data.txt
                 }
                 'RS384' {
