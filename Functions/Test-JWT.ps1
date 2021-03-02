@@ -49,10 +49,10 @@ function Test-JWT {
                 { $_ -in @('RS256', 'ES256') } {
                     $result = openssl dgst -sha256 -verify $PublicKey -signature $env:TEMP\sig.txt $env:TEMP\data.txt
                 }
-                'RS384' {
+                { $_ -in @('RS384', 'ES384') } {
                     $result = openssl dgst -sha384 -verify $PublicKey -signature $env:TEMP\sig.txt $env:TEMP\data.txt
                 }
-                'RS512' {
+                { $_ -in @('RS512', 'ES512') } {
                     $result = openssl dgst -sha512 -verify $PublicKey -signature $env:TEMP\sig.txt $env:TEMP\data.txt
                 }
                 'HS256' {
