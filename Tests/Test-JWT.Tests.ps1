@@ -73,18 +73,18 @@ Describe "Test-JWT" {
             }
         }
         It "with SHA 256" {
-            $jwt = New-JWT -PrivateKey $key_256 -Algorithm RS256 -Payload $claim
-            $result = Test-JWT -JWT $jwt -PublicKey D:\a\jwtPS\jwtPS\.github\workflows\public2048.pem
+            $jwt = New-JWT -PrivateKey $key_256 -Algorithm ES256 -Payload $claim
+            $result = Test-JWT -JWT $jwt -PublicKey D:\a\jwtPS\jwtPS\.github\workflows\pubkeyoprime256v1.pem
             $result | Should -Match "OK"
         }
         It "with SHA 384" {
             $jwt = New-JWT -PrivateKey $key_384 -Algorithm ES384 -Payload $claim
-            $result = Test-JWT -JWT $jwt -PublicKey D:\a\jwtPS\jwtPS\.github\workflows\public2048.pem
+            $result = Test-JWT -JWT $jwt -PublicKey D:\a\jwtPS\jwtPS\.github\workflows\ec-384-publickey.pem
             $result | Should -Match "OK"
         }
         It "with SHA 512" {
             $jwt = New-JWT -PrivateKey $key_512 -Algorithm ES512 -Payload $claim
-            $result = Test-JWT -JWT $jwt -PublicKey D:\a\jwtPS\jwtPS\.github\workflows\public2048.pem
+            $result = Test-JWT -JWT $jwt -PublicKey D:\a\jwtPS\jwtPS\.github\workflows\ec-512-publickey.pem
             $result | Should -Match "OK"
         }
     }
