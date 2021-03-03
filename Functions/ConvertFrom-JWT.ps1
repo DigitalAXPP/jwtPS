@@ -16,16 +16,9 @@ function ConvertFrom-JWT {
 
     process {
         $header, $payload, $signature = $JWT.Split('.') -replace '-','+' -replace '_','/'
-        switch ($payload.Length % 4) {
-            0 { continue }
-            1 { $payload = $payload.Substring(0, $payload.Length -1) }
-            2 { $payload += "==" }
-            3 { $payload += "=" }
-            Default {}
-        }
         $reversedJWT = [PSCustomObject]@{
-            'Header' = ([System.Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($header)) | ConvertFrom-Json)
-            'Payload' = ([System.Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($payload)) | ConvertFrom-Json)
+            'Header' = (ConvertFrom-Base64 -Base64 $header)
+            'Payload' = (ConvertFrom-Base64 -Base64 $payload)
         }
     }
 

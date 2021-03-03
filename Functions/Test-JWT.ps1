@@ -37,9 +37,8 @@ function Test-JWT {
         try {
             #region Reversing and splitting the JWT
             $header, $payload, $signature = $JWT.Split(".")
-            $preparedSignature = $signature.Insert(($signature.Length), "==").Replace('-', '+').Replace('_', '/')
-            $bytes = [System.Convert]::FromBase64String($preparedSignature)
-            $headerDecoded = [System.Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($header)) | ConvertFrom-Json
+            $bytes = ConvertFrom-Base64 -Base64 $signature -Byte
+            $headerDecoded = ConvertFrom-Base64 -Base64 $header
             #endregion
             Set-Content -Path $env:TEMP\data.txt -Value "$header.$payload" -NoNewline
             Set-Content -Path $env:TEMP\sig.txt -Value $bytes -AsByteStream
