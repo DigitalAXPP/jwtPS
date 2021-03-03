@@ -6,14 +6,14 @@ function ConvertFrom-Base64 {
             ValueFromPipeline,
             HelpMessage='Enter the Base64 string.'
         )][string]$Base64,
-        
+
         [Parameter(
             HelpMessage='Use switch if the input is in bytes.'
         )]
         [switch]$Byte
     )
-    
-    begin {        
+
+    begin {
     }
 
     process {
@@ -27,7 +27,7 @@ function ConvertFrom-Base64 {
             }
         }
     }
-    
+
     end {
         if ($PSBoundParameters.ContainsKey('Byte')) {
             return [System.Convert]::FromBase64String($string)
