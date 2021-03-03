@@ -57,4 +57,35 @@ Describe "Test-JWT" {
             $result | Should -Match "OK"
         }
     }
+    Context "ECDSA encryption" {
+        BeforeEach {
+            $key_256 = "-----BEGIN EC PRIVATE KEY-----`r`nMHcCAQEEIO9Xgf50T8VO6GkncN1Q2oF0kq3IBrbkI+SSphg98VE2oAoGCCqGSM49`r`nAwEHoUQDQgAEN9S07l/929SmRhf0yTvTykjwJd/QJXARITRQ5B8e00aSKR7uuguy`r`nfeGQEbNDmL21aAhy7RqmQBhx3ZcO71apFA==`r`n-----END EC PRIVATE KEY-----`r`n"
+            $key_384 = "-----BEGIN EC PRIVATE KEY-----`r`nMIGkAgEBBDDIBWp8sZe1ff5kmLHS3RFd1pHxOimPnO1vfrydzlm8UlYNBFnj0lrI`r`nCoTPd1tg8HugBwYFK4EEACKhZANiAARtMhih0x3xd4OaZKXw64GApFQv2tPylyao`r`n3gpcxbq62o6o0sk734KOwJTKkOVBElOJlAWRtkplBc9UkS7wQv7zo5cBwDO0v+nt`r`nEzDFGAoqOg1lfMW22hDoyMCGywxdGhs=`r`n-----END EC PRIVATE KEY-----`r`n"
+            $key_512 = "-----BEGIN EC PRIVATE KEY-----`r`nMIHcAgEBBEIB383k8S7qBj3/wbufXKbnuXKVLhlZ+Rpzeox3Dc9phmLaKHKggePA`r`nSivMyCaR7MZMWsYJ5UdG/covRbXxuQaenQqgBwYFK4EEACOhgYkDgYYABAFBKL3L`r`nsMgI9Xc443ef8I63bS5hz703VtroGvOBQv4zuY2V8y3amqdgjas7FQlI4ZNQBohs`r`nLHIRTaJy/uqpi3T3JAHLriR1QzEQ5S/WUiKx0iPUcM6ItuMaByaZGb11YMw/ygIy`r`n+mpcE0LEEtuVsSuzuSSc5nnvgreD6h+mhHzKNxVOog==`r`n-----END EC PRIVATE KEY-----`r`n"
+            $claim = @{
+                aud = "jwtPS"
+                iss = "DigitalAXPP"
+                sub = "ES Test"
+                nbf = "0"
+                exp = ([System.DateTimeOffset]::Now.AddHours(3)).ToUnixTimeSeconds()
+                iat = ([System.DateTimeOffset]::Now).ToUnixTimeSeconds()
+                jti = [guid]::NewGuid()
+            }
+        }
+        It "with SHA 256" {
+            $jwt = New-JWT -PrivateKey $key_256 -Algorithm RS256 -Payload $claim
+            $result = Test-JWT -JWT $jwt -PublicKey D:\a\jwtPS\jwtPS\.github\workflows\public2048.pem
+            $result | Should -Match "OK"
+        }
+        It "with SHA 384" {
+            $jwt = New-JWT -PrivateKey $key_384 -Algorithm ES384 -Payload $claim
+            $result = Test-JWT -JWT $jwt -PublicKey D:\a\jwtPS\jwtPS\.github\workflows\public2048.pem
+            $result | Should -Match "OK"
+        }
+        It "with SHA 512" {
+            $jwt = New-JWT -PrivateKey $key_512 -Algorithm ES512 -Payload $claim
+            $result = Test-JWT -JWT $jwt -PublicKey D:\a\jwtPS\jwtPS\.github\workflows\public2048.pem
+            $result | Should -Match "OK"
+        }
+    }
 }

@@ -37,22 +37,21 @@ function Test-JWT {
         try {
             #region Reversing and splitting the JWT
             $header, $payload, $signature = $JWT.Split(".")
-            $preparedSignature = $signature.Insert(($signature.Length), "==").Replace('-', '+').Replace('_', '/')
-            $bytes = [System.Convert]::FromBase64String($preparedSignature)
-            $headerDecoded = [System.Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($header)) | ConvertFrom-Json
+            $bytes = ConvertFrom-Base64 -Base64 $signature -Byte
+            $headerDecoded = ConvertFrom-Base64 -Base64 $header
             #endregion
             Set-Content -Path $env:TEMP\data.txt -Value "$header.$payload" -NoNewline
             Set-Content -Path $env:TEMP\sig.txt -Value $bytes -AsByteStream
 
             #region Verify signature
             switch ($headerDecoded.alg) {
-                'RS256' {
+                { $_ -in @('RS256', 'ES256') } {
                     $result = openssl dgst -sha256 -verify $PublicKey -signature $env:TEMP\sig.txt $env:TEMP\data.txt
                 }
-                'RS384' {
+                { $_ -in @('RS384', 'ES384') } {
                     $result = openssl dgst -sha384 -verify $PublicKey -signature $env:TEMP\sig.txt $env:TEMP\data.txt
                 }
-                'RS512' {
+                { $_ -in @('RS512', 'ES512') } {
                     $result = openssl dgst -sha512 -verify $PublicKey -signature $env:TEMP\sig.txt $env:TEMP\data.txt
                 }
                 'HS256' {
