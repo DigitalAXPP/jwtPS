@@ -110,9 +110,11 @@ I2PDI5/dlaxe2Iz9d/ZmPKlPtOIfZCP/xW1Ss/z6OZ/PQc0MNYFj1KMBalt6wmlE
 
             //-- Act
             var jwt = signature.Create(rsapriv, rsapub);
+            var regex = @"(^[\w-]*\.[\w-]*\.[\w-]*$)";
 
             //-- Assert
-            Assert.NotEmpty(jwt);
+            Assert.IsType<string>(jwt);
+            Assert.Matches(regex, jwt);
         }
     }
 }

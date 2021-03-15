@@ -21,12 +21,6 @@ namespace jwtPS.Class
             string token = null;
             switch (Algorithm)
             {
-                case "ES256":
-                    {
-
-
-                    }
-                    break;
                 case "RS256":
                     {
                         token = JwtBuilder.Create()
@@ -48,6 +42,15 @@ namespace jwtPS.Class
                                   .WithSecret(Secret)
                                   .AddClaims(ClaimSet)
                                   .Encode();
+            return token;
+        }
+        public string Create(ECDsa PublicKey, ECDsa PrivateKey)
+        {
+            var token = JwtBuilder.Create()
+                                          .WithAlgorithm(new ES256Algorithm(PublicKey, PrivateKey))
+                                          .AddClaims(ClaimSet)
+                                          .MustVerifySignature()
+                                          .Encode();
             return token;
         }
     }
