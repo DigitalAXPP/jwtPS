@@ -30,6 +30,24 @@ namespace jwtPS.Class
                                           .Encode();
                     }
                     break;
+                case "RS384":
+                    {
+                        token = JwtBuilder.Create()
+                                          .WithAlgorithm(new RS384Algorithm(PublicKey, PrivateKey))
+                                          .AddClaims(ClaimSet)
+                                          .MustVerifySignature()
+                                          .Encode();
+                    }
+                    break;
+                case "RS512":
+                    {
+                        token = JwtBuilder.Create()
+                                          .WithAlgorithm(new RS512Algorithm(PublicKey, PrivateKey))
+                                          .AddClaims(ClaimSet)
+                                          .MustVerifySignature()
+                                          .Encode();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -47,10 +65,10 @@ namespace jwtPS.Class
         public string Create(ECDsa PublicKey, ECDsa PrivateKey)
         {
             var token = JwtBuilder.Create()
-                                          .WithAlgorithm(new ES256Algorithm(PublicKey, PrivateKey))
-                                          .AddClaims(ClaimSet)
-                                          .MustVerifySignature()
-                                          .Encode();
+                                  .WithAlgorithm(new ES256Algorithm(PublicKey, PrivateKey))
+                                  .AddClaims(ClaimSet)
+                                  .MustVerifySignature()
+                                  .Encode();
             return token;
         }
     }
