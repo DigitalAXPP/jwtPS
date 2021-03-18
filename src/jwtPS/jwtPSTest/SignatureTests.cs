@@ -41,15 +41,21 @@ namespace jwtPSTest
                 new KeyValuePair<string, object>( "exp", DateTimeOffset.Now.AddDays(1).ToUnixTimeSeconds())
             };
             const string secret = "GQDstcKsx0NHjPOuXOYg5MbeJ1XT0uFiwDVvVBrk";
-            var signature = new Signature(payload, "HS256");
+            var signature256 = new Signature(payload, "HS256");
+            var signature384 = new Signature(payload, "HS384");
+            var signature512 = new Signature(payload, "HS512");
 
             //-- Act
-            var tokenBase64 = signature.Create(secret);
+            var token256 = signature256.Create(secret);
+            var token384 = signature384.Create(secret);
+            var token512 = signature512.Create(secret);
             var regex = @"(^[\w-]*\.[\w-]*\.[\w-]*$)";
 
             //-- Assert
-            Assert.IsType<string>(tokenBase64);
-            Assert.Matches(regex, tokenBase64);
+            Assert.IsType<string>(token256);
+            Assert.Matches(regex, token256);
+            Assert.Matches(regex, token384);
+            Assert.Matches(regex, token512);
         }
 
         [Fact]

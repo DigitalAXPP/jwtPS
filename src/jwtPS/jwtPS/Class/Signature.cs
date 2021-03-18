@@ -55,11 +55,39 @@ namespace jwtPS.Class
         }
         public string Create(string Secret)
         {
-            var token = JwtBuilder.Create()
-                                  .WithAlgorithm(new HMACSHA256Algorithm())
-                                  .WithSecret(Secret)
-                                  .AddClaims(ClaimSet)
-                                  .Encode();
+            string token = null;
+            switch (Algorithm)
+            {
+                case "HS256":
+                    {
+                        token = JwtBuilder.Create()
+                                          .WithAlgorithm(new HMACSHA256Algorithm())
+                                          .WithSecret(Secret)
+                                          .AddClaims(ClaimSet)
+                                          .Encode();
+                    }
+                    break;
+                case "HS384":
+                    {
+                        token = JwtBuilder.Create()
+                                          .WithAlgorithm(new HMACSHA384Algorithm())
+                                          .WithSecret(Secret)
+                                          .AddClaims(ClaimSet)
+                                          .Encode();
+                    }
+                    break;
+                case "HS512":
+                    {
+                        token = JwtBuilder.Create()
+                                          .WithAlgorithm(new HMACSHA512Algorithm())
+                                          .WithSecret(Secret)
+                                          .AddClaims(ClaimSet)
+                                          .Encode();
+                    }
+                    break;
+                default:
+                    break;
+            }
             return token;
         }
         public string Create(ECDsa PublicKey, ECDsa PrivateKey)
