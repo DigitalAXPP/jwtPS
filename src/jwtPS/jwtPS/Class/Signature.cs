@@ -1,5 +1,6 @@
 ﻿using JWT.Algorithms;
 using JWT.Builder;
+using jwtPS.Enum;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 
@@ -8,9 +9,9 @@ namespace jwtPS.Class
     public class Signature
     {
         public List<KeyValuePair<string, object>> ClaimSet { get; set; }
-        public string Algorithm { get; set; }
+        public Algorithm Algorithm { get; set; }
 
-        public Signature(List<KeyValuePair<string, object>> Data, string Algorithm)
+        public Signature(List<KeyValuePair<string, object>> Data, Algorithm Algorithm)
         {
             ClaimSet = Data;
             this.Algorithm = Algorithm;
@@ -26,7 +27,7 @@ namespace jwtPS.Class
             string token = null;
             switch (Algorithm)
             {
-                case "RS256":
+                case Algorithm.RS256:
                     {
                         token = JwtBuilder.Create()
                                           .WithAlgorithm(new RS256Algorithm(PublicKey, PrivateKey))
@@ -35,7 +36,7 @@ namespace jwtPS.Class
                                           .Encode();
                     }
                     break;
-                case "RS384":
+                case Algorithm.RS384:
                     {
                         token = JwtBuilder.Create()
                                           .WithAlgorithm(new RS384Algorithm(PublicKey, PrivateKey))
@@ -44,7 +45,7 @@ namespace jwtPS.Class
                                           .Encode();
                     }
                     break;
-                case "RS512":
+                case Algorithm.RS512:
                     {
                         token = JwtBuilder.Create()
                                           .WithAlgorithm(new RS512Algorithm(PublicKey, PrivateKey))
@@ -68,7 +69,7 @@ namespace jwtPS.Class
             string token = null;
             switch (Algorithm)
             {
-                case "HS256":
+                case Algorithm.HS256:
                     {
                         token = JwtBuilder.Create()
                                           .WithAlgorithm(new HMACSHA256Algorithm())
@@ -77,7 +78,7 @@ namespace jwtPS.Class
                                           .Encode();
                     }
                     break;
-                case "HS384":
+                case Algorithm.HS384:
                     {
                         token = JwtBuilder.Create()
                                           .WithAlgorithm(new HMACSHA384Algorithm())
@@ -86,7 +87,7 @@ namespace jwtPS.Class
                                           .Encode();
                     }
                     break;
-                case "HS512":
+                case Algorithm.HS512:
                     {
                         token = JwtBuilder.Create()
                                           .WithAlgorithm(new HMACSHA512Algorithm())
@@ -111,7 +112,7 @@ namespace jwtPS.Class
             string token = null;
             switch (Algorithm)
             {
-                case "ES256":
+                case Algorithm.ES256:
                     {
                         token = JwtBuilder.Create()
                                           .WithAlgorithm(new ES256Algorithm(PublicKey, PrivateKey))
@@ -120,7 +121,7 @@ namespace jwtPS.Class
                                           .Encode();
                     }
                     break;
-                case "ES384":
+                case Algorithm.ES384:
                     {
                         token = JwtBuilder.Create()
                                           .WithAlgorithm(new ES384Algorithm(PublicKey, PrivateKey))
@@ -129,7 +130,7 @@ namespace jwtPS.Class
                                           .Encode();
                     }
                     break;
-                case "ES512":
+                case Algorithm.ES512:
                     {
                         token = JwtBuilder.Create()
                                           .WithAlgorithm(new ES512Algorithm(PublicKey, PrivateKey))

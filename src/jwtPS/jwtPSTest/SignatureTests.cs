@@ -1,4 +1,5 @@
 ﻿using jwtPS.Class;
+using jwtPS.Enum;
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
@@ -22,11 +23,11 @@ namespace jwtPSTest
             };
 
             //-- Act
-            var signature = new Signature(payload, "HS256");
+            var signature = new Signature(payload, Algorithm.HS256);
 
             //-- Assert
             Assert.IsType<Signature>(signature);
-            Assert.Equal("HS256", signature.Algorithm);
+            Assert.Equal(Algorithm.HS256, signature.Algorithm);
         }
         [Fact]
         public void CreateWithHMACTest()
@@ -41,9 +42,9 @@ namespace jwtPSTest
                 new KeyValuePair<string, object>( "exp", DateTimeOffset.Now.AddDays(1).ToUnixTimeSeconds())
             };
             const string secret = "GQDstcKsx0NHjPOuXOYg5MbeJ1XT0uFiwDVvVBrk";
-            var signature256 = new Signature(payload, "HS256");
-            var signature384 = new Signature(payload, "HS384");
-            var signature512 = new Signature(payload, "HS512");
+            var signature256 = new Signature(payload, Algorithm.HS256);
+            var signature384 = new Signature(payload, Algorithm.HS384);
+            var signature512 = new Signature(payload, Algorithm.HS512);
 
             //-- Act
             var token256 = signature256.Create(secret);
@@ -112,9 +113,9 @@ I2PDI5/dlaxe2Iz9d/ZmPKlPtOIfZCP/xW1Ss/z6OZ/PQc0MNYFj1KMBalt6wmlE
             var publicKeyBytes = Convert.FromBase64String(publickey);
             using var rsapub = RSA.Create();
             rsapub.ImportSubjectPublicKeyInfo(publicKeyBytes, out _);
-            var signatureSHA256 = new Signature(payload, "RS256");
-            var signatureSHA384 = new Signature(payload, "RS384");
-            var signatureSHA512 = new Signature(payload, "RS512");
+            var signatureSHA256 = new Signature(payload, Algorithm.RS256);
+            var signatureSHA384 = new Signature(payload, Algorithm.RS384);
+            var signatureSHA512 = new Signature(payload, Algorithm.RS512);
 
             //-- Act
             var jwt256 = signatureSHA256.Create(rsapriv, rsapub);
@@ -143,7 +144,7 @@ I2PDI5/dlaxe2Iz9d/ZmPKlPtOIfZCP/xW1Ss/z6OZ/PQc0MNYFj1KMBalt6wmlE
                 new KeyValuePair<string, object>( "nbf", "0" ),
                 new KeyValuePair<string, object>( "exp", DateTimeOffset.Now.AddDays(1).ToUnixTimeSeconds())
             };
-            var signature = new Signature(payload, "ES256");
+            var signature = new Signature(payload, Algorithm.ES256);
             using var ecdsapriv = ECDsa.Create();
             var privatekey = @"MHcCAQEEIO9Xgf50T8VO6GkncN1Q2oF0kq3IBrbkI+SSphg98VE2oAoGCCqGSM49
 AwEHoUQDQgAEN9S07l/929SmRhf0yTvTykjwJd/QJXARITRQ5B8e00aSKR7uuguy
@@ -177,7 +178,7 @@ JXARITRQ5B8e00aSKR7uuguyfeGQEbNDmL21aAhy7RqmQBhx3ZcO71apFA==";
                 new KeyValuePair<string, object>( "nbf", "0" ),
                 new KeyValuePair<string, object>( "exp", DateTimeOffset.Now.AddDays(1).ToUnixTimeSeconds())
             };
-            var signature = new Signature(payload, "ES384");
+            var signature = new Signature(payload, Algorithm.ES384);
             using var ecdsapriv = ECDsa.Create();
             var privatekey = @"MIGkAgEBBDDIBWp8sZe1ff5kmLHS3RFd1pHxOimPnO1vfrydzlm8UlYNBFnj0lrI
 CoTPd1tg8HugBwYFK4EEACKhZANiAARtMhih0x3xd4OaZKXw64GApFQv2tPylyao
@@ -213,7 +214,7 @@ qN4KXMW6utqOqNLJO9+CjsCUypDlQRJTiZQFkbZKZQXPVJEu8EL+86OXAcAztL/p
                 new KeyValuePair<string, object>( "nbf", "0" ),
                 new KeyValuePair<string, object>( "exp", DateTimeOffset.Now.AddDays(1).ToUnixTimeSeconds())
             };
-            var signature = new Signature(payload, "ES512");
+            var signature = new Signature(payload, Algorithm.ES512);
             using var ecdsapriv = ECDsa.Create();
             var privatekey = @"MIHcAgEBBEIB383k8S7qBj3/wbufXKbnuXKVLhlZ+Rpzeox3Dc9phmLaKHKggePA
 SivMyCaR7MZMWsYJ5UdG/covRbXxuQaenQqgBwYFK4EEACOhgYkDgYYABAFBKL3L
