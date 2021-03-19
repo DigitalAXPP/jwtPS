@@ -29,7 +29,7 @@ namespace jwtPSTest
             Assert.Equal("HS256", signature.Algorithm);
         }
         [Fact]
-        public void CreateJWTwithHMACTest()
+        public void CreateWithHMACTest()
         {
             //-- Arrange
             var payload = new List<KeyValuePair<string, object>>()
@@ -59,7 +59,7 @@ namespace jwtPSTest
         }
 
         [Fact]
-        public void CreatewithRSA()
+        public void CreatewithRSATest()
         {
             //-- Arrange
             var payload = new List<KeyValuePair<string, object>>()
@@ -132,7 +132,7 @@ I2PDI5/dlaxe2Iz9d/ZmPKlPtOIfZCP/xW1Ss/z6OZ/PQc0MNYFj1KMBalt6wmlE
         }
 
         [Fact]
-        public void CreateJWTwithECDSA()
+        public void CreateWithECDSA256Test()
         {
             //-- Arrange
             var payload = new List<KeyValuePair<string, object>>()
@@ -158,9 +158,85 @@ JXARITRQ5B8e00aSKR7uuguyfeGQEbNDmL21aAhy7RqmQBhx3ZcO71apFA==";
 
             //-- Act
             var jwt = signature.Create(ecdsapub, ecdsapriv);
+            var regex = @"(^[\w-]*\.[\w-]*\.[\w-]*$)";
 
             //-- Assert
-            Assert.NotEmpty(jwt);
+            Assert.IsType<string>(jwt);
+            Assert.Matches(regex, jwt);
+        }
+
+        [Fact]
+        public void CreateWithECDSA384Test()
+        {
+            //-- Arrange
+            var payload = new List<KeyValuePair<string, object>>()
+            {
+                new KeyValuePair<string, object>( "aud", "jwtPS" ),
+                new KeyValuePair<string, object>( "iss", "DigitalAXPP" ),
+                new KeyValuePair<string, object>( "sub", "RS256 Test" ),
+                new KeyValuePair<string, object>( "nbf", "0" ),
+                new KeyValuePair<string, object>( "exp", DateTimeOffset.Now.AddDays(1).ToUnixTimeSeconds())
+            };
+            var signature = new Signature(payload, "ES384");
+            using var ecdsapriv = ECDsa.Create();
+            var privatekey = @"MIGkAgEBBDDIBWp8sZe1ff5kmLHS3RFd1pHxOimPnO1vfrydzlm8UlYNBFnj0lrI
+CoTPd1tg8HugBwYFK4EEACKhZANiAARtMhih0x3xd4OaZKXw64GApFQv2tPylyao
+3gpcxbq62o6o0sk734KOwJTKkOVBElOJlAWRtkplBc9UkS7wQv7zo5cBwDO0v+nt
+EzDFGAoqOg1lfMW22hDoyMCGywxdGhs=";
+            var privbytes = Convert.FromBase64String(privatekey);
+            ecdsapriv.ImportECPrivateKey(privbytes, out _);
+            var publickey = @"MHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEbTIYodMd8XeDmmSl8OuBgKRUL9rT8pcm
+qN4KXMW6utqOqNLJO9+CjsCUypDlQRJTiZQFkbZKZQXPVJEu8EL+86OXAcAztL/p
+7RMwxRgKKjoNZXzFttoQ6MjAhssMXRob";
+            var pubbytes = Convert.FromBase64String(publickey);
+            using var ecdsapub = ECDsa.Create();
+            ecdsapub.ImportSubjectPublicKeyInfo(pubbytes, out _);
+
+            //-- Act
+            var jwt = signature.Create(ecdsapub, ecdsapriv);
+            var regex = @"(^[\w-]*\.[\w-]*\.[\w-]*$)";
+
+            //-- Assert
+            Assert.IsType<string>(jwt);
+            Assert.Matches(regex, jwt);
+        }
+
+        [Fact]
+        public void CreateWithECDSA512Test()
+        {
+            //-- Arrange
+            var payload = new List<KeyValuePair<string, object>>()
+            {
+                new KeyValuePair<string, object>( "aud", "jwtPS" ),
+                new KeyValuePair<string, object>( "iss", "DigitalAXPP" ),
+                new KeyValuePair<string, object>( "sub", "RS256 Test" ),
+                new KeyValuePair<string, object>( "nbf", "0" ),
+                new KeyValuePair<string, object>( "exp", DateTimeOffset.Now.AddDays(1).ToUnixTimeSeconds())
+            };
+            var signature = new Signature(payload, "ES512");
+            using var ecdsapriv = ECDsa.Create();
+            var privatekey = @"MIHcAgEBBEIB383k8S7qBj3/wbufXKbnuXKVLhlZ+Rpzeox3Dc9phmLaKHKggePA
+SivMyCaR7MZMWsYJ5UdG/covRbXxuQaenQqgBwYFK4EEACOhgYkDgYYABAFBKL3L
+sMgI9Xc443ef8I63bS5hz703VtroGvOBQv4zuY2V8y3amqdgjas7FQlI4ZNQBohs
+LHIRTaJy/uqpi3T3JAHLriR1QzEQ5S/WUiKx0iPUcM6ItuMaByaZGb11YMw/ygIy
++mpcE0LEEtuVsSuzuSSc5nnvgreD6h+mhHzKNxVOog==";
+            var privbytes = Convert.FromBase64String(privatekey);
+            ecdsapriv.ImportECPrivateKey(privbytes, out _);
+            var publickey = @"MIGbMBAGByqGSM49AgEGBSuBBAAjA4GGAAQBQSi9y7DICPV3OON3n/COt20uYc+9
+N1ba6BrzgUL+M7mNlfMt2pqnYI2rOxUJSOGTUAaIbCxyEU2icv7qqYt09yQBy64k
+dUMxEOUv1lIisdIj1HDOiLbjGgcmmRm9dWDMP8oCMvpqXBNCxBLblbErs7kknOZ5
+74K3g+ofpoR8yjcVTqI=";
+            var pubbytes = Convert.FromBase64String(publickey);
+            using var ecdsapub = ECDsa.Create();
+            ecdsapub.ImportSubjectPublicKeyInfo(pubbytes, out _);
+
+            //-- Act
+            var jwt = signature.Create(ecdsapub, ecdsapriv);
+            var regex = @"(^[\w-]*\.[\w-]*\.[\w-]*$)";
+
+            //-- Assert
+            Assert.IsType<string>(jwt);
+            Assert.Matches(regex, jwt);
         }
     }
 }

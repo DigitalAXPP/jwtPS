@@ -92,11 +92,40 @@ namespace jwtPS.Class
         }
         public string Create(ECDsa PublicKey, ECDsa PrivateKey)
         {
-            var token = JwtBuilder.Create()
-                                  .WithAlgorithm(new ES256Algorithm(PublicKey, PrivateKey))
-                                  .AddClaims(ClaimSet)
-                                  .MustVerifySignature()
-                                  .Encode();
+            string token = null;
+            switch (Algorithm)
+            {
+                case "ES256":
+                    {
+                        token = JwtBuilder.Create()
+                                          .WithAlgorithm(new ES256Algorithm(PublicKey, PrivateKey))
+                                          .AddClaims(ClaimSet)
+                                          .MustVerifySignature()
+                                          .Encode();
+                    }
+                    break;
+                case "ES384":
+                    {
+                        token = JwtBuilder.Create()
+                                          .WithAlgorithm(new ES384Algorithm(PublicKey, PrivateKey))
+                                          .AddClaims(ClaimSet)
+                                          .MustVerifySignature()
+                                          .Encode();
+                    }
+                    break;
+                case "ES512":
+                    {
+                        token = JwtBuilder.Create()
+                                          .WithAlgorithm(new ES512Algorithm(PublicKey, PrivateKey))
+                                          .AddClaims(ClaimSet)
+                                          .MustVerifySignature()
+                                          .Encode();
+                    }
+                    break;
+                default:
+                    break;
+            }
+
             return token;
         }
     }
