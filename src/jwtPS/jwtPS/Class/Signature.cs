@@ -15,7 +15,12 @@ namespace jwtPS.Class
             ClaimSet = Data;
             this.Algorithm = Algorithm;
         }
-
+        /// <summary>
+        /// The method returns a JWT with an RSA key pair.
+        /// </summary>
+        /// <param name="PrivateKey"></param>
+        /// <param name="PublicKey"></param>
+        /// <returns>string</returns>
         public string Create(RSA PrivateKey, RSA PublicKey)
         {
             string token = null;
@@ -53,6 +58,11 @@ namespace jwtPS.Class
             }
             return token;
         }
+        /// <summary>
+        /// This method returns a JWT with an HMAC signature. Create a secret which will be used for encryption and decryption
+        /// </summary>
+        /// <param name="Secret"></param>
+        /// <returns>string</returns>
         public string Create(string Secret)
         {
             string token = null;
@@ -90,6 +100,12 @@ namespace jwtPS.Class
             }
             return token;
         }
+        /// <summary>
+        /// This method returns a JWT with an ECDsa key pair.
+        /// </summary>
+        /// <param name="PublicKey"></param>
+        /// <param name="PrivateKey"></param>
+        /// <returns>string</returns>
         public string Create(ECDsa PublicKey, ECDsa PrivateKey)
         {
             string token = null;

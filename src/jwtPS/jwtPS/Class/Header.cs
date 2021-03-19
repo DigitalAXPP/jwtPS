@@ -14,7 +14,10 @@ namespace jwtPS.Class
         {
             alg = Algorithm;
         }
-
+        /// <summary>
+        /// This methods returns the JWT header encrypted in Base 64.
+        /// </summary>
+        /// <returns>string</returns>
         public string Create()
         {
             var dict = new Dictionary<string, string>()
