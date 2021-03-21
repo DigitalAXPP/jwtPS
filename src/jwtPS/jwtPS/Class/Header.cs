@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using jwtPS.Enum;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,9 +9,9 @@ namespace jwtPS.Class
     public class Header
     {
         const string typ = "JWT";
-        private string alg { get; set; }
+        private Algorithm alg { get; set; }
 
-        public Header(string Algorithm)
+        public Header(Algorithm Algorithm)
         {
             alg = Algorithm;
         }
@@ -20,7 +21,7 @@ namespace jwtPS.Class
         /// <returns>string</returns>
         public string Create()
         {
-            var dict = new Dictionary<string, string>()
+            var dict = new Dictionary<string, object>()
             {
                 { "typ", typ },
                 { "alg", alg }

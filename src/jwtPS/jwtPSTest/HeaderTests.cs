@@ -1,4 +1,5 @@
 using jwtPS.Class;
+using jwtPS.Enum;
 using Xunit;
 
 namespace jwtPSTest
@@ -9,7 +10,7 @@ namespace jwtPSTest
         public void CreateTest()
         {
             //-- Arrange
-            var jwt = new Header("HS256");
+            var jwt = new Header(Algorithm.HS256);
 
             //-- Act
             var header = jwt.Create();
