@@ -13,13 +13,13 @@ namespace jwtPSTest
         public void ConstructorTest()
         {
             //-- Arrange
-            var payload = new List<KeyValuePair<string, object>>()
+            var payload = new Dictionary<string, object>()
             {
-                new KeyValuePair<string, object>( "aud", "jwtPS" ),
-                new KeyValuePair<string, object>( "iss", "DigitalAXPP" ),
-                new KeyValuePair<string, object>( "sub", "RS256 Test" ),
-                new KeyValuePair<string, object>( "nbf", "0" ),
-                new KeyValuePair<string, object>( "exp", DateTime.Today.AddDays(1))
+                { "aud", "jwtPS" },
+                { "iss", "DigitalAXPP" },
+                { "sub", "RS256 Test" },
+                { "nbf", "0" },
+                { "exp", DateTime.Today.AddDays(1) }
             };
 
             //-- Act
@@ -33,13 +33,13 @@ namespace jwtPSTest
         public void CreateWithHMACTest()
         {
             //-- Arrange
-            var payload = new List<KeyValuePair<string, object>>()
+            var payload = new Dictionary<string, object>()
             {
-                new KeyValuePair<string, object>( "aud", "jwtPS" ),
-                new KeyValuePair<string, object>( "iss", "DigitalAXPP" ),
-                new KeyValuePair<string, object>( "sub", "RS256 Test" ),
-                new KeyValuePair<string, object>( "nbf", "0" ),
-                new KeyValuePair<string, object>( "exp", DateTimeOffset.Now.AddDays(1).ToUnixTimeSeconds())
+                { "aud", "jwtPS" },
+                { "iss", "DigitalAXPP" },
+                { "sub", "RS256 Test" },
+                { "nbf", "0" },
+                { "exp", DateTime.Today.AddDays(1) }
             };
             const string secret = "GQDstcKsx0NHjPOuXOYg5MbeJ1XT0uFiwDVvVBrk";
             var signature256 = new Signature(payload, Algorithm.HS256);
@@ -63,13 +63,13 @@ namespace jwtPSTest
         public void CreatewithRSATest()
         {
             //-- Arrange
-            var payload = new List<KeyValuePair<string, object>>()
+            var payload = new Dictionary<string, object>()
             {
-                new KeyValuePair<string, object>( "aud", "jwtPS" ),
-                new KeyValuePair<string, object>( "iss", "DigitalAXPP" ),
-                new KeyValuePair<string, object>( "sub", "RS256 Test" ),
-                new KeyValuePair<string, object>( "nbf", "0" ),
-                new KeyValuePair<string, object>( "exp", DateTimeOffset.Now.AddDays(1).ToUnixTimeSeconds())
+                { "aud", "jwtPS" },
+                { "iss", "DigitalAXPP" },
+                { "sub", "RS256 Test" },
+                { "nbf", "0" },
+                { "exp", DateTime.Today.AddDays(1) }
             };
             var privatekey = @"
 MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC4yIC+wJeDpeBr
@@ -136,13 +136,13 @@ I2PDI5/dlaxe2Iz9d/ZmPKlPtOIfZCP/xW1Ss/z6OZ/PQc0MNYFj1KMBalt6wmlE
         public void CreateWithECDSA256Test()
         {
             //-- Arrange
-            var payload = new List<KeyValuePair<string, object>>()
+            var payload = new Dictionary<string, object>()
             {
-                new KeyValuePair<string, object>( "aud", "jwtPS" ),
-                new KeyValuePair<string, object>( "iss", "DigitalAXPP" ),
-                new KeyValuePair<string, object>( "sub", "RS256 Test" ),
-                new KeyValuePair<string, object>( "nbf", "0" ),
-                new KeyValuePair<string, object>( "exp", DateTimeOffset.Now.AddDays(1).ToUnixTimeSeconds())
+                { "aud", "jwtPS" },
+                { "iss", "DigitalAXPP" },
+                { "sub", "RS256 Test" },
+                { "nbf", "0" },
+                { "exp", DateTime.Today.AddDays(1) }
             };
             var signature = new Signature(payload, Algorithm.ES256);
             using var ecdsapriv = ECDsa.Create();
@@ -170,13 +170,13 @@ JXARITRQ5B8e00aSKR7uuguyfeGQEbNDmL21aAhy7RqmQBhx3ZcO71apFA==";
         public void CreateWithECDSA384Test()
         {
             //-- Arrange
-            var payload = new List<KeyValuePair<string, object>>()
+            var payload = new Dictionary<string, object>()
             {
-                new KeyValuePair<string, object>( "aud", "jwtPS" ),
-                new KeyValuePair<string, object>( "iss", "DigitalAXPP" ),
-                new KeyValuePair<string, object>( "sub", "RS256 Test" ),
-                new KeyValuePair<string, object>( "nbf", "0" ),
-                new KeyValuePair<string, object>( "exp", DateTimeOffset.Now.AddDays(1).ToUnixTimeSeconds())
+                { "aud", "jwtPS" },
+                { "iss", "DigitalAXPP" },
+                { "sub", "RS256 Test" },
+                { "nbf", "0" },
+                { "exp", DateTime.Today.AddDays(1) }
             };
             var signature = new Signature(payload, Algorithm.ES384);
             using var ecdsapriv = ECDsa.Create();
@@ -206,13 +206,13 @@ qN4KXMW6utqOqNLJO9+CjsCUypDlQRJTiZQFkbZKZQXPVJEu8EL+86OXAcAztL/p
         public void CreateWithECDSA512Test()
         {
             //-- Arrange
-            var payload = new List<KeyValuePair<string, object>>()
+            var payload = new Dictionary<string, object>()
             {
-                new KeyValuePair<string, object>( "aud", "jwtPS" ),
-                new KeyValuePair<string, object>( "iss", "DigitalAXPP" ),
-                new KeyValuePair<string, object>( "sub", "RS256 Test" ),
-                new KeyValuePair<string, object>( "nbf", "0" ),
-                new KeyValuePair<string, object>( "exp", DateTimeOffset.Now.AddDays(1).ToUnixTimeSeconds())
+                { "aud", "jwtPS" },
+                { "iss", "DigitalAXPP" },
+                { "sub", "RS256 Test" },
+                { "nbf", "0" },
+                { "exp", DateTime.Today.AddDays(1) }
             };
             var signature = new Signature(payload, Algorithm.ES512);
             using var ecdsapriv = ECDsa.Create();

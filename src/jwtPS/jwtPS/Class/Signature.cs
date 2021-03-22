@@ -8,10 +8,10 @@ namespace jwtPS.Class
 {
     public class Signature
     {
-        public List<KeyValuePair<string, object>> ClaimSet { get; set; }
+        public Dictionary<string, object> ClaimSet { get; set; }
         public Algorithm Algorithm { get; set; }
 
-        public Signature(List<KeyValuePair<string, object>> Data, Algorithm Algorithm)
+        public Signature(Dictionary<string, object> Data, Algorithm Algorithm)
         {
             ClaimSet = Data;
             this.Algorithm = Algorithm;
