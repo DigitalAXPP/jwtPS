@@ -11,6 +11,7 @@ namespace jwtPS.Class
         public Dictionary<string, object> ClaimSet { get; set; }
         public Algorithm Algorithm { get; set; }
 
+
         public Signature(Dictionary<string, object> Data, Algorithm Algorithm)
         {
             ClaimSet = Data;
