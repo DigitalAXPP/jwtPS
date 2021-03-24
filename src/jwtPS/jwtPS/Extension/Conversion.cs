@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace jwtPS.Extension
 {
-    public static class Extensions
+    public static class Conversion
     {
         public static Dictionary<K, V> ToDictionary<K, V>(this Hashtable Table)
         {
