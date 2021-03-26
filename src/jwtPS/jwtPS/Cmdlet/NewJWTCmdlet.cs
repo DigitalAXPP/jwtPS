@@ -26,6 +26,8 @@ namespace jwtPS
             //var claimset = new Claimset().Create(Payload);
             var claim = Conversion.ToDictionary<string, object>(Payload);
             var jwt = new Signature(claim, Algorithm);
+            var rsapriv = Conversion.ToRSA(Privatekey);
+            var rsapub = Conversion.ToRSA(Publickey);
             string token = null;
             switch (Algorithm)
             {
@@ -40,8 +42,9 @@ namespace jwtPS
                 case Algorithm.RS384:
                 case Algorithm.RS512:
                     {
-                        token = jwt.Create(Publickey, Privatekey);
+                        token = jwt.Create(rsapriv, rsapub);
                     }
+                    break;
                 default:
                     break;
             }

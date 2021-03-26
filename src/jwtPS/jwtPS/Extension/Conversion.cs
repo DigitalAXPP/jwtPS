@@ -19,6 +19,7 @@ namespace jwtPS.Extension
             var bytes = Convert.FromBase64String(Key);
             using var rsa = RSA.Create();
             rsa.ImportPkcs8PrivateKey(bytes, out _);
+            return rsa;
         }
     }
 }
