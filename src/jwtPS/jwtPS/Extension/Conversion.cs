@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text.RegularExpressions;
 
 namespace jwtPS.Extension
 {
@@ -16,7 +17,9 @@ namespace jwtPS.Extension
         }
         public static RSA ToRSA(this string Key)
         {
-            var bytes = Convert.FromBase64String(Key);
+            var regex = @"(-----(BEGIN|END) \w* \w* KEY-----)|(-----(BEGIN|END) \w* KEY-----)";
+            var cleankey = Regex.Replace(Key, regex, string.Empty);
+            var bytes = Convert.FromBase64String(cleankey);
             using var rsa = RSA.Create();
             rsa.ImportPkcs8PrivateKey(bytes, out _);
             return rsa;
