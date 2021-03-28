@@ -28,7 +28,7 @@ namespace jwtPSTest
         }
 
         [Fact]
-        public void ToRSATest()
+        public void ToRSAPrivatekeyTest()
         {
             //-- Arrange
             var key = @"-----BEGIN PRIVATE KEY-----
@@ -59,6 +59,27 @@ tDkhw/OqDoDPCcNdXlAtc7IvBHj55CCp63HFphkCgYEA3eHDbrPLKZToKvcJ7TI4
 ddtmbgQcESw40/0fvd2NRABSZ/xbrKCFRiG6od0y9WSw1Kl0chMLlWhN1osbqbXZ
 5h9Ey+dTqd9d5+lIRxlBjoQ=
 -----END PRIVATE KEY-----";
+
+            //-- Act
+            var rsa = Conversion.ToRSA(key);
+
+            //-- Assert
+            Assert.IsAssignableFrom<RSA>(rsa);
+        }
+
+        [Fact]
+        public void ToRSAPublickeyTest()
+        {
+            //-- Arrange
+            var key = @"-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuMiAvsCXg6Xga/0bl8gj
+bgGT4/6kgmgSFfaq9MozVelSbB9lC3b7/aklk73I2tsDAs3GDVArZcBS58AiGoT+
+6yogfIzLKzjYbm9al9e+WdV408TbqyER7eb+Z7rjsTvAJnKbSq7SRm72/ED0OvgQ
+iXXPjP95EWAwD4o7tIlJlgr3iuQ8E56K5Hr8nsRFUVLKCJDIQVcw+i2cv2zrnKeK
+Au7Fyfxx2ifP9/4uh3pIjz3vdMO0MyeVJ/88ZcGwndE+T5t9wcEvzJ4/3sWW3sOa
+I2PDI5/dlaxe2Iz9d/ZmPKlPtOIfZCP/xW1Ss/z6OZ/PQc0MNYFj1KMBalt6wmlE
+8QIDAQAB
+-----END PUBLIC KEY-----";
 
             //-- Act
             var rsa = Conversion.ToRSA(key);

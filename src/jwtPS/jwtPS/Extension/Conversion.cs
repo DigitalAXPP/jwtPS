@@ -21,8 +21,20 @@ namespace jwtPS.Extension
             var cleankey = Regex.Replace(Key, regex, string.Empty);
             var bytes = Convert.FromBase64String(cleankey);
             using var rsa = RSA.Create();
-            rsa.ImportPkcs8PrivateKey(bytes, out _);
-            return rsa;
+            if (Key.Contains("PUBLIC"))
+            {
+                rsa.ImportSubjectPublicKeyInfo(bytes, out _);
+                return rsa;
+            }
+            else if (Key.Contains("PRIVATE"))
+            {
+                rsa.ImportPkcs8PrivateKey(bytes, out _);
+                return rsa;
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException("The string cannot be classified as either private or public key.");
+            }
         }
     }
 }
