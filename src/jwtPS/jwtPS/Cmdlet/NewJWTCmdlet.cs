@@ -48,7 +48,7 @@ namespace jwtPS
                 default:
                     break;
             }
-            WriteObject(claim);
+            WriteObject(token);
         }
     }
 }
