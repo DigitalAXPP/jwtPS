@@ -1,7 +1,8 @@
-﻿using jwtPS;
-using jwtPS.Enum;
+﻿using jwtPS.Enum;
+using jwtPS.PwShCmdlet;
 using System;
 using System.Collections;
+using System.Linq;
 using Xunit;
 
 namespace jwtPSTest
@@ -27,10 +28,12 @@ namespace jwtPSTest
             };
 
             //-- Act
-            var result = cmdlet.Invoke();
+            var result = cmdlet.Invoke().OfType<string>().ToList();
+            var regex = @"(^[\w-]*\.[\w-]*\.[\w-]*$)";
 
             //-- Assert
-            Assert.NotNull(result);
+            Assert.IsType<string>(result[0]);
+            Assert.Matches(regex, result[0]);
         }
     }
 }

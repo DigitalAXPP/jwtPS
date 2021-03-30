@@ -1,9 +1,9 @@
 ﻿using System.Management.Automation;
 
-namespace jwtPS.Cmdlet
+namespace jwtPS.PwShCmdlet
 {
     [Cmdlet(VerbsData.ConvertFrom, "JWT")]
-    public class ConvertFromJWTCmdlet : PSCmdlet
+    public class ConvertFromJWTCmdlet : Cmdlet
     {
     }
 }

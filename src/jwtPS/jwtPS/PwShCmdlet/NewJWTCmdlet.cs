@@ -4,10 +4,11 @@ using System.Collections;
 using System.Management.Automation;
 using Signature = jwtPS.Class.Signature;
 
-namespace jwtPS
+namespace jwtPS.PwShCmdlet
 {
     [Cmdlet(VerbsCommon.New, "JWT")]
-    public class NewJWTCmdlet : PSCmdlet
+    [OutputType(typeof(string))]
+    public class NewJWTCmdlet : Cmdlet
     {
         [Parameter(HelpMessage = "Enter the private key.")]
         public string Privatekey { get; set; }
@@ -26,8 +27,6 @@ namespace jwtPS
             //var claimset = new Claimset().Create(Payload);
             var claim = Conversion.ToDictionary<string, object>(Payload);
             var jwt = new Signature(claim, Algorithm);
-            var rsapriv = Conversion.ToRSA(Privatekey);
-            var rsapub = Conversion.ToRSA(Publickey);
             string token = null;
             switch (Algorithm)
             {
@@ -42,6 +41,8 @@ namespace jwtPS
                 case Algorithm.RS384:
                 case Algorithm.RS512:
                     {
+                        var rsapriv = Conversion.ToRSA(Privatekey);
+                        var rsapub = Conversion.ToRSA(Publickey);
                         token = jwt.Create(rsapriv, rsapub);
                     }
                     break;
