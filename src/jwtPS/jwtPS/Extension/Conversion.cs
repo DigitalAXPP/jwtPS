@@ -20,7 +20,7 @@ namespace jwtPS.Extension
             var regex = @"(-----(BEGIN|END) \w* \w* KEY-----)|(-----(BEGIN|END) \w* KEY-----)";
             var cleankey = Regex.Replace(Key, regex, string.Empty);
             var bytes = Convert.FromBase64String(cleankey);
-            using var rsa = RSA.Create();
+            var rsa = RSA.Create();
             if (Key.Contains("PUBLIC"))
             {
                 rsa.ImportSubjectPublicKeyInfo(bytes, out _);
