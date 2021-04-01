@@ -58,6 +58,8 @@ namespace jwtPS.Class
                 default:
                     break;
             }
+            PublicKey.Dispose();
+            PrivateKey.Dispose();
             return token;
         }
         /// <summary>

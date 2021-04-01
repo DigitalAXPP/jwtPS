@@ -87,5 +87,23 @@ I2PDI5/dlaxe2Iz9d/ZmPKlPtOIfZCP/xW1Ss/z6OZ/PQc0MNYFj1KMBalt6wmlE
             //-- Assert
             Assert.IsAssignableFrom<RSA>(rsa);
         }
+
+        [Fact]
+        public void ToECDsa384PublickeyTest()
+        {
+            //-- Arrange
+            var key = @"-----BEGIN EC PRIVATE KEY-----
+MIGkAgEBBDDIBWp8sZe1ff5kmLHS3RFd1pHxOimPnO1vfrydzlm8UlYNBFnj0lrI
+CoTPd1tg8HugBwYFK4EEACKhZANiAARtMhih0x3xd4OaZKXw64GApFQv2tPylyao
+3gpcxbq62o6o0sk734KOwJTKkOVBElOJlAWRtkplBc9UkS7wQv7zo5cBwDO0v+nt
+EzDFGAoqOg1lfMW22hDoyMCGywxdGhs=
+-----END EC PRIVATE KEY-----";
+
+            //-- Act
+            var ecdsa = Conversion.ToECDsa(key);
+
+            //-- Assert
+            Assert.IsAssignableFrom<ECDsa>(ecdsa);
+        }
     }
 }

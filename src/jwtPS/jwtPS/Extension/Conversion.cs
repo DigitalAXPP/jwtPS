@@ -36,5 +36,26 @@ namespace jwtPS.Extension
                 throw new ArgumentOutOfRangeException("The string cannot be classified as either private or public key.");
             }
         }
+        public static ECDsa ToECDsa(this string Key)
+        {
+            var regex = @"(-----(BEGIN|END) \w* \w* KEY-----)|(-----(BEGIN|END) \w* KEY-----)";
+            var cleankey = Regex.Replace(Key, regex, string.Empty);
+            var bytes = Convert.FromBase64String(cleankey);
+            var ecdsa = ECDsa.Create();
+            if (Key.Contains("PUBLIC"))
+            {
+                ecdsa.ImportSubjectPublicKeyInfo(bytes, out _);
+                return ecdsa;
+            }
+            else if (Key.Contains("PRIVATE"))
+            {
+                ecdsa.ImportPkcs8PrivateKey(bytes, out _);
+                return ecdsa;
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException("The string cannot be classified as either private or public key.");
+            }
+        }
     }
 }

@@ -23,8 +23,6 @@ namespace jwtPS.PwShCmdlet
         protected override void ProcessRecord()
         {
             base.ProcessRecord();
-            //var header = new Header(Algorithm).Create();
-            //var claimset = new Claimset().Create(Payload);
             var claim = Conversion.ToDictionary<string, object>(Payload);
             var jwt = new Signature(claim, Algorithm);
             string token = null;
@@ -44,6 +42,15 @@ namespace jwtPS.PwShCmdlet
                         var rsapriv = Conversion.ToRSA(Privatekey);
                         var rsapub = Conversion.ToRSA(Publickey);
                         token = jwt.Create(rsapriv, rsapub);
+                    }
+                    break;
+                case Algorithm.ES256:
+                case Algorithm.ES384:
+                case Algorithm.ES512:
+                    {
+                        var ecdsapriv = Conversion.ToRSA(Privatekey);
+                        var ecdsapub = Conversion.ToRSA(Publickey);
+                        token = jwt.Create(ecdsapub, ecdsapriv);
                     }
                     break;
                 default:
