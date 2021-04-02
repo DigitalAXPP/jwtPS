@@ -49,7 +49,7 @@ namespace jwtPS.Extension
             }
             else if (Key.Contains("PRIVATE"))
             {
-                ecdsa.ImportPkcs8PrivateKey(bytes, out _);
+                ecdsa.ImportECPrivateKey(bytes, out _);
                 return ecdsa;
             }
             else

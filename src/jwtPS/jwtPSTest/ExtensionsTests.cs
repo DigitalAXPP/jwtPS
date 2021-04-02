@@ -87,9 +87,11 @@ I2PDI5/dlaxe2Iz9d/ZmPKlPtOIfZCP/xW1Ss/z6OZ/PQc0MNYFj1KMBalt6wmlE
             //-- Assert
             Assert.IsAssignableFrom<RSA>(rsa);
         }
-
+        /// <summary>
+        /// This test uses an ES384 private key.
+        /// </summary>
         [Fact]
-        public void ToECDsa384PublickeyTest()
+        public void ToECDsaPrivatekeyTest()
         {
             //-- Arrange
             var key = @"-----BEGIN EC PRIVATE KEY-----
@@ -98,6 +100,25 @@ CoTPd1tg8HugBwYFK4EEACKhZANiAARtMhih0x3xd4OaZKXw64GApFQv2tPylyao
 3gpcxbq62o6o0sk734KOwJTKkOVBElOJlAWRtkplBc9UkS7wQv7zo5cBwDO0v+nt
 EzDFGAoqOg1lfMW22hDoyMCGywxdGhs=
 -----END EC PRIVATE KEY-----";
+
+            //-- Act
+            var ecdsa = Conversion.ToECDsa(key);
+
+            //-- Assert
+            Assert.IsAssignableFrom<ECDsa>(ecdsa);
+        }
+        /// <summary>
+        /// This test uses an ES384 public key.
+        /// </summary>
+        [Fact]
+        public void ToECDsaPublickeyTest()
+        {
+            //-- Arrange
+            var key = @"-----BEGIN PUBLIC KEY-----
+MHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEfLxMoGVLJr4e4r/ZK2SUnT7vFauxSRPU
+l6S+2JI3lVFxPChZMzSJju+jnkVAQ1QlxMhg8rt2ecp+ZBaC8zuoaFmThNQo+SFT
+oGZhmXD3iid6G+xQ3aZCjoo5R6p0ilC3
+-----END PUBLIC KEY-----";
 
             //-- Act
             var ecdsa = Conversion.ToECDsa(key);

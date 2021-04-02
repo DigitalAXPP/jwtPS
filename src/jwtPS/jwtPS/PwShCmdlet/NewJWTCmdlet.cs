@@ -48,8 +48,8 @@ namespace jwtPS.PwShCmdlet
                 case Algorithm.ES384:
                 case Algorithm.ES512:
                     {
-                        var ecdsapriv = Conversion.ToRSA(Privatekey);
-                        var ecdsapub = Conversion.ToRSA(Publickey);
+                        var ecdsapriv = Conversion.ToECDsa(Privatekey);
+                        var ecdsapub = Conversion.ToECDsa(Publickey);
                         token = jwt.Create(ecdsapub, ecdsapriv);
                     }
                     break;
