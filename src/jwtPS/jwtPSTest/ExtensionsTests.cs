@@ -126,5 +126,19 @@ oGZhmXD3iid6G+xQ3aZCjoo5R6p0ilC3
             //-- Assert
             Assert.IsAssignableFrom<ECDsa>(ecdsa);
         }
+
+        [Fact]
+        public void FromBase64Test()
+        {
+            //-- Arrange
+            var base64 = "V2VsY29tZSB0byB0aGUgand0UFMgbW9kdWxlIQ==";
+
+            //-- Act
+            var expected = "Welcome to the jwtPS module!";
+            var actual = Conversion.FromBase64(base64);
+
+            //-- Assert
+            Assert.Equal(expected, actual);
+        }
     }
 }
