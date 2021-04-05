@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.Json;
 using System.Text.RegularExpressions;
 
 namespace jwtPS.Extension
@@ -81,7 +80,7 @@ namespace jwtPS.Extension
         /// </summary>
         /// <param name="Input"></param>
         /// <returns>String</returns>
-        public static object FromBase64(this string Input)
+        public static string FromBase64(this string Input)
         {
             var base64 = Input.Replace('-', '+').Replace('_', '/');
             switch (base64.Length % 4)
@@ -104,15 +103,7 @@ namespace jwtPS.Extension
                 default:
                     break;
             }
-            var decode = Encoding.UTF8.GetString(Convert.FromBase64String(base64));
-            byte[] jsonUtf8Bytes;
-            var options = new JsonSerializerOptions
-            {
-                WriteIndented = true
-            };
-            jsonUtf8Bytes = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(decode, options);
-            return Encoding.UTF8.GetString(jsonUtf8Bytes);
-            //return JsonConvert.DeserializeObject(decode);
+            return Encoding.UTF8.GetString(Convert.FromBase64String(base64));
         }
     }
 }
