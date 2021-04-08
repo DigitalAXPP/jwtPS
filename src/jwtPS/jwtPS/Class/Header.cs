@@ -9,7 +9,7 @@ namespace jwtPS.Class
     public class Header
     {
         const string typ = "JWT";
-        private Algorithm alg { get; set; }
+        internal Algorithm alg { get; set; }
 
         public Header(Algorithm Algorithm)
         {
