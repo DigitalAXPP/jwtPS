@@ -13,6 +13,10 @@ namespace jwtPS.PwShCmdlet
         public string JWT { get; set; }
         [Parameter(HelpMessage = "Enter the secret.")]
         public string Secret { get; set; }
+        [Parameter(HelpMessage = "Enter the public key.")]
+        public string Publickey { get; set; }
+        [Parameter(HelpMessage = "Enter the private key.")]
+        public string Privatekey { get; set; }
 
         protected override void ProcessRecord()
         {
@@ -50,10 +54,34 @@ namespace jwtPS.PwShCmdlet
                     }
                     break;
                 case "RS256":
+                    {
+                        var pubkey = Conversion.ToRSA(Publickey);
+                        var privkey = Conversion.ToRSA(Privatekey);
+                        builder = JwtBuilder.Create()
+                                            .WithAlgorithm(new RS256Algorithm(pubkey, privkey))
+                                            .MustVerifySignature()
+                                            .Decode(JWT);
+                    }
                     break;
                 case "RS384":
+                    {
+                        var pubkey = Conversion.ToRSA(Publickey);
+                        var privkey = Conversion.ToRSA(Privatekey);
+                        builder = JwtBuilder.Create()
+                                            .WithAlgorithm(new RS384Algorithm(pubkey, privkey))
+                                            .MustVerifySignature()
+                                            .Decode(JWT);
+                    }
                     break;
                 case "RS512":
+                    {
+                        var pubkey = Conversion.ToRSA(Publickey);
+                        var privkey = Conversion.ToRSA(Privatekey);
+                        builder = JwtBuilder.Create()
+                                            .WithAlgorithm(new RS512Algorithm(pubkey, privkey))
+                                            .MustVerifySignature()
+                                            .Decode(JWT);
+                    }
                     break;
                 case "ES256":
                     break;
