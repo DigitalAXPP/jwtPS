@@ -1,4 +1,5 @@
 ﻿using jwtPS.PwShCmdlet;
+using System.Collections;
 using System.Linq;
 using Xunit;
 
@@ -17,10 +18,10 @@ namespace jwtPSTest
             {
                 JWT = base64
             };
-            var actual = cmdlet.Invoke().OfType<string>().ToList();
+            var actual = cmdlet.Invoke().OfType<Hashtable>().ToList();
 
             //-- Assert
-            Assert.IsType<string>(actual);
+            Assert.IsType<Hashtable>(actual[0]);
         }
     }
 }

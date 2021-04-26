@@ -3,12 +3,14 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="JWT" Version="8.1.3" />
-    <PackageReference Include="Microsoft.PowerShell.SDK" Version="7.1.3" />
+    <PackageReference Include="JWT" Version="8.2.0" />
+    <PackageReference Include="Microsoft.PowerShell.SDK" Version="7.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="System.Management.Automation" Version="7.0.3" />
   </ItemGroup>
 
 </Project>
