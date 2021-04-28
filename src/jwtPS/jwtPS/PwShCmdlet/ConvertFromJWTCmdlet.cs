@@ -19,7 +19,6 @@ namespace jwtPS.PwShCmdlet
         protected override void BeginProcessing()
         {
             base.BeginProcessing();
-            WriteVerbose("Converting a BASE64 string to as hashtable.");
         }
 
         protected override void ProcessRecord()
@@ -30,6 +29,8 @@ namespace jwtPS.PwShCmdlet
                               "Convert string"))
             {
                 var jwtParts = JWT.Split('.');
+                WriteDebug($"The header of the JWT is expected to be: {jwtParts[0]}");
+                WriteDebug($"The payload of the JWT is expected to be: {jwtParts[1]}");
                 var table = new Hashtable()
                 {
                     { "Header", Conversion.FromBase64(jwtParts[0]) },
