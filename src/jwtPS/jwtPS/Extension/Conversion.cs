@@ -82,28 +82,35 @@ namespace jwtPS.Extension
         /// <returns>String</returns>
         public static string FromBase64(this string Input)
         {
-            var base64 = Input.Replace('-', '+').Replace('_', '/');
-            switch (base64.Length % 4)
+            try
             {
-                case 1:
-                    {
-                        base64 = base64.Substring(0, base64.Length - 1);
+                var base64 = Input.Replace('-', '+').Replace('_', '/');
+                switch (base64.Length % 4)
+                {
+                    case 1:
+                        {
+                            base64 = base64.Substring(0, base64.Length - 1);
+                            break;
+                        }
+                    case 2:
+                        {
+                            base64 += "==";
+                            break;
+                        }
+                    case 3:
+                        {
+                            base64 += "=";
+                            break;
+                        }
+                    default:
                         break;
-                    }
-                case 2:
-                    {
-                        base64 += "==";
-                        break;
-                    }
-                case 3:
-                    {
-                        base64 += "=";
-                        break;
-                    }
-                default:
-                    break;
+                }
+                return Encoding.UTF8.GetString(Convert.FromBase64String(base64));
             }
-            return Encoding.UTF8.GetString(Convert.FromBase64String(base64));
+            catch (Exception)
+            {
+                return string.Empty;
+            }
         }
     }
 }

@@ -7,6 +7,7 @@ namespace jwtPS.PwShCmdlet
     [Cmdlet(VerbsData.ConvertFrom, "JWT", 
             SupportsShouldProcess = true, 
             ConfirmImpact = ConfirmImpact.Low)]
+    [OutputType(typeof(Hashtable))]
     public class ConvertFromJWTCmdlet : Cmdlet
     {
         [Parameter(
