@@ -6,6 +6,10 @@ using Signature = jwtPS.Class.Signature;
 
 namespace jwtPS.PwShCmdlet
 {
+    /// <summary>
+    /// <para type="synopsis">This cmdlet creates a Json Web Token.</para>
+    /// <para type="description">This cmdlet creates Json Web Tokens with HMAC, RSA and ECDsa signature algorithms.</para>
+    /// </summary>
     [Cmdlet(VerbsCommon.New, "JWT", 
             SupportsShouldProcess = true, 
             ConfirmImpact = ConfirmImpact.Low, 
