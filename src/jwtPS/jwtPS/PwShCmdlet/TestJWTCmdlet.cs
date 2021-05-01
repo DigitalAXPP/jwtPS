@@ -6,6 +6,10 @@ using System.Text.Json;
 
 namespace jwtPS.PwShCmdlet
 {
+    /// <summary>
+    /// <para type="synopsis">The command verifies the JWT.</para>
+    /// <para type="description">The command verifies the validity of the JWT signature and returns the content of the header and body.</para>
+    /// </summary>
     [Cmdlet(VerbsDiagnostic.Test, "JWT", 
             SupportsShouldProcess = true, 
             ConfirmImpact = ConfirmImpact.Low, 
@@ -15,15 +19,19 @@ namespace jwtPS.PwShCmdlet
         [Parameter(HelpMessage = "Enter the JWT.",
                    Mandatory = true,
                    ValueFromPipeline = true)]
+        [ValidatePattern(@"(^[\w-]*\.[\w-]*\.[\w-]*$)")]
         public string JWT { get; set; }
+
         [Parameter(HelpMessage = "Enter the secret.",
                    Mandatory = true,
                    ParameterSetName = "Secret")]
         public string Secret { get; set; }
+
         [Parameter(HelpMessage = "Enter the public key.",
                    Mandatory = true,
                    ParameterSetName = "Key")]
         public string Publickey { get; set; }
+
         [Parameter(HelpMessage = "Enter the private key.",
                    Mandatory = true,
                    ParameterSetName = "Key")]

@@ -21,17 +21,21 @@ namespace jwtPS.PwShCmdlet
                    Mandatory = true,
                    ParameterSetName = "Key")]
         public string Privatekey { get; set; }
+
         [Parameter(HelpMessage = "Enter the public key",
                    Mandatory = true,
                    ParameterSetName = "Key")]
         public string Publickey { get; set; }
+
         [Parameter(HelpMessage = "Enter the HMAC secret.",
                    Mandatory = true,
                    ParameterSetName = "Secret",
                    ValueFromPipeline = true)]
         public string Secret { get; set; }
+
         [Parameter(HelpMessage = "Enter the desired algorithm for the JWT.")]
         public Algorithm Algorithm { get; set; }
+
         [Parameter(HelpMessage = "Enter the payload.",
                    Mandatory = true)]
         public Hashtable Payload { get; set; }
