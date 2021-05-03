@@ -2,15 +2,13 @@
 using jwtPS.PwShCmdlet;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
-using System.Text;
 using Xunit;
 
 namespace jwtPSTest
 {
-    public class NewJWTPSCmdletTests
+    public class NewJWTHMACPSCmdletTests
     {
         [Fact]
         public void NewJWTHMAC256()
