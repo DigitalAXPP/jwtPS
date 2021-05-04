@@ -13,7 +13,7 @@ namespace jwtPSTest
         [Fact]
         public void NewJWTRSA256()
         {
-            //-- arrange
+            //-- Arrange
             var privatekey = @"-----BEGIN PRIVATE KEY-----
 MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC4yIC+wJeDpeBr
 /RuXyCNuAZPj/qSCaBIV9qr0yjNV6VJsH2ULdvv9qSWTvcja2wMCzcYNUCtlwFLn
@@ -70,7 +70,7 @@ I2PDI5/dlaxe2Iz9d/ZmPKlPtOIfZCP/xW1Ss/z6OZ/PQc0MNYFj1KMBalt6wmlE
                 {
                     powershell.Runspace = runspace;
 
-                    //-- act
+                    //-- Act
                     var newJWTCommand = new Command("New-JWT");
                     newJWTCommand.Parameters.Add("Privatekey", privatekey);
                     newJWTCommand.Parameters.Add("Publickey", publickey);
@@ -80,7 +80,7 @@ I2PDI5/dlaxe2Iz9d/ZmPKlPtOIfZCP/xW1Ss/z6OZ/PQc0MNYFj1KMBalt6wmlE
                     powershell.Commands.AddCommand(newJWTCommand);
                     var result = powershell.Invoke<string>();
 
-                    //-- assert
+                    //-- Assert
                     Assert.IsType<string>(result[0]);
                     Assert.Matches(regex, result[0]);
                 }
@@ -90,7 +90,7 @@ I2PDI5/dlaxe2Iz9d/ZmPKlPtOIfZCP/xW1Ss/z6OZ/PQc0MNYFj1KMBalt6wmlE
         [Fact]
         public void NewJWTRSA384()
         {
-            //-- arrange
+            //-- Arrange
             var privatekey = @"-----BEGIN PRIVATE KEY-----
 MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC4yIC+wJeDpeBr
 /RuXyCNuAZPj/qSCaBIV9qr0yjNV6VJsH2ULdvv9qSWTvcja2wMCzcYNUCtlwFLn
@@ -147,7 +147,7 @@ I2PDI5/dlaxe2Iz9d/ZmPKlPtOIfZCP/xW1Ss/z6OZ/PQc0MNYFj1KMBalt6wmlE
                 {
                     powershell.Runspace = runspace;
 
-                    //-- act
+                    //-- Act
                     var newJWTCommand = new Command("New-JWT");
                     newJWTCommand.Parameters.Add("Privatekey", privatekey);
                     newJWTCommand.Parameters.Add("Publickey", publickey);
@@ -157,7 +157,7 @@ I2PDI5/dlaxe2Iz9d/ZmPKlPtOIfZCP/xW1Ss/z6OZ/PQc0MNYFj1KMBalt6wmlE
                     powershell.Commands.AddCommand(newJWTCommand);
                     var result = powershell.Invoke<string>();
 
-                    //-- assert
+                    //-- Assert
                     Assert.IsType<string>(result[0]);
                     Assert.Matches(regex, result[0]);
                 }
@@ -167,7 +167,7 @@ I2PDI5/dlaxe2Iz9d/ZmPKlPtOIfZCP/xW1Ss/z6OZ/PQc0MNYFj1KMBalt6wmlE
         [Fact]
         public void NewJWTRSA512()
         {
-            //-- arrange
+            //-- Arrange
             var privatekey = @"-----BEGIN PRIVATE KEY-----
 MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC4yIC+wJeDpeBr
 /RuXyCNuAZPj/qSCaBIV9qr0yjNV6VJsH2ULdvv9qSWTvcja2wMCzcYNUCtlwFLn
@@ -224,7 +224,7 @@ I2PDI5/dlaxe2Iz9d/ZmPKlPtOIfZCP/xW1Ss/z6OZ/PQc0MNYFj1KMBalt6wmlE
                 {
                     powershell.Runspace = runspace;
 
-                    //-- act
+                    //-- Act
                     var newJWTCommand = new Command("New-JWT");
                     newJWTCommand.Parameters.Add("Privatekey", privatekey);
                     newJWTCommand.Parameters.Add("Publickey", publickey);
@@ -234,7 +234,7 @@ I2PDI5/dlaxe2Iz9d/ZmPKlPtOIfZCP/xW1Ss/z6OZ/PQc0MNYFj1KMBalt6wmlE
                     powershell.Commands.AddCommand(newJWTCommand);
                     var result = powershell.Invoke<string>();
 
-                    //-- assert
+                    //-- Assert
                     Assert.IsType<string>(result[0]);
                     Assert.Matches(regex, result[0]);
                 }
