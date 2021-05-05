@@ -13,8 +13,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Run xunit tests
+      - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.101
+      
+      - name: Run Xunit tests
         run: dotnet test ${{ github.workspace }}/src/jwtPS/jwtPSTest/jwtPSTest.csproj --verbosity normal
