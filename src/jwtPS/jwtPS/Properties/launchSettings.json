@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "jwtPS": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Program Files\\PowerShell\\7-preview\\pwsh.exe",
+      "commandLineArgs": "-NoProfile -NoExit -Command “Import-Module .\\jwtPS.dll”"
+    }
+  }
+}
