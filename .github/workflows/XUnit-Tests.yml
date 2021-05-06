@@ -17,6 +17,9 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.101
+
+      - name: Build the module
+        run: dotnet build ${{ github.workspace }}/src/jwtPS/jwtPS/jwtPS.csproj
       
       - name: Run Xunit tests
         run: dotnet test ${{ github.workspace }}/src/jwtPS/jwtPSTest/jwtPSTest.csproj --verbosity normal
