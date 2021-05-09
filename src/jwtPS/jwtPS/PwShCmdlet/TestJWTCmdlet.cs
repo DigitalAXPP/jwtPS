@@ -107,36 +107,36 @@ namespace jwtPS.PwShCmdlet
                                                 .Decode(JWT);
                         }
                         break;
-                    case "ES256":
-                        {
-                            var pubkey = Conversion.ToECDsa(Publickey);
-                            var privkey = Conversion.ToECDsa(Privatekey);
-                            builder = JwtBuilder.Create()
-                                                .WithAlgorithm(new ES256Algorithm(pubkey, privkey))
-                                                .MustVerifySignature()
-                                                .Decode(JWT);
-                        }
-                        break;
-                    case "ES384":
-                        {
-                            var pubkey = Conversion.ToECDsa(Publickey);
-                            var privkey = Conversion.ToECDsa(Privatekey);
-                            builder = JwtBuilder.Create()
-                                                .WithAlgorithm(new ES384Algorithm(pubkey, privkey))
-                                                .MustVerifySignature()
-                                                .Decode(JWT);
-                        }
-                        break;
-                    case "ES512":
-                        {
-                            var pubkey = Conversion.ToECDsa(Publickey);
-                            var privkey = Conversion.ToECDsa(Privatekey);
-                            builder = JwtBuilder.Create()
-                                                .WithAlgorithm(new ES512Algorithm(pubkey, privkey))
-                                                .MustVerifySignature()
-                                                .Decode(JWT);
-                        }
-                        break;
+                    //case "ES256":
+                    //    {
+                    //        var pubkey = Conversion.ToECDsa(Publickey);
+                    //        var privkey = Conversion.ToECDsa(Privatekey);
+                    //        builder = JwtBuilder.Create()
+                    //                            .WithAlgorithm(new ES256Algorithm(pubkey, privkey))
+                    //                            .MustVerifySignature()
+                    //                            .Decode(JWT);
+                    //    }
+                    //    break;
+                    //case "ES384":
+                    //    {
+                    //        var pubkey = Conversion.ToECDsa(Publickey);
+                    //        var privkey = Conversion.ToECDsa(Privatekey);
+                    //        builder = JwtBuilder.Create()
+                    //                            .WithAlgorithm(new ES384Algorithm(pubkey, privkey))
+                    //                            .MustVerifySignature()
+                    //                            .Decode(JWT);
+                    //    }
+                    //    break;
+                    //case "ES512":
+                    //    {
+                    //        var pubkey = Conversion.ToECDsa(Publickey);
+                    //        var privkey = Conversion.ToECDsa(Privatekey);
+                    //        builder = JwtBuilder.Create()
+                    //                            .WithAlgorithm(new ES512Algorithm(pubkey, privkey))
+                    //                            .MustVerifySignature()
+                    //                            .Decode(JWT);
+                    //    }
+                    //    break;
                     default:
                         break;
                 }
