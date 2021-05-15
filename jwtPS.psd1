@@ -9,10 +9,10 @@
 @{
 
 # Script module or binary module file associated with this manifest.
-RootModule = '.\jwtPS.psm1'
+RootModule = '.\src\jwtPS\bin\Debug\net5.0\jwtPS.dll'
 
 # Version number of this module.
-ModuleVersion = '0.0.6.0'
+ModuleVersion = '0.0.7.0'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
