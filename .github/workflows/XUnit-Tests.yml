@@ -22,4 +22,4 @@ jobs:
         run: dotnet build ${{ github.workspace }}/src/jwtPS/jwtPS.csproj
       
       - name: Run Xunit tests
-        run: dotnet test ${{ github.workspace }}/src/jwtPS/jwtPSTest/jwtPSTest.csproj --verbosity normal
+        run: dotnet test ${{ github.workspace }}/src/jwtPSTest/jwtPSTest.csproj --verbosity normal
