@@ -110,44 +110,44 @@ namespace jwtPS.Class
         /// <param name="PublicKey"></param>
         /// <param name="PrivateKey"></param>
         /// <returns>string</returns>
-        public string Create(ECDsa PublicKey, ECDsa PrivateKey)
-        {
-            string token = null;
-            switch (Algorithm)
-            {
-                case Algorithm.ES256:
-                    {
-                        token = JwtBuilder.Create()
-                                          .WithAlgorithm(new ES256Algorithm(PublicKey, PrivateKey))
-                                          .AddClaims(ClaimSet)
-                                          .MustVerifySignature()
-                                          .Encode();
-                    }
-                    break;
-                case Algorithm.ES384:
-                    {
-                        token = JwtBuilder.Create()
-                                          .WithAlgorithm(new ES384Algorithm(PublicKey, PrivateKey))
-                                          .AddClaims(ClaimSet)
-                                          .MustVerifySignature()
-                                          .Encode();
-                    }
-                    break;
-                case Algorithm.ES512:
-                    {
-                        token = JwtBuilder.Create()
-                                          .WithAlgorithm(new ES512Algorithm(PublicKey, PrivateKey))
-                                          .AddClaims(ClaimSet)
-                                          .MustVerifySignature()
-                                          .Encode();
-                    }
-                    break;
-                default:
-                    break;
-            }
-            PublicKey.Dispose();
-            PrivateKey.Dispose();
-            return token;
-        }
+        //public string Create(ECDsa PublicKey, ECDsa PrivateKey)
+        //{
+        //    string token = null;
+        //    switch (Algorithm)
+        //    {
+        //        case Algorithm.ES256:
+        //            {
+        //                token = JwtBuilder.Create()
+        //                                  .WithAlgorithm(new ES256Algorithm(PublicKey, PrivateKey))
+        //                                  .AddClaims(ClaimSet)
+        //                                  .MustVerifySignature()
+        //                                  .Encode();
+        //            }
+        //            break;
+        //        case Algorithm.ES384:
+        //            {
+        //                token = JwtBuilder.Create()
+        //                                  .WithAlgorithm(new ES384Algorithm(PublicKey, PrivateKey))
+        //                                  .AddClaims(ClaimSet)
+        //                                  .MustVerifySignature()
+        //                                  .Encode();
+        //            }
+        //            break;
+        //        case Algorithm.ES512:
+        //            {
+        //                token = JwtBuilder.Create()
+        //                                  .WithAlgorithm(new ES512Algorithm(PublicKey, PrivateKey))
+        //                                  .AddClaims(ClaimSet)
+        //                                  .MustVerifySignature()
+        //                                  .Encode();
+        //            }
+        //            break;
+        //        default:
+        //            break;
+        //    }
+        //    PublicKey.Dispose();
+        //    PrivateKey.Dispose();
+        //    return token;
+        //}
     }
 }
