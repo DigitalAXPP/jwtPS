@@ -87,8 +87,9 @@ function Test-JWT {
 
             # Is Token Expired
             $jwtDatas = ConvertFrom-JWT($JWT)
-            $PayloadExpirationDate = Get-Date -UnixTimeSeconds $jwtDatas.Payload.exp
-            $now = (Get-Date).ToUniversalTime()
+            $PayloadExpirationDate = Get-Date -AsUTC -UnixTimeSeconds $jwtDatas.Payload.exp
+            #$now = (Get-Date).ToUniversalTime()
+            $now = Get-Date -AsUTC
             if ($now -gt $PayloadExpirationDate) {
                 $result = "Expired"
             }
