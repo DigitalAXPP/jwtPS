@@ -34,9 +34,11 @@ function Test-JWT {
     }
 
     process {
+        # Get Os temporary files location
         $tmpPath = [IO.Path]::GetTempPath()
         $FullPathToData = $tmpPath + "data.txt"
         $FullPathToSig  = $tmpPath + "sig.txt"
+        # powershell has some difficulty with paths like './'
         $PublicKey = [System.IO.Path]::GetFullPath("$PublicKey")
 
         try {
@@ -51,27 +53,28 @@ function Test-JWT {
             Set-Content -Path $FullPathToSig -Value $bytes -AsByteStream
 
             #region Verify signature
-            switch ($headerDecoded.alg) {
+            switch ([string]$headerDecoded.alg) {
                 { $_ -in @('RS256', 'ES256') } {
-                    $result = openssl dgst -sha256 -verify $PublicKey -signature $FullPathToSig $FullPathToData
+                    # [2>&1] on linux openssl output error on STDERR
+                    $result = openssl dgst -sha256 -verify $PublicKey -signature $FullPathToSig $FullPathToData 2>&1
                 }
                 { $_ -in @('RS384', 'ES384') } {
-                    $result = openssl dgst -sha384 -verify $PublicKey -signature $FullPathToSig $FullPathToData
+                    $result = openssl dgst -sha384 -verify $PublicKey -signature $FullPathToSig $FullPathToData 2>&1
                 }
                 { $_ -in @('RS512', 'ES512') } {
-                    $result = openssl dgst -sha512 -verify $PublicKey -signature $FullPathToSig $FullPathToData
+                    $result = openssl dgst -sha512 -verify $PublicKey -signature $FullPathToSig $FullPathToData 2>&1
                 }
                 'HS256' {
                     Remove-Item -Path $FullPathToSig -Force
-                    $result = openssl dgst -sha256 -mac HMAC -macopt key:$Secret -out $FullPathToSig $FullPathToData
+                    $result = openssl dgst -sha256 -mac HMAC -macopt key:$Secret -out $FullPathToSig $FullPathToData 2>&1
                 }
                 'HS384' {
                     Remove-Item -Path $FullPathToSig -Force
-                    $result = openssl dgst -sha384 -mac HMAC -macopt key:$Secret -out $FullPathToSig $FullPathToData
+                    $result = openssl dgst -sha384 -mac HMAC -macopt key:$Secret -out $FullPathToSig $FullPathToData 2>&1
                 }
                 'HS512' {
                     Remove-Item -Path $FullPathToSig -Force
-                    $result = openssl dgst -sha512 -mac HMAC -macopt key:$Secret -out $FullPathToSig $FullPathToData
+                    $result = openssl dgst -sha512 -mac HMAC -macopt key:$Secret -out $FullPathToSig $FullPathToData 2>&1
                 }
                 Default {
                     throw [System.ArgumentOutOfRangeException]::new("The JWT uses an unsupported algorithm.")
@@ -87,13 +90,11 @@ function Test-JWT {
 
             # Is Token Expired
             $jwtDatas = ConvertFrom-JWT($JWT)
-            $PayloadExpirationDate = Get-Date -AsUTC -UnixTimeSeconds $jwtDatas.Payload.exp
-            #$now = (Get-Date).ToUniversalTime()
-            $now = Get-Date -AsUTC
-            if ($now -gt $PayloadExpirationDate) {
+            $now = Get-Date -AsUTC -UFormat %s
+
+            if ([int]$now -gt [int]$jwtDatas.Payload.exp) {
                 $result = "Expired"
             }
-
         }
         catch [System.Management.Automation.MethodException] {
             throw [System.Management.Automation.MethodException]::new($_.Exception.Message)
