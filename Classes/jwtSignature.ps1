@@ -10,15 +10,15 @@ class jwtSignature : jwtBase {
 
     [string]Create() {
         $rsa_Base64 = [string]::Empty
-        #retreive temporary directory
+        # Get Os temporary files location
         $tmpPath = [IO.Path]::GetTempPath()
         $FullPathToData = $tmpPath + "data.txt"
         $FullPathToSig  = $tmpPath + "sig.txt"
         $FullPathToKey  = $tmpPath + "key.pem"
 
         try {
-            (Get-Content $this.PrivateKey) | Set-Content -Path $FullPathToKey
-            Set-Content -Path "$FullPathToData" -Value $this.Data -NoNewline
+            (Get-Content -Path $this.PrivateKey) | Set-Content -Path $FullPathToKey
+            Set-Content -Path $FullPathToData -Value $this.Data -NoNewline
 
             switch ($this.Algorithm) { #-replace "[A-Z]") {
                 { $_ -in @('RS256', 'ES256') } {
