@@ -11,7 +11,7 @@ class jwtSignature : jwtBase {
     [string]Create() {
         $rsa_Base64 = [string]::Empty
         # Get Os temporary files location
-        $tmpPath = [IO.Path]::GetTempPath()
+        $tmpPath = ([IO.Path]::GetTempPath())
         $FullPathToData = $tmpPath + "data.txt"
         $FullPathToSig  = $tmpPath + "sig.txt"
         $FullPathToKey  = $tmpPath + "key.pem"
