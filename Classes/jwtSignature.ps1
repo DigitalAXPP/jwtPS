@@ -22,7 +22,7 @@ class jwtSignature : jwtBase {
 
             switch ($this.Algorithm) { #-replace "[A-Z]") {
                 { $_ -in @('RS256', 'ES256') } {
-                    openssl dgst -sha256 -sign "$FullPathToKey" -out "$FullPathToSig" "$FullPathToData"
+                    openssl dgst -sha256 -sign $FullPathToKey -out $FullPathToSig $FullPathToData
                 }
                 { $_ -in @('RS384', 'ES384') } {
                     openssl dgst -sha384 -sign $FullPathToKey -out $FullPathToSig $FullPathToData
