@@ -27,14 +27,16 @@ To create a JWT you need three things:
 The algorithm in the new version is a bit cumbersome to set up. The algorithm consists out of two discriminating unions. `encryption` sets the encryption level of the algorithm and `algorithm` sets up the algorithm. The classes written in F# look like that:
 ```fsharp
 type encryption = SHA256 | SHA384 | SHA512
-type Algo =
+type Algorithm =
     | HMAC of encryption
     | RSA of encryption
     | ECDsa of encryption
 ```
 To create this class in PowerShell you need to cast them like this:
 ```PowerShell
-$algorithm = [jwtFunction+Algo]::newRSA([jwtFunction+encryption]::newSHA256())
+$algorithmForHMAC = [jwtFunction+Algorithm+HMAC]::newHMAC([jwtFunction+encryption]::SHA256)
+$algorithmForRSA = [jwtFunction+Algorithm+RSA]::newRSA([jwtFunction+encryption]::SHA384)
+$algorithmForECDsa = [jwtFunction+Algorithm+ECDsa]::newECDsa([jwtFunction+encryption]::SHA512)
 ```
 Finally, you can see below the code to create a JWT with all required information.
 ```PowerShell
@@ -48,7 +50,7 @@ $payload = @{
     iat = ([System.DateTimeOffset]::Now).ToUnixTimeSeconds()
     jti = [guid]::NewGuid()
 }
-$algorithm = [jwtFunction+Algo]::newRSA([jwtFunction+encryption]::newSHA256())
+$algorithm = [jwtFunction+Algorithm+RSA]::newRSA([jwtFunction+encryption]::SHA256)
 $jwt = New-JWT -PrivateKey $key -Algorithm $algorithm -Payload $payload
 ```
 **Attention**, `New-Jwt` expects the private key to be in **PEM** format.
