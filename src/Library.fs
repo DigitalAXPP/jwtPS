@@ -13,7 +13,7 @@ type NewJwtCommand () =
     [<ValidateNotNullOrEmpty>]
     member val Payload : Hashtable = Hashtable () with get, set
     [<Parameter(Mandatory=true)>]
-    member val Algorithm : Algorithm = HMAC HS256 with get, set
+    member val Algorithm : Algorithm = HMAC SHA256 with get, set
     [<Parameter(Mandatory=true)>]
     [<ValidateNotNullOrEmpty>]
     member val Secret : string = String.Empty with get, set

@@ -9,14 +9,12 @@ module jwtFunction
         alg: string
     }
 
-    type hsAlgorithm = HS256 | HS384 | HS512
-    type rsAlgorithm = RS256 | RS384 | RS512
-    type esAlgorithm = ES256 | ES384 | ES512
+    type encryption = SHA256 | SHA384 | SHA512
 
     type Algorithm = 
-        | HMAC of hsAlgorithm
-        | RSA of rsAlgorithm
-        | ECDsa of esAlgorithm
+        | HMAC of encryption
+        | RSA of encryption
+        | ECDsa of encryption
 
     let createJwtHeader (algorithm: string) =
         let header = {typ = "JWT"; alg = algorithm}
@@ -37,7 +35,7 @@ module jwtFunction
             .Replace("/", "_")
             .Replace("=", "")
 
-    let hashHS (msg: string) (algorithm: hsAlgorithm) (secret: string) =
+    let hashHS (msg: string) (algorithm: encryption) (secret: string) =
         let dataInBytes = System.Text.Encoding.UTF8.GetBytes msg
         let secretInBytes = System.Text.Encoding.UTF8.GetBytes secret
         let hsHash = match algorithm with
@@ -50,7 +48,7 @@ module jwtFunction
             .Replace("/", "_")
             .Replace("=", "")
 
-    let hashRS (msg: string) (algorithm: rsAlgorithm) (privateKeyPath: string) =
+    let hashRS (msg: string) (algorithm: encryption) (privateKeyPath: string) =
         let rsa = RSA.Create()
         // let privKey = System.IO.File.ReadAllText @"C:\Users\Alexande.Piepenhagen\Documents\FSharp\privkey.pem"
         let privKey = System.IO.File.ReadAllText privateKeyPath
@@ -73,7 +71,7 @@ module jwtFunction
             .Replace("/", "_")
             .Replace("=", "")
 
-    let hashES (msg: string) (algorithm: esAlgorithm) (privateKeyPath: string) =
+    let hashES (msg: string) (algorithm: encryption) (privateKeyPath: string) =
         let rsa = ECDsa.Create()
         // let privKey = System.IO.File.ReadAllText @"C:\Users\Alexande.Piepenhagen\Documents\FSharp\private_ec.pem"
         let privKey = System.IO.File.ReadAllText privateKeyPath
@@ -89,19 +87,19 @@ module jwtFunction
             .Replace("/", "_")
             .Replace("=", "")
 
-    let newJwtHMAC (algorithm: hsAlgorithm) (claimSet: Hashtable) (secret: string) =
+    let newJwtHMAC (algorithm: encryption) (claimSet: Hashtable) (secret: string) =
         let jHeader = createJwtHeader (algorithm.ToString())
         let jClaimSet = createJwtClaimset claimSet
         let jSignature = hashHS $"{jHeader}.{jClaimSet}" algorithm secret
         $"{jHeader}.{jClaimSet}.{jSignature}"
 
-    let newJwtRS (algorithm: rsAlgorithm) (claimSet: Hashtable) (keyPath: string) =
+    let newJwtRS (algorithm: encryption) (claimSet: Hashtable) (keyPath: string) =
         let jHeader = createJwtHeader (algorithm.ToString())
         let jClaimSet = createJwtClaimset claimSet
         let jSignature = hashRS $"{jHeader}.{jClaimSet}" algorithm keyPath
         $"{jHeader}.{jClaimSet}.{jSignature}"
 
-    let newJwtES (algorithm: esAlgorithm) (claimSet: Hashtable) (keyPath: string) =
+    let newJwtES (algorithm: encryption) (claimSet: Hashtable) (keyPath: string) =
         let jHeader = createJwtHeader (algorithm.ToString())
         let jClaimSet = createJwtClaimset claimSet
         let jSignature = hashES $"{jHeader}.{jClaimSet}" algorithm keyPath
