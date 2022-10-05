@@ -9,12 +9,18 @@ open jwtFunction
 [<OutputType(typeof<string>)>]
 type NewJwtCommand () =
     inherit PSCmdlet ()
-    [<Parameter(Mandatory=true)>]
+    [<Parameter(
+        Mandatory=true,
+        ValueFromPipelineByPropertyName=true)>]
     [<ValidateNotNullOrEmpty>]
     member val Payload : Hashtable = Hashtable () with get, set
-    [<Parameter(Mandatory=true)>]
+    [<Parameter(
+        Mandatory=true,
+        ValueFromPipelineByPropertyName=true)>]
     member val Algorithm : Algorithm = HMAC SHA256 with get, set
-    [<Parameter(Mandatory=true)>]
+    [<Parameter(
+        Mandatory=true,
+        ValueFromPipelineByPropertyName=true)>]
     [<ValidateNotNullOrEmpty>]
     member val Secret : string = String.Empty with get, set
 
@@ -26,8 +32,11 @@ type NewJwtCommand () =
 [<Cmdlet("ConvertFrom", "Jwt")>]
 type ConvertFromJwtCommand () =
     inherit PSCmdlet ()
-    [<Parameter(Mandatory=true)>]
+    [<Parameter(
+        Mandatory=true,
+        ValueFromPipeline=true)>]
     [<ValidateNotNullOrEmpty>]
+    [<ValidatePattern(@"(^[\w-]+\.[\w-]+\.[\w-]+$)")>]
     member val Jwt : string = String.Empty with get, set
 
     override x.ProcessRecord () =

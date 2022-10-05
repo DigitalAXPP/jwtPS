@@ -39,9 +39,9 @@ module jwtFunction
         let dataInBytes = System.Text.Encoding.UTF8.GetBytes msg
         let secretInBytes = System.Text.Encoding.UTF8.GetBytes secret
         let hsHash = match algorithm with
-                        | HS256 -> HMACSHA256.HashData (secretInBytes, dataInBytes)
-                        | HS384 -> HMACSHA384.HashData (secretInBytes, dataInBytes)
-                        | HS512 -> HMACSHA512.HashData (secretInBytes, dataInBytes)
+                        | SHA256 -> HMACSHA256.HashData (secretInBytes, dataInBytes)
+                        | SHA384 -> HMACSHA384.HashData (secretInBytes, dataInBytes)
+                        | SHA512 -> HMACSHA512.HashData (secretInBytes, dataInBytes)
         let base64 = System.Convert.ToBase64String hsHash
         base64
             .Replace("+", "-")
@@ -62,9 +62,9 @@ module jwtFunction
         rsa.ImportFromPem privKey
         let dataInBytes = System.Text.Encoding.UTF8.GetBytes msg
         let bytes = match algorithm with
-                    | RS256 -> rsa.SignData(dataInBytes, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1)
-                    | RS384 -> rsa.SignData(dataInBytes, HashAlgorithmName.SHA384, RSASignaturePadding.Pkcs1)
-                    | RS512 -> rsa.SignData(dataInBytes, HashAlgorithmName.SHA512, RSASignaturePadding.Pkcs1)
+                    | SHA256 -> rsa.SignData(dataInBytes, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1)
+                    | SHA384 -> rsa.SignData(dataInBytes, HashAlgorithmName.SHA384, RSASignaturePadding.Pkcs1)
+                    | SHA512 -> rsa.SignData(dataInBytes, HashAlgorithmName.SHA512, RSASignaturePadding.Pkcs1)
         let base64 = System.Convert.ToBase64String bytes
         base64
             .Replace("+", "-")
@@ -78,9 +78,9 @@ module jwtFunction
         rsa.ImportFromPem privKey
         let dataInBytes = System.Text.Encoding.UTF8.GetBytes msg
         let bytes = match algorithm with
-                    | ES256 -> rsa.SignData(dataInBytes, HashAlgorithmName.SHA256)
-                    | ES384 -> rsa.SignData(dataInBytes, HashAlgorithmName.SHA384)
-                    | ES512 -> rsa.SignData(dataInBytes, HashAlgorithmName.SHA512)
+                    | SHA256 -> rsa.SignData(dataInBytes, HashAlgorithmName.SHA256)
+                    | SHA384 -> rsa.SignData(dataInBytes, HashAlgorithmName.SHA384)
+                    | SHA512 -> rsa.SignData(dataInBytes, HashAlgorithmName.SHA512)
         let base64 = System.Convert.ToBase64String bytes
         base64
             .Replace("+", "-")
