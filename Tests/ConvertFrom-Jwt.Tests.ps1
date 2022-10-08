@@ -23,12 +23,14 @@ Describe "ConvertFrom-JWT" {
                 iat = ([System.DateTimeOffset]::Now).ToUnixTimeSeconds()
                 jti = [guid]::NewGuid()
             }
-            $alg = [jwtFunction+Algorithm+HMAC]::NewHMAC([jwtFunction+encryption]::SHA256)
+            $encryption = [jwtFunction+encryption]::SHA256
+            $algorithm = [jwtFunction+algorithm]::HMAC
+            $alg = [jwtFunction+cryptographyType]::new($algorithm, $encryption)
         }
         It "Verification of the header" {
             $jwt = New-JWT -Secret 'S3cuR3$3cR3T' -Algorithm $alg -Payload $claim
             $conversion = ConvertFrom-JWT -JWT $jwt
-            $conversion.Header | Should -BeExactly '{"typ":"JWT","alg":"SHA256"}'
+            $conversion.Header | Should -BeExactly '{"typ":"JWT","alg":"HS256"}'
         }
         It "Verification of the payload" {
             $jwt = New-JWT -Secret 'S3cuR3$3cR3T' -Algorithm $alg -Payload $claim

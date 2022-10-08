@@ -25,20 +25,26 @@ Describe "New-JWT" {
                 iat = ([System.DateTimeOffset]::Now).ToUnixTimeSeconds()
                 jti = [guid]::NewGuid()
             }
-            $alg256 = [jwtFunction+Algorithm+RSA]::NewRSA([jwtFunction+encryption]::SHA256)
-            $alg384 = [jwtFunction+Algorithm+RSA]::NewRSA([jwtFunction+encryption]::SHA384)
-            $alg512 = [jwtFunction+Algorithm+RSA]::NewRSA([jwtFunction+encryption]::SHA512)
         }
         It "With SHA256" {
-            $jwt = New-JWT -Secret $key -Algorithm $alg256 -Payload $claim
+            $encryption = [jwtFunction+encryption]::SHA256
+            $algorithm = [jwtFunction+algorithm]::RSA
+            $alg = [jwtFunction+cryptographyType]::new($algorithm, $encryption)
+            $jwt = New-JWT -Secret $key -Algorithm $alg -Payload $claim
             $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
         }
         It "With SHA384" {
-            $jwt = New-JWT -Secret $key -Algorithm $alg384 -Payload $claim
+            $encryption = [jwtFunction+encryption]::SHA384
+            $algorithm = [jwtFunction+algorithm]::RSA
+            $alg = [jwtFunction+cryptographyType]::new($algorithm, $encryption)
+            $jwt = New-JWT -Secret $key -Algorithm $alg -Payload $claim
             $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
         }
         It "With SHA512" {
-            $jwt = New-JWT -Secret $key -Algorithm $alg512 -Payload $claim
+            $encryption = [jwtFunction+encryption]::SHA512
+            $algorithm = [jwtFunction+algorithm]::RSA
+            $alg = [jwtFunction+cryptographyType]::new($algorithm, $encryption)
+            $jwt = New-JWT -Secret $key -Algorithm $alg -Payload $claim
             $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
         }
     }
@@ -56,20 +62,26 @@ Describe "New-JWT" {
                 iat = ([System.DateTimeOffset]::Now).ToUnixTimeSeconds()
                 jti = [guid]::NewGuid()
             }
-            $alg256 = [jwtFunction+Algorithm+ECDsa]::NewECDsa([jwtFunction+encryption]::SHA256)
-            $alg384 = [jwtFunction+Algorithm+ECDsa]::NewECDsa([jwtFunction+encryption]::SHA384)
-            $alg512 = [jwtFunction+Algorithm+ECDsa]::NewECDsa([jwtFunction+encryption]::SHA512)
         }
         It "With SHA256" {
-            $jwt = New-JWT -Secret $key_256 -Algorithm $alg256 -Payload $claim
+            $encryption = [jwtFunction+encryption]::SHA256
+            $algorithm = [jwtFunction+algorithm]::ECDsa
+            $alg = [jwtFunction+cryptographyType]::new($algorithm, $encryption)
+            $jwt = New-JWT -Secret $key_256 -Algorithm $alg -Payload $claim
             $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
         }
         It "With SHA384" {
-            $jwt = New-JWT -Secret $key_384 -Algorithm $alg384 -Payload $claim
+            $encryption = [jwtFunction+encryption]::SHA384
+            $algorithm = [jwtFunction+algorithm]::ECDsa
+            $alg = [jwtFunction+cryptographyType]::new($algorithm, $encryption)
+            $jwt = New-JWT -Secret $key_384 -Algorithm $alg -Payload $claim
             $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
         }
         It "With SHA512" {
-            $jwt = New-JWT -Secret $key_512 -Algorithm $alg512 -Payload $claim
+            $encryption = [jwtFunction+encryption]::SHA512
+            $algorithm = [jwtFunction+algorithm]::ECDsa
+            $alg = [jwtFunction+cryptographyType]::new($algorithm, $encryption)
+            $jwt = New-JWT -Secret $key_512 -Algorithm $alg -Payload $claim
             $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
         }
     }
@@ -84,20 +96,26 @@ Describe "New-JWT" {
                 iat = ([System.DateTimeOffset]::Now).ToUnixTimeSeconds()
                 jti = [guid]::NewGuid()
             }
-            $alg256 = [jwtFunction+Algorithm+HMAC]::NewHMAC([jwtFunction+encryption]::SHA256)
-            $alg384 = [jwtFunction+Algorithm+HMAC]::NewHMAC([jwtFunction+encryption]::SHA384)
-            $alg512 = [jwtFunction+Algorithm+HMAC]::NewHMAC([jwtFunction+encryption]::SHA512)
         }
         It "With SHA256" {
-            $jwt = New-JWT -Algorithm $alg256 -Payload $claim -Secret 'P@ssw0rd'
+            $encryption = [jwtFunction+encryption]::SHA256
+            $algorithm = [jwtFunction+algorithm]::HMAC
+            $alg = [jwtFunction+cryptographyType]::new($algorithm, $encryption)
+            $jwt = New-JWT -Algorithm $alg -Payload $claim -Secret 'P@ssw0rd'
             $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
         }
         It "With SHA384" {
-            $jwt = New-JWT -Algorithm $alg384 -Payload $claim -Secret 'P@ssw0rd'
+            $encryption = [jwtFunction+encryption]::SHA384
+            $algorithm = [jwtFunction+algorithm]::HMAC
+            $alg = [jwtFunction+cryptographyType]::new($algorithm, $encryption)
+            $jwt = New-JWT -Algorithm $alg -Payload $claim -Secret 'P@ssw0rd'
             $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
         }
         It "With SHA512" {
-            $jwt = New-JWT -Algorithm $alg512 -Payload $claim -Secret 'P@ssw0rd'
+            $encryption = [jwtFunction+encryption]::SHA512
+            $algorithm = [jwtFunction+algorithm]::HMAC
+            $alg = [jwtFunction+cryptographyType]::new($algorithm, $encryption)
+            $jwt = New-JWT -Algorithm $alg -Payload $claim -Secret 'P@ssw0rd'
             $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
         }
     }

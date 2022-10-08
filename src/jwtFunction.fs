@@ -4,17 +4,37 @@ module jwtFunction
     open System.Collections
     open System.Security.Cryptography
 
-    type jwtHeader = {
-        typ: string
-        alg: string
-    }
+    type jwtHeader = 
+        {
+            typ: string
+            alg: string
+        }
 
-    type encryption = SHA256 | SHA384 | SHA512
+    type encryption = 
+        | SHA256
+        | SHA384
+        | SHA512
+        member this.IdSuffix =
+            match this with
+            | SHA256 -> "256"
+            | SHA384 -> "384"
+            | SHA512 -> "512"
 
-    type Algorithm = 
-        | HMAC of encryption
-        | RSA of encryption
-        | ECDsa of encryption
+    type algorithm = 
+        | HMAC
+        | RSA
+        | ECDsa
+        member this.IdPrefix =
+            match this with
+            | HMAC -> "HS"
+            | RSA -> "RS"
+            | ECDsa -> "ES"
+
+    type cryptographyType = 
+        {
+            Algorithm: algorithm
+            Encryption: encryption
+        } member this.Id = this.Algorithm.IdPrefix + this.Encryption.IdSuffix
 
     let createJwtHeader (algorithm: string) =
         let header = {typ = "JWT"; alg = algorithm}
@@ -105,12 +125,6 @@ module jwtFunction
         let jSignature = hashES $"{jHeader}.{jClaimSet}" algorithm keyPath
         $"{jHeader}.{jClaimSet}.{jSignature}"
 
-    let extractAlgorithm (algorithm: Algorithm) =
-        match algorithm with
-        | HMAC x -> x.ToString()
-        | RSA x -> x.ToString()
-        | ECDsa x -> x.ToString()
-
     let convertFromBase64 (jwt: string) =
         let str = match jwt.Length % 4 with
                     | 1 -> jwt.Substring (1, jwt.Length - 1)
@@ -123,13 +137,13 @@ module jwtFunction
         let bytes = System.Convert.FromBase64String strReplaced
         System.Text.Encoding.UTF8.GetString bytes
 
-    let newJwt (algorithm: Algorithm) (claimSet: Hashtable) (secretOrKeyPath: string) =
-        let jHeader = createJwtHeader (extractAlgorithm algorithm)
+    let newJwt (algorithm: cryptographyType) (claimSet: Hashtable) (secretOrKeyPath: string) =
+        let jHeader = createJwtHeader (algorithm.Id)
         let jClaimSet = createJwtClaimset claimSet
-        let jSignature = match algorithm with
-                            | HMAC x -> hashHS $"{jHeader}.{jClaimSet}" x secretOrKeyPath
-                            | RSA x -> hashRS $"{jHeader}.{jClaimSet}" x secretOrKeyPath
-                            | ECDsa x -> hashES $"{jHeader}.{jClaimSet}" x secretOrKeyPath
+        let jSignature = match algorithm.Algorithm with
+                            | HMAC -> hashHS $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
+                            | RSA -> hashRS $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
+                            | ECDsa -> hashES $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
         $"{jHeader}.{jClaimSet}.{jSignature}"
 
     //let verifyJwt (jwt: string) =

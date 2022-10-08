@@ -24,21 +24,26 @@ To create a JWT you need three things:
 1. You need to have the path of your private key
 2. You need to provide the payload as a hashtable
 3. You need to select the algorithm. 
-The algorithm in the new version is a bit cumbersome to set up. The algorithm consists out of two discriminating unions. `encryption` sets the encryption level of the algorithm and `algorithm` sets up the algorithm. The classes written in F# look like that:
+The algorithm in the new version is a bit cumbersome to set up. The algorithm consists out of two discriminating unions. `encryption` sets the encryption level of the algorithm and `algorithm` sets up the algorithm. Finally, both types make up `cryptographyType`. The classes written in F# look like that:
 ```fsharp
 type encryption = SHA256 | SHA384 | SHA512
-type Algorithm =
+type algorithm =
     | HMAC of encryption
     | RSA of encryption
     | ECDsa of encryption
+type cryptographyType = 
+{
+    Algorithm: algorithm
+    Encryption: encryption
+}
 ```
 To create this class in PowerShell you need to cast them like this:
 ```PowerShell
-$algorithmForHMAC = [jwtFunction+Algorithm+HMAC]::newHMAC([jwtFunction+encryption]::SHA256)
-$algorithmForRSA = [jwtFunction+Algorithm+RSA]::newRSA([jwtFunction+encryption]::SHA384)
-$algorithmForECDsa = [jwtFunction+Algorithm+ECDsa]::newECDsa([jwtFunction+encryption]::SHA512)
+$encryption = [jwtFunction+encryption]::SHA256
+$algorithm = [jwtFunction+algorithm]::HMAC
+$alg = [jwtFunction+cryptographyType]::new($algorithm, $encryption)
 ```
-Finally, you can see below the code to create a JWT with all required information.
+Finally, you can see below the code to create a JWT using RSA encryption with SHA384.
 ```PowerShell
 $key = "C:\Users\Path\To\Private\Key.pem"
 $payload = @{
@@ -50,7 +55,9 @@ $payload = @{
     iat = ([System.DateTimeOffset]::Now).ToUnixTimeSeconds()
     jti = [guid]::NewGuid()
 }
-$algorithm = [jwtFunction+Algorithm+RSA]::newRSA([jwtFunction+encryption]::SHA256)
-$jwt = New-JWT -PrivateKey $key -Algorithm $algorithm -Payload $payload
+$encryption = [jwtFunction+encryption]::SHA384
+$algorithm = [jwtFunction+algorithm]::RSA
+$alg = [jwtFunction+cryptographyType]::new($algorithm, $encryption)
+$jwt = New-JWT -PrivateKey $key -Algorithm $alg -Payload $payload
 ```
 **Attention**, `New-Jwt` expects the private key to be in **PEM** format.

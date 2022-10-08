@@ -17,7 +17,7 @@ type NewJwtCommand () =
     [<Parameter(
         Mandatory=true,
         ValueFromPipelineByPropertyName=true)>]
-    member val Algorithm : Algorithm = HMAC SHA256 with get, set
+    member val Algorithm : cryptographyType = { Algorithm = HMAC; Encryption = SHA256 } with get, set
     [<Parameter(
         Mandatory=true,
         ValueFromPipelineByPropertyName=true)>]
