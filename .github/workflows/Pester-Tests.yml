@@ -16,7 +16,6 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
-        dotnet-version: [ '5.0.x' , '6.0.x' ]
     # The type of runner that the job will run on
     runs-on: ${{ matrix.os }}
     # If any job fails, all jobs that are in progress or queued will be cancelled
@@ -26,9 +25,9 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
       - name: Setup dotnet
-        uses: actions/setup-dotnet@v2
-          with:
-            dotnet-version: ${{ matrix.dotnet-version }}
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '6.x'
       - name: Install dependencies
         run: dotnet restore
       - name: Build project
