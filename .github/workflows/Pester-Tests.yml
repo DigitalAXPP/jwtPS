@@ -25,7 +25,7 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
       - name: Print path
-        run: echo "$env:GITHUB_WORKSPACE"
+        run: echo "$env:GITHUB_ACTION_PATH"
       - name: Setup dotnet
         uses: actions/setup-dotnet@v3
         with:
