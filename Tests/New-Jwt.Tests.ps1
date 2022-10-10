@@ -1,6 +1,6 @@
 Describe "New-JWT" {
     BeforeAll {
-        Import-Module -Name C:\Users\apiep\Documents\github\jwtPS\jwtPS.psd1
+        Import-Module -Name $env:GITHUB_WORKSPACE\jwtPS.psd1
     }
     Context "Verify parameter" {
         $mandatoryParameter = @(
