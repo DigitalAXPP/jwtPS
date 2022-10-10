@@ -15,7 +15,12 @@ Describe "New-JWT" {
     }
     Context "Creating RSA signature" {
         BeforeEach {
-            $key = "$env:GITHUB_WORKSPACE\.github\workflows\privkey.pem"
+            if ($IsLinux) {
+                $key = "$env:GITHUB_WORKSPACE/.github/workflows/privkey.pem"
+            }
+            elseif ($IsWindows) {
+                $key = "$env:GITHUB_WORKSPACE\.github\workflows\privkey.pem"
+            }
             $claim = @{
                 aud = "jwtPS"
                 iss = "DigitalAXPP"
@@ -50,9 +55,16 @@ Describe "New-JWT" {
     }
     Context "Creating ECDSA signature" {
         BeforeEach {
-            $key_256 = "$env:GITHUB_WORKSPACE\.github\workflows\private_es256.pem"
-            $key_384 = "$env:GITHUB_WORKSPACE\.github\workflows\private_es384.pem"
-            $key_512 = "$env:GITHUB_WORKSPACE\.github\workflows\private_es512.pem"
+            if ($IsLinux) {
+                $key_256 = "$env:GITHUB_WORKSPACE/.github/workflows/private_es256.pem"
+                $key_384 = "$env:GITHUB_WORKSPACE/.github/workflows/private_es384.pem"
+                $key_512 = "$env:GITHUB_WORKSPACE/.github/workflows/private_es512.pem"
+            }
+            elseif ($IsWindows) {
+                $key_256 = "$env:GITHUB_WORKSPACE\.github\workflows\private_es256.pem"
+                $key_384 = "$env:GITHUB_WORKSPACE\.github\workflows\private_es384.pem"
+                $key_512 = "$env:GITHUB_WORKSPACE\.github\workflows\private_es512.pem"
+            }
             $claim = @{
                 aud = "jwtPS"
                 iss = "DigitalAXPP"
