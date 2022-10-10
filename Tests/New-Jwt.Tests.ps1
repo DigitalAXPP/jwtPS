@@ -50,9 +50,9 @@ Describe "New-JWT" {
     }
     Context "Creating ECDSA signature" {
         BeforeEach {
-            $key_256 = "C:\Users\apiep\Documents\keys\private_es256.pem"
-            $key_384 = "C:\Users\apiep\Documents\keys\private_es384.pem"
-            $key_512 = "C:\Users\apiep\Documents\keys\private_es512.pem"
+            $key_256 = "$env:GITHUB_WORKSPACE\.github\workflows\private_es256.pem"
+            $key_384 = "$env:GITHUB_WORKSPACE\.github\workflows\private_es384.pem"
+            $key_512 = "$env:GITHUB_WORKSPACE\.github\workflows\private_es512.pem"
             $claim = @{
                 aud = "jwtPS"
                 iss = "DigitalAXPP"
