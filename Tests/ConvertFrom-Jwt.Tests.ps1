@@ -1,6 +1,6 @@
 Describe "ConvertFrom-JWT" {
     BeforeAll {
-        Import-Module C:\Users\apiep\Documents\github\jwtPS\jwtPS.psd1
+        Import-Module -Global $env:GITHUB_WORKSPACE\jwtPS.psd1
     }
     Context "Verify parameter" {
         $mandatoryParameter = @(

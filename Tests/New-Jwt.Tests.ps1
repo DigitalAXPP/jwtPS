@@ -1,6 +1,6 @@
 Describe "New-JWT" {
     BeforeAll {
-        Import-Module -Name $env:GITHUB_WORKSPACE\jwtPS.psd1
+        Import-Module -Global $env:GITHUB_WORKSPACE\jwtPS.psd1
     }
     Context "Verify parameter" {
         $mandatoryParameter = @(
@@ -15,7 +15,7 @@ Describe "New-JWT" {
     }
     Context "Creating RSA signature" {
         BeforeEach {
-            $key = "C:\Users\apiep\Documents\keys\privkey.pem"
+            $key = "$env:GITHUB_WORKSPACE\.github\workflows\privkey.pem"
             $claim = @{
                 aud = "jwtPS"
                 iss = "DigitalAXPP"
