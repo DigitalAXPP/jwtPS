@@ -11,21 +11,38 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
+  # This workflow contains a single job called "PowerShell_Tests"
   PowerShell_Tests:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
     # The type of runner that the job will run on
-    runs-on: windows-latest
-
+    runs-on: ${{ matrix.os }}
+    # If any job fails, all jobs that are in progress or queued will be cancelled
+    continue-on-error: true
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-
+      - uses: actions/checkout@v3
+      - name: Print path
+        run: echo "The workflow path is $env:GITHUB_WORKSPACE"
+        shell: pwsh
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '6.x'
+      - name: Install dependencies
+        run: dotnet restore
+      - name: Build project
+        run: dotnet build --configuration Release --no-restore
+      - name: Publish project
+        run: dotnet publish
+        
       - name: Install PowerShell modules
         shell: pwsh
         run: |
           Set-PSRepository psgallery -InstallationPolicy trusted
-          Install-Module -Name Pester -RequiredVersion 5.0.4 -Confirm:$false -Force
+          Install-Module -Name Pester -Confirm:$false -Force
           Install-Module -Name PSScriptAnalyzer -Force
 
       # Runs a single command using the runners shell
@@ -52,4 +69,4 @@ jobs:
         with:
           name: Script Analysis
           path: ${{ github.workspace }}/.github/workflows/
-          retention-days: 1
+          retention-days: 10

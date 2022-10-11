@@ -1,35 +1,35 @@
 ---
-external help file: jwtPS-help.xml
+external help file: jwtPS.dll-Help.xml
 Module Name: jwtPS
 online version:
 schema: 2.0.0
 ---
 
-# ConvertFrom-JWT
+# ConvertFrom-Jwt
 
 ## SYNOPSIS
-This function accepts a JWT and converts the base64 encryption back to human readable form.
+This function accepts a string in the format of a Json Web Token (JWT) and returns a hashtable with of the header and claimset converted from Base 64.
 
 ## SYNTAX
 
 ```
-ConvertFrom-JWT [-JWT] <String> [<CommonParameters>]
+ConvertFrom-Jwt -Jwt <String> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-The entered JWT will be split into three parts. The header, plus the payload will be returned as PSCustomObject.
+The string must be a valid JWT. The function will split the string into the three parts of a JWT and convert the first two parts back into the human-readable format. The header and the claimset will be returned as a hashtable.
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> ConvertFrom-JWT -JWT $jwt
+PS C:\> ConvertFrom-Jwt -Jwt "eyJ0eXAi[...]I1NiJ9.eyJpYXQiOjEyMzQ1Njc[...]IsImV4cCI6OTg3NjU0MzIxfQ.K741[...]Yf2aE68CHY"
 ```
 
 ## PARAMETERS
 
-### -JWT
-Enter the JWT you want to convert to human readable text.
+### -Jwt
+Expects string in valid JWT format.
 
 ```yaml
 Type: String
@@ -37,7 +37,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: True
-Position: 0
+Position: Named
 Default value: None
 Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
@@ -52,8 +52,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-### System.Management.Automation.PSObject
-
+### System.Object
 ## NOTES
 
 ## RELATED LINKS

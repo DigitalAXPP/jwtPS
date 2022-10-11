@@ -1,3 +1,0 @@
-class jwtBase {
-    [Algorithm]$Algorithm
-}

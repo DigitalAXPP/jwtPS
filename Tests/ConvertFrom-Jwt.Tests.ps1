@@ -1,6 +1,11 @@
 Describe "ConvertFrom-JWT" {
     BeforeAll {
-        Import-Module D:\a\jwtPS\jwtPS\jwtPS.psd1
+        if ($IsLinux) {
+            Import-Module -Global "$env:GITHUB_WORKSPACE/src/bin/Debug/net6.0/publish/jwtPS.dll"
+        }
+        elseif ($IsWindows) {
+            Import-Module -Global "$env:GITHUB_WORKSPACE\src\bin\Debug\net6.0\publish\jwtPS.dll"
+        }
     }
     Context "Verify parameter" {
         $mandatoryParameter = @(
@@ -23,20 +28,22 @@ Describe "ConvertFrom-JWT" {
                 iat = ([System.DateTimeOffset]::Now).ToUnixTimeSeconds()
                 jti = [guid]::NewGuid()
             }
+            $encryption = [jwtFunction+encryption]::SHA256
+            $algorithm = [jwtFunction+algorithm]::HMAC
+            $alg = [jwtFunction+cryptographyType]::new($algorithm, $encryption)
         }
         It "Verification of the header" {
-            $jwt = New-JWT -PrivateKey 'S3cuR3$3cR3T' -Algorithm HS256 -Payload $claim
+            $jwt = New-JWT -Secret 'S3cuR3$3cR3T' -Algorithm $alg -Payload $claim
             $conversion = ConvertFrom-JWT -JWT $jwt
-            $conversion.Header.alg | Should -BeExactly 'HS256'
-            $conversion.Header.typ | Should -BeExactly 'JWT'
+            $conversion.Header | Should -BeExactly '{"typ":"JWT","alg":"HS256"}'
         }
         It "Verification of the payload" {
-            $jwt = New-JWT -PrivateKey 'S3cuR3$3cR3T' -Algorithm HS256 -Payload $claim
+            $jwt = New-JWT -Secret 'S3cuR3$3cR3T' -Algorithm $alg -Payload $claim
             $conversion = ConvertFrom-JWT -JWT $jwt
-            $conversion.Payload.iss | Should -BeExactly $claim.iss
-            $conversion.Payload.exp | Should -BeExactly $claim.exp
-            $conversion.Payload.iat | Should -BeExactly $claim.iat
-            $conversion.Payload.jti | Should -BeExactly $claim.jti
+            $conversion.Claimset | Should -Match $claim.iss
+            $conversion.Claimset | Should -Match $claim.exp
+            $conversion.Claimset | Should -Match $claim.iat
+            $conversion.Claimset | Should -Match $claim.jti
         }
     }
 }
