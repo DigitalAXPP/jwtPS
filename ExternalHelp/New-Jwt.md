@@ -13,7 +13,7 @@ The function creates a Json Web Token (JWT).
 ## SYNTAX
 
 ```
-New-Jwt -Payload <Hashtable> -Algorithm <Algorithm> -Secret <String> [<CommonParameters>]
+New-Jwt -Payload <Hashtable> -Algorithm <cryptographyType> -Secret <String> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -23,21 +23,30 @@ Three parts are required to create a JWT: the algorithm which decides how the bo
 
 ### Example 1
 ```powershell
-PS C:\> New-Jwt -Payload @{'iat'=123456789} -Algorithm ([jwtFunction+Algorithm+HMAC]::NewHMAC([jwtFunction+encryption]::SHA256)) -Secret P@ssw0rd
+PS C:\> $algorithm = [jwtFunction+algorithm]::HMAC
+PS C:\> $encryption = [jwtFunction+encryption]::SHA256
+PS C:\> $cryptoType = [jwtFunction+cryptographyType]::new($algorithm, $encryption)
+PS C:\> New-Jwt -Payload @{'iat'=123456789} -Algorithm $cryptoType -Secret P@ssw0rd
 ```
 
 This function returns a JWT with HMAC encryption.
 
 ### Example 2
 ```powershell
-PS C:\> New-Jwt -Payload @{'iat'=123456789} -Algorithm ([jwtFunction+Algorithm+RSA]::NewRSA([jwtFunction+encryption]::SHA386)) -Secret Path\To\File.pem
+PS C:\> $algorithm = [jwtFunction+algorithm]::RSA
+PS C:\> $encryption = [jwtFunction+encryption]::SHA384
+PS C:\> $cryptoType = [jwtFunction+cryptographyType]::new($algorithm, $encryption)
+PS C:\> New-Jwt -Payload @{'iat'=123456789} -Algorithm $cryptoType -Secret Path\To\File.pem
 ```
 
 This function returns a JWT with RSA encryption and SHA386.
 
 ### Example 3
 ```powershell
-PS C:\> New-Jwt -Payload @{'iat'=123456789} -Algorithm ([jwtFunction+Algorithm+ECDsa]::NewECDsa([jwtFunction+encryption]::SHA512)) -Secret Path\To\File.pem
+PS C:\> $algorithm = [jwtFunction+algorithm]::ECDsa
+PS C:\> $encryption = [jwtFunction+encryption]::SHA512
+PS C:\> $cryptoType = [jwtFunction+cryptographyType]::new($algorithm, $encryption)
+PS C:\> New-Jwt -Payload @{'iat'=123456789} -Algorithm $cryptoType -Secret Path\To\File.pem
 ```
 
 This function returns a JWT with ECDsa encryption and SHA512.
@@ -48,14 +57,14 @@ This function returns a JWT with ECDsa encryption and SHA512.
 Set the encryption algorithm.
 
 ```yaml
-Type: Algorithm
+Type: cryptographyType
 Parameter Sets: (All)
 Aliases:
 
 Required: True
 Position: Named
 Default value: None
-Accept pipeline input: False
+Accept pipeline input: True (ByPropertyName)
 Accept wildcard characters: False
 ```
 
@@ -70,7 +79,7 @@ Aliases:
 Required: True
 Position: Named
 Default value: None
-Accept pipeline input: False
+Accept pipeline input: True (ByPropertyName)
 Accept wildcard characters: False
 ```
 
@@ -85,7 +94,7 @@ Aliases:
 Required: True
 Position: Named
 Default value: None
-Accept pipeline input: False
+Accept pipeline input: True (ByPropertyName)
 Accept wildcard characters: False
 ```
 
