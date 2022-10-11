@@ -1,6 +1,11 @@
 Describe "New-JWT" {
     BeforeAll {
-        Import-Module -Global $env:GITHUB_WORKSPACE\jwtPS.psd1
+        if ($IsLinux) {
+            Import-Module -Global "$env:GITHUB_WORKSPACE/src/bin/Debug/net6.0/publish/jwtPS.dll"
+        }
+        elseif ($IsWindows) {
+            Import-Module -Global "$env:GITHUB_WORKSPACE\src\bin\Debug\net6.0\publish\jwtPS.dll"
+        }
     }
     Context "Verify parameter" {
         $mandatoryParameter = @(
