@@ -15,7 +15,7 @@
     <command:syntax>
       <command:syntaxItem>
         <maml:name>ConvertFrom-Jwt</maml:name>
-        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="none">
           <maml:name>Jwt</maml:name>
           <maml:description>
             <maml:para>Expects string in valid JWT format.</maml:para>
@@ -30,7 +30,7 @@
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="none">
         <maml:name>Jwt</maml:name>
         <maml:description>
           <maml:para>Expects string in valid JWT format.</maml:para>
@@ -94,19 +94,19 @@
     <command:syntax>
       <command:syntaxItem>
         <maml:name>New-Jwt</maml:name>
-        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName)" position="named" aliases="none">
           <maml:name>Algorithm</maml:name>
           <maml:description>
             <maml:para>Set the encryption algorithm.</maml:para>
           </maml:description>
-          <command:parameterValue required="true" variableLength="false">Algorithm</command:parameterValue>
+          <command:parameterValue required="true" variableLength="false">cryptographyType</command:parameterValue>
           <dev:type>
-            <maml:name>Algorithm</maml:name>
+            <maml:name>cryptographyType</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName)" position="named" aliases="none">
           <maml:name>Payload</maml:name>
           <maml:description>
             <maml:para>Provide the claimset.</maml:para>
@@ -118,7 +118,7 @@
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName)" position="named" aliases="none">
           <maml:name>Secret</maml:name>
           <maml:description>
             <maml:para>The secret is a password for HMAC encryption and a private key for RSA or ECDsa algorithms.</maml:para>
@@ -133,19 +133,19 @@
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName)" position="named" aliases="none">
         <maml:name>Algorithm</maml:name>
         <maml:description>
           <maml:para>Set the encryption algorithm.</maml:para>
         </maml:description>
-        <command:parameterValue required="true" variableLength="false">Algorithm</command:parameterValue>
+        <command:parameterValue required="true" variableLength="false">cryptographyType</command:parameterValue>
         <dev:type>
-          <maml:name>Algorithm</maml:name>
+          <maml:name>cryptographyType</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName)" position="named" aliases="none">
         <maml:name>Payload</maml:name>
         <maml:description>
           <maml:para>Provide the claimset.</maml:para>
@@ -157,7 +157,7 @@
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName)" position="named" aliases="none">
         <maml:name>Secret</maml:name>
         <maml:description>
           <maml:para>The secret is a password for HMAC encryption and a private key for RSA or ECDsa algorithms.</maml:para>
@@ -198,21 +198,30 @@
     <command:examples>
       <command:example>
         <maml:title>-------------------------- Example 1 --------------------------</maml:title>
-        <dev:code>PS C:\&gt; New-Jwt -Payload @{'iat'=123456789} -Algorithm [jwtFunction+Algorithm+HMAC]::NewHMAC([jwtFunction+hsAlgorithm]::HS256) -Secret P@ssw0rd</dev:code>
+        <dev:code>PS C:\&gt; $algorithm = [jwtFunction+algorithm]::HMAC
+PS C:\&gt; $encryption = [jwtFunction+encryption]::SHA256
+PS C:\&gt; $cryptoType = [jwtFunction+cryptographyType]::new($algorithm, $encryption)
+PS C:\&gt; New-Jwt -Payload @{'iat'=123456789} -Algorithm $cryptoType -Secret P@ssw0rd</dev:code>
         <dev:remarks>
           <maml:para>This function returns a JWT with HMAC encryption.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>-------------------------- Example 2 --------------------------</maml:title>
-        <dev:code>PS C:\&gt; New-Jwt -Payload @{'iat'=123456789} -Algorithm [jwtFunction+Algorithm+RSA]::NewRSA([jwtFunction+rsAlgorithm]::RS386) -Secret Path\To\File.pem</dev:code>
+        <dev:code>PS C:\&gt; $algorithm = [jwtFunction+algorithm]::RSA
+PS C:\&gt; $encryption = [jwtFunction+encryption]::SHA384
+PS C:\&gt; $cryptoType = [jwtFunction+cryptographyType]::new($algorithm, $encryption)
+PS C:\&gt; New-Jwt -Payload @{'iat'=123456789} -Algorithm $cryptoType -Secret Path\To\File.pem</dev:code>
         <dev:remarks>
           <maml:para>This function returns a JWT with RSA encryption and SHA386.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>-------------------------- Example 3 --------------------------</maml:title>
-        <dev:code>PS C:\&gt; New-Jwt -Payload @{'iat'=123456789} -Algorithm [jwtFunction+Algorithm+ECDsa]::NewECDsa([jwtFunction+esAlgorithm]::RS512) -Secret Path\To\File.pem</dev:code>
+        <dev:code>PS C:\&gt; $algorithm = [jwtFunction+algorithm]::ECDsa
+PS C:\&gt; $encryption = [jwtFunction+encryption]::SHA512
+PS C:\&gt; $cryptoType = [jwtFunction+cryptographyType]::new($algorithm, $encryption)
+PS C:\&gt; New-Jwt -Payload @{'iat'=123456789} -Algorithm $cryptoType -Secret Path\To\File.pem</dev:code>
         <dev:remarks>
           <maml:para>This function returns a JWT with ECDsa encryption and SHA512.</maml:para>
         </dev:remarks>
