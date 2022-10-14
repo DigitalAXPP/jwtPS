@@ -40,7 +40,9 @@ type ConvertFromJwtCommand () =
     member val Jwt : string = String.Empty with get, set
 
     override x.ProcessRecord () =
+        x.WriteVerbose ($"The JWT you provided is:\r\n{x.Jwt}")
         let jwtSplit = x.Jwt.Split "."
+        x.WriteDebug ($"The three parts of the JWT are:\r\n{jwtSplit.[0]}\r\n{jwtSplit.[1]}\r\n{jwtSplit.[2]}")
         let dict = Dictionary<string, string> ()
         dict.Add("Header", (convertFromBase64 jwtSplit.[0]))
         dict.Add("Claimset", (convertFromBase64 jwtSplit.[1]))
