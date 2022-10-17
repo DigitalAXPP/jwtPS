@@ -15,7 +15,7 @@ jobs:
   PowerShell_Tests:
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
     # The type of runner that the job will run on
     runs-on: ${{ matrix.os }}
     # If any job fails, all jobs that are in progress or queued will be cancelled
