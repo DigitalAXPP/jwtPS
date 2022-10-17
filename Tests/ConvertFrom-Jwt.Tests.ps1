@@ -1,6 +1,6 @@
 Describe "ConvertFrom-JWT" {
     BeforeAll {
-        if ($IsLinux) {
+        if ($IsLinux -or $IsMacOS) {
             Import-Module -Global "$env:GITHUB_WORKSPACE/src/bin/Debug/net6.0/publish/jwtPS.dll"
         }
         elseif ($IsWindows) {

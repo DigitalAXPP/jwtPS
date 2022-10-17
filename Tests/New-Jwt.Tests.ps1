@@ -1,6 +1,6 @@
 Describe "New-JWT" {
     BeforeAll {
-        if ($IsLinux) {
+        if ($IsLinux -or $IsMacOS) {
             Import-Module -Global "$env:GITHUB_WORKSPACE/src/bin/Debug/net6.0/publish/jwtPS.dll"
         }
         elseif ($IsWindows) {
@@ -20,7 +20,7 @@ Describe "New-JWT" {
     }
     Context "Creating RSA signature" {
         BeforeEach {
-            if ($IsLinux) {
+            if ($IsLinux -or $IsMacOS) {
                 $key = "$env:GITHUB_WORKSPACE/.github/workflows/privkey.pem"
             }
             elseif ($IsWindows) {
@@ -60,7 +60,7 @@ Describe "New-JWT" {
     }
     Context "Creating ECDSA signature" {
         BeforeEach {
-            if ($IsLinux) {
+            if ($IsLinux -or $IsMacOS) {
                 $key_256 = "$env:GITHUB_WORKSPACE/.github/workflows/private_es256.pem"
                 $key_384 = "$env:GITHUB_WORKSPACE/.github/workflows/private_es384.pem"
                 $key_512 = "$env:GITHUB_WORKSPACE/.github/workflows/private_es512.pem"
