@@ -136,4 +136,44 @@ Describe "New-JWT" {
             $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
         }
     }
+    Context "Creating RSA-PSS signature" {
+        BeforeEach {
+            if ($IsLinux -or $IsMacOS) {
+                $key = "$env:GITHUB_WORKSPACE/.github/workflows/privkey.pem"
+            }
+            elseif ($IsWindows) {
+                $key = "$env:GITHUB_WORKSPACE\.github\workflows\privkey.pem"
+            }
+            $claim = @{
+                aud = "jwtPS"
+                iss = "DigitalAXPP"
+                sub = "RS256 Test"
+                nbf = "0"
+                exp = ([System.DateTimeOffset]::Now.AddHours(3)).ToUnixTimeSeconds()
+                iat = ([System.DateTimeOffset]::Now).ToUnixTimeSeconds()
+                jti = [guid]::NewGuid()
+            }
+        }
+        It "With SHA256" {
+            $encryption = [jwtFunction+encryption]::SHA256
+            $algorithm = [jwtFunction+algorithm]::PSS
+            $alg = [jwtFunction+cryptographyType]::new($algorithm, $encryption)
+            $jwt = New-JWT -Secret $key -Algorithm $alg -Payload $claim
+            $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
+        }
+        It "With SHA384" {
+            $encryption = [jwtFunction+encryption]::SHA384
+            $algorithm = [jwtFunction+algorithm]::PSS
+            $alg = [jwtFunction+cryptographyType]::new($algorithm, $encryption)
+            $jwt = New-JWT -Secret $key -Algorithm $alg -Payload $claim
+            $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
+        }
+        It "With SHA512" {
+            $encryption = [jwtFunction+encryption]::SHA512
+            $algorithm = [jwtFunction+algorithm]::PSS
+            $alg = [jwtFunction+cryptographyType]::new($algorithm, $encryption)
+            $jwt = New-JWT -Secret $key -Algorithm $alg -Payload $claim
+            $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
+        }
+    }
 }

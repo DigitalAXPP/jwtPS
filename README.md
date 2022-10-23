@@ -31,6 +31,7 @@ type algorithm =
     | HMAC of encryption
     | RSA of encryption
     | ECDsa of encryption
+    | PSS of encryption
 type cryptographyType = 
 {
     Algorithm: algorithm
