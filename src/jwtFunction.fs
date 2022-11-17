@@ -2,41 +2,9 @@ module jwtFunction
     open System.Text.Json
     open System.Collections
     open System.Security.Cryptography
-
-    type jwtHeader = 
-        {
-            typ: string
-            alg: string
-        }
-
-    type encryption = 
-        | SHA256
-        | SHA384
-        | SHA512
-        member this.IdSuffix =
-            match this with
-            | SHA256 -> "256"
-            | SHA384 -> "384"
-            | SHA512 -> "512"
-
-    type algorithm = 
-        | HMAC
-        | RSA
-        | ECDsa
-        | PSS
-        member this.IdPrefix =
-            match this with
-            | HMAC -> "HS"
-            | RSA -> "RS"
-            | ECDsa -> "ES"
-            | PSS -> "PS"
-
-    type cryptographyType = 
-        {
-            Algorithm: algorithm
-            Encryption: encryption
-        } member this.Id = this.Algorithm.IdPrefix + this.Encryption.IdSuffix
-
+    open jwtTypes
+    open jwtRsaEncryption
+    
     let createJwtHeader (algorithm: string) =
         let header = {typ = "JWT"; alg = algorithm}
         let jsonHeader = JsonSerializer.Serialize header
@@ -64,50 +32,6 @@ module jwtFunction
                         | SHA384 -> HMACSHA384.HashData (secretInBytes, dataInBytes)
                         | SHA512 -> HMACSHA512.HashData (secretInBytes, dataInBytes)
         let base64 = System.Convert.ToBase64String hsHash
-        base64
-            .Replace("+", "-")
-            .Replace("/", "_")
-            .Replace("=", "")
-
-    let hashRSWithPemFile (msg: string) (algorithm: encryption) (privateKeyPath: string) =
-        let rsa = RSA.Create()
-        let privKey = System.IO.File.ReadAllText privateKeyPath
-        rsa.ImportFromPem privKey
-        let dataInBytes = System.Text.Encoding.UTF8.GetBytes msg
-        let bytes = match algorithm with
-                    | SHA256 -> rsa.SignData(dataInBytes, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1)
-                    | SHA384 -> rsa.SignData(dataInBytes, HashAlgorithmName.SHA384, RSASignaturePadding.Pkcs1)
-                    | SHA512 -> rsa.SignData(dataInBytes, HashAlgorithmName.SHA512, RSASignaturePadding.Pkcs1)
-        let base64 = System.Convert.ToBase64String bytes
-        base64
-            .Replace("+", "-")
-            .Replace("/", "_")
-            .Replace("=", "")
-
-    let hashRSWithPemContent (msg: string) (algorithm: encryption) (privateKey: string) =
-        let rsa = RSA.Create()
-        rsa.ImportFromPem privateKey
-        let dataInBytes = System.Text.Encoding.UTF8.GetBytes msg
-        let bytes = match algorithm with
-                    | SHA256 -> rsa.SignData(dataInBytes, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1)
-                    | SHA384 -> rsa.SignData(dataInBytes, HashAlgorithmName.SHA384, RSASignaturePadding.Pkcs1)
-                    | SHA512 -> rsa.SignData(dataInBytes, HashAlgorithmName.SHA512, RSASignaturePadding.Pkcs1)
-        let base64 = System.Convert.ToBase64String bytes
-        base64
-            .Replace("+", "-")
-            .Replace("/", "_")
-            .Replace("=", "")
-
-    let hashRSWithDerFile (msg: string) (algorithm: encryption) (privateKeyPath: string) =
-        let rsa = RSA.Create()
-        let privKey = System.IO.File.ReadAllBytes privateKeyPath
-        rsa.ImportPkcs8PrivateKey privKey |> ignore
-        let dataInBytes = System.Text.Encoding.UTF8.GetBytes msg
-        let bytes = match algorithm with
-                    | SHA256 -> rsa.SignData(dataInBytes, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1)
-                    | SHA384 -> rsa.SignData(dataInBytes, HashAlgorithmName.SHA384, RSASignaturePadding.Pkcs1)
-                    | SHA512 -> rsa.SignData(dataInBytes, HashAlgorithmName.SHA512, RSASignaturePadding.Pkcs1)
-        let base64 = System.Convert.ToBase64String bytes
         base64
             .Replace("+", "-")
             .Replace("/", "_")

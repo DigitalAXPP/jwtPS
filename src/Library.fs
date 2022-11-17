@@ -4,6 +4,7 @@ open System.Collections
 open System.Collections.Generic
 open System.Management.Automation
 open jwtFunction
+open jwtTypes
 
 [<Cmdlet("New", "Jwt")>]
 [<OutputType(typeof<string>)>]

@@ -6,6 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="jwtTypes.fs" />
+    <Compile Include="jwtRsaEncryption.fs" />
     <Compile Include="jwtFunction.fs" />
     <Compile Include="Library.fs" />
   </ItemGroup>
