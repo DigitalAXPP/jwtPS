@@ -69,11 +69,39 @@ module jwtFunction
             .Replace("/", "_")
             .Replace("=", "")
 
-    let hashRS (msg: string) (algorithm: encryption) (privateKeyPath: string) =
+    let hashRSWithPemFile (msg: string) (algorithm: encryption) (privateKeyPath: string) =
         let rsa = RSA.Create()
-        // let privKey = System.IO.File.ReadAllText @"C:\Users\Alexande.Piepenhagen\Documents\FSharp\privkey.pem"
         let privKey = System.IO.File.ReadAllText privateKeyPath
         rsa.ImportFromPem privKey
+        let dataInBytes = System.Text.Encoding.UTF8.GetBytes msg
+        let bytes = match algorithm with
+                    | SHA256 -> rsa.SignData(dataInBytes, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1)
+                    | SHA384 -> rsa.SignData(dataInBytes, HashAlgorithmName.SHA384, RSASignaturePadding.Pkcs1)
+                    | SHA512 -> rsa.SignData(dataInBytes, HashAlgorithmName.SHA512, RSASignaturePadding.Pkcs1)
+        let base64 = System.Convert.ToBase64String bytes
+        base64
+            .Replace("+", "-")
+            .Replace("/", "_")
+            .Replace("=", "")
+
+    let hashRSWithPemContent (msg: string) (algorithm: encryption) (privateKey: string) =
+        let rsa = RSA.Create()
+        rsa.ImportFromPem privateKey
+        let dataInBytes = System.Text.Encoding.UTF8.GetBytes msg
+        let bytes = match algorithm with
+                    | SHA256 -> rsa.SignData(dataInBytes, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1)
+                    | SHA384 -> rsa.SignData(dataInBytes, HashAlgorithmName.SHA384, RSASignaturePadding.Pkcs1)
+                    | SHA512 -> rsa.SignData(dataInBytes, HashAlgorithmName.SHA512, RSASignaturePadding.Pkcs1)
+        let base64 = System.Convert.ToBase64String bytes
+        base64
+            .Replace("+", "-")
+            .Replace("/", "_")
+            .Replace("=", "")
+
+    let hashRSWithDerFile (msg: string) (algorithm: encryption) (privateKeyPath: string) =
+        let rsa = RSA.Create()
+        let privKey = System.IO.File.ReadAllBytes privateKeyPath
+        rsa.ImportPkcs8PrivateKey privKey |> ignore
         let dataInBytes = System.Text.Encoding.UTF8.GetBytes msg
         let bytes = match algorithm with
                     | SHA256 -> rsa.SignData(dataInBytes, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1)
@@ -126,7 +154,7 @@ module jwtFunction
     let newJwtRS (algorithm: encryption) (claimSet: Hashtable) (keyPath: string) =
         let jHeader = createJwtHeader (algorithm.ToString())
         let jClaimSet = createJwtClaimset claimSet
-        let jSignature = hashRS $"{jHeader}.{jClaimSet}" algorithm keyPath
+        let jSignature = hashRSWithPemFile $"{jHeader}.{jClaimSet}" algorithm keyPath
         $"{jHeader}.{jClaimSet}.{jSignature}"
 
     let newJwtES (algorithm: encryption) (claimSet: Hashtable) (keyPath: string) =
@@ -158,20 +186,22 @@ module jwtFunction
         let jClaimSet = createJwtClaimset claimSet
         let jSignature = match algorithm.Algorithm with
                             | HMAC -> hashHS $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
-                            | RSA -> hashRS $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
+                            | RSA -> hashRSWithPemFile $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
                             | ECDsa -> hashES $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
                             | PSS -> hashPS $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
         $"{jHeader}.{jClaimSet}.{jSignature}"
 
-    //let verifyJwt (jwt: string) =
-    //    let jwtSplit = x.Jwt.Split "."
-    //    let bodyBytes = System.Text.Encoding.UTF8.GetBytes $"{jwtSplit.[0]}.{jwtSplit.[1]}"
-    //    let signatureBytes = System.Text.Encoding.UTF8.GetBytes jwtSplit.[2]
+    let verifyJwt (jwt: string) =
+       let jwtSplit = jwt.Split "."
+       let bodyBytes = System.Text.Encoding.UTF8.GetBytes $"{jwtSplit.[0]}.{jwtSplit.[1]}"
+       let signatureBytes = System.Text.Encoding.UTF8.GetBytes jwtSplit.[2]
 
-    //    let rsa = RSA.Create()
+       let rsa = RSA.Create()
         
     //    let pubKey = System.IO.File.ReadAllText @"C:\Users\alexande.piepenhagen\Documents\FSharp\pubkey.pem"
+       let pubKey = System.IO.File.ReadAllBytes @"C:\Users\apiep\Documents\keys\rsapubkey.der"
     //    let pubKeyBytes = System.Text.Encoding.UTF8.GetBytes pubKey
     //    rsa.ImportFromPem pubKey
+       rsa.ImportSubjectPublicKeyInfo pubKey |> ignore
 
-    //    rsa.VerifyData(bodyBytes, signatureBytes, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1)
+       rsa.VerifyData(bodyBytes, signatureBytes, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1)

@@ -59,6 +59,6 @@ $payload = @{
 $encryption = [jwtFunction+encryption]::SHA384
 $algorithm = [jwtFunction+algorithm]::RSA
 $alg = [jwtFunction+cryptographyType]::new($algorithm, $encryption)
-$jwt = New-JWT -PrivateKey $key -Algorithm $alg -Payload $payload
+$jwt = New-JWT -Secret $key -Algorithm $alg -Payload $payload
 ```
 **Attention**, `New-Jwt` expects the private key to be in **PEM** format.
