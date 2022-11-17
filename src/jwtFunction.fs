@@ -4,6 +4,8 @@ module jwtFunction
     open System.Security.Cryptography
     open jwtTypes
     open jwtRsaEncryption
+    open jwtEcdsaEncryption
+    open jwtPssEncryption
     
     let createJwtHeader (algorithm: string) =
         let header = {typ = "JWT"; alg = algorithm}
@@ -37,38 +39,6 @@ module jwtFunction
             .Replace("/", "_")
             .Replace("=", "")
 
-    let hashES (msg: string) (algorithm: encryption) (privateKeyPath: string) =
-        let rsa = ECDsa.Create()
-        // let privKey = System.IO.File.ReadAllText @"C:\Users\Alexande.Piepenhagen\Documents\FSharp\private_ec.pem"
-        let privKey = System.IO.File.ReadAllText privateKeyPath
-        rsa.ImportFromPem privKey
-        let dataInBytes = System.Text.Encoding.UTF8.GetBytes msg
-        let bytes = match algorithm with
-                    | SHA256 -> rsa.SignData(dataInBytes, HashAlgorithmName.SHA256)
-                    | SHA384 -> rsa.SignData(dataInBytes, HashAlgorithmName.SHA384)
-                    | SHA512 -> rsa.SignData(dataInBytes, HashAlgorithmName.SHA512)
-        let base64 = System.Convert.ToBase64String bytes
-        base64
-            .Replace("+", "-")
-            .Replace("/", "_")
-            .Replace("=", "")
-
-    let hashPS (msg: string) (algorithm: encryption) (privateKeyPath: string) =
-        let rsa = RSA.Create()
-        // let privKey = System.IO.File.ReadAllText @"C:\Users\Alexande.Piepenhagen\Documents\FSharp\privkey.pem"
-        let privKey = System.IO.File.ReadAllText privateKeyPath
-        rsa.ImportFromPem privKey
-        let dataInBytes = System.Text.Encoding.UTF8.GetBytes msg
-        let bytes = match algorithm with
-                    | SHA256 -> rsa.SignData(dataInBytes, HashAlgorithmName.SHA256, RSASignaturePadding.Pss)
-                    | SHA384 -> rsa.SignData(dataInBytes, HashAlgorithmName.SHA384, RSASignaturePadding.Pss)
-                    | SHA512 -> rsa.SignData(dataInBytes, HashAlgorithmName.SHA512, RSASignaturePadding.Pss)
-        let base64 = System.Convert.ToBase64String bytes
-        base64
-            .Replace("+", "-")
-            .Replace("/", "_")
-            .Replace("=", "")
-
     let newJwtHMAC (algorithm: encryption) (claimSet: Hashtable) (secret: string) =
         let jHeader = createJwtHeader (algorithm.ToString())
         let jClaimSet = createJwtClaimset claimSet
@@ -84,13 +54,13 @@ module jwtFunction
     let newJwtES (algorithm: encryption) (claimSet: Hashtable) (keyPath: string) =
         let jHeader = createJwtHeader (algorithm.ToString())
         let jClaimSet = createJwtClaimset claimSet
-        let jSignature = hashES $"{jHeader}.{jClaimSet}" algorithm keyPath
+        let jSignature = hashESWithPemFile $"{jHeader}.{jClaimSet}" algorithm keyPath
         $"{jHeader}.{jClaimSet}.{jSignature}"
 
     let newJwtPS (algorithm: encryption) (claimSet: Hashtable) (keyPath: string) =
         let jHeader = createJwtHeader (algorithm.ToString())
         let jClaimSet = createJwtClaimset claimSet
-        let jSignature = hashPS $"{jHeader}.{jClaimSet}" algorithm keyPath
+        let jSignature = hashPSWithPemFile $"{jHeader}.{jClaimSet}" algorithm keyPath
         $"{jHeader}.{jClaimSet}.{jSignature}"
 
     let convertFromBase64 (jwt: string) =
@@ -111,8 +81,8 @@ module jwtFunction
         let jSignature = match algorithm.Algorithm with
                             | HMAC -> hashHS $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
                             | RSA -> hashRSWithPemFile $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
-                            | ECDsa -> hashES $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
-                            | PSS -> hashPS $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
+                            | ECDsa -> hashESWithPemFile $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
+                            | PSS -> hashPSWithPemFile $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
         $"{jHeader}.{jClaimSet}.{jSignature}"
 
     let verifyJwt (jwt: string) =
