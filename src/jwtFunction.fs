@@ -75,7 +75,27 @@ module jwtFunction
         let bytes = System.Convert.FromBase64String strReplaced
         System.Text.Encoding.UTF8.GetString bytes
 
-    let newJwt (algorithm: cryptographyType) (claimSet: Hashtable) (secretOrKeyPath: string) =
+    let newJwtWithPemFile (algorithm: cryptographyType) (claimSet: Hashtable) (secretOrKeyPath: string) =
+        let jHeader = createJwtHeader (algorithm.Id)
+        let jClaimSet = createJwtClaimset claimSet
+        let jSignature = match algorithm.Algorithm with
+                            | HMAC -> hashHS $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
+                            | RSA -> hashRSWithPemFile $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
+                            | ECDsa -> hashESWithPemFile $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
+                            | PSS -> hashPSWithPemFile $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
+        $"{jHeader}.{jClaimSet}.{jSignature}"
+
+    let newJwtWithPemContent (algorithm: cryptographyType) (claimSet: Hashtable) (secretOrKeyPath: string) =
+        let jHeader = createJwtHeader (algorithm.Id)
+        let jClaimSet = createJwtClaimset claimSet
+        let jSignature = match algorithm.Algorithm with
+                            | HMAC -> hashHS $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
+                            | RSA -> hashRSWithPemContent $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
+                            | ECDsa -> hashESWithPemContnent $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
+                            | PSS -> hashPSWithPemContent $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
+        $"{jHeader}.{jClaimSet}.{jSignature}"
+
+    let newJwtWithDerFile (algorithm: cryptographyType) (claimSet: Hashtable) (secretOrKeyPath: string) =
         let jHeader = createJwtHeader (algorithm.Id)
         let jClaimSet = createJwtClaimset claimSet
         let jSignature = match algorithm.Algorithm with

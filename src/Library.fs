@@ -20,13 +20,29 @@ type NewJwtCommand () =
         ValueFromPipelineByPropertyName=true)>]
     member val Algorithm : cryptographyType = { Algorithm = HMAC; Encryption = SHA256 } with get, set
     [<Parameter(
+        ParameterSetName="Key",
         Mandatory=true,
         ValueFromPipelineByPropertyName=true)>]
     [<ValidateNotNullOrEmpty>]
     member val Secret : string = String.Empty with get, set
+    [<Parameter(
+        ParameterSetName="FilePath",
+        Mandatory=true,
+        ValueFromPipelineByPropertyName=true)>]
+    [<ValidateNotNullOrEmpty>]
+    member val FilePath : System.IO.FileInfo = null with get, set
+
+    override x.BeginProcessing () =
+        x.WriteDebug ($"Parameter set: {x.ParameterSetName}")
+        base.BeginProcessing()
 
     override x.ProcessRecord () =
-        let jwt = newJwt x.Algorithm x.Payload x.Secret
+        let jwt = 
+                match x.ParameterSetName with
+                | "Key" -> newJwtWithPemContent x.Algorithm x.Payload x.Secret
+                | "FilePath" -> newJwtWithPemFile x.Algorithm x.Payload x.FilePath.FullName
+                | _ -> "Incorrect ParameterSet selected."
+          
         x.WriteObject (jwt)
         base.ProcessRecord ()
 
