@@ -40,7 +40,10 @@ type NewJwtCommand () =
         let jwt = 
                 match x.ParameterSetName with
                 | "Key" -> newJwtWithPemContent x.Algorithm x.Payload x.Secret
-                | "FilePath" -> newJwtWithPemFile x.Algorithm x.Payload x.FilePath.FullName
+                | "FilePath" -> if x.FilePath.Extension = ".pem" then 
+                                    newJwtWithPemFile x.Algorithm x.Payload x.FilePath.FullName
+                                else
+                                    newJwtWithDerFile x.Algorithm x.Payload x.FilePath.FullName
                 | _ -> "Incorrect ParameterSet selected."
           
         x.WriteObject (jwt)

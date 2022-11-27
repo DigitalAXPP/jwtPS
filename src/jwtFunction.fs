@@ -100,9 +100,9 @@ module jwtFunction
         let jClaimSet = createJwtClaimset claimSet
         let jSignature = match algorithm.Algorithm with
                             | HMAC -> hashHS $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
-                            | RSA -> hashRSWithPemFile $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
-                            | ECDsa -> hashESWithPemFile $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
-                            | PSS -> hashPSWithPemFile $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
+                            | RSA -> hashRSWithDerFile $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
+                            | ECDsa -> hashESWithDerFile $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
+                            | PSS -> hashPSWithDerFile $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
         $"{jHeader}.{jClaimSet}.{jSignature}"
 
     let verifyJwt (jwt: string) =
