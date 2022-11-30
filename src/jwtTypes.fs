@@ -1,5 +1,5 @@
 module jwtTypes
-    type internal jwtHeader = 
+    type jwtHeader = 
         {
             typ: string
             alg: string
