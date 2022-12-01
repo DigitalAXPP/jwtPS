@@ -28,9 +28,9 @@ Describe "ConvertFrom-JWT" {
                 iat = ([System.DateTimeOffset]::Now).ToUnixTimeSeconds()
                 jti = [guid]::NewGuid()
             }
-            $encryption = [jwtFunction+encryption]::SHA256
-            $algorithm = [jwtFunction+algorithm]::HMAC
-            $alg = [jwtFunction+cryptographyType]::new($algorithm, $encryption)
+            $encryption = [jwtTypes+encryption]::SHA256
+            $algorithm = [jwtTypes+algorithm]::HMAC
+            $alg = [jwtTypes+cryptographyType]::new($algorithm, $encryption)
         }
         It "Verification of the header" {
             $jwt = New-JWT -Secret 'S3cuR3$3cR3T' -Algorithm $alg -Payload $claim
