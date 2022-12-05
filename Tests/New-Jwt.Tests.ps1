@@ -236,7 +236,7 @@ Describe "New-JWT" {
             $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
         }
         It "With DER and SHA256" {
-            $encryption = [jwtTypes+encryption]::SHA25
+            $encryption = [jwtTypes+encryption]::SHA256
             $algorithm = [jwtTypes+algorithm]::PSS
             $alg = [jwtTypes+cryptographyType]::new($algorithm, $encryption)
             $jwt = New-JWT -FilePath $keyDer -Algorithm $alg -Payload $claim
@@ -244,7 +244,7 @@ Describe "New-JWT" {
         }
         It "With String and SHA256" {
             $content = (Get-Content -Path $key) -join ""
-            $encryption = [jwtTypes+encryption]::SHA512
+            $encryption = [jwtTypes+encryption]::SHA256
             $algorithm = [jwtTypes+algorithm]::PSS
             $alg = [jwtTypes+cryptographyType]::new($algorithm, $encryption)
             $jwt = New-JWT -Secret $content -Algorithm $alg -Payload $claim
