@@ -212,9 +212,11 @@ Describe "New-JWT" {
         BeforeEach {
             if ($IsLinux -or $IsMacOS) {
                 $key = "$env:GITHUB_WORKSPACE/.github/workflows/privkey.pem"
+                $keyDer = "$env:GITHUB_WORKSPACE/.github/workflows/rsaprivkey.der"
             }
             elseif ($IsWindows) {
                 $key = "$env:GITHUB_WORKSPACE\.github\workflows\privkey.pem"
+                $keyDer = "$env:GITHUB_WORKSPACE\.github\workflows\rsaprivkey.der"
             }
             $claim = @{
                 aud = "jwtPS"
@@ -233,6 +235,13 @@ Describe "New-JWT" {
             $jwt = New-JWT -FilePath $key -Algorithm $alg -Payload $claim
             $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
         }
+        It "With DER and SHA256" {
+            $encryption = [jwtTypes+encryption]::SHA25
+            $algorithm = [jwtTypes+algorithm]::PSS
+            $alg = [jwtTypes+cryptographyType]::new($algorithm, $encryption)
+            $jwt = New-JWT -FilePath $keyDer -Algorithm $alg -Payload $claim
+            $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
+        }
         It "With String and SHA256" {
             $content = (Get-Content -Path $key) -join ""
             $encryption = [jwtTypes+encryption]::SHA512
@@ -241,11 +250,18 @@ Describe "New-JWT" {
             $jwt = New-JWT -Secret $content -Algorithm $alg -Payload $claim
             $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
         }
-        It "With SHA384" {
+        It "With PEM and SHA384" {
             $encryption = [jwtTypes+encryption]::SHA384
             $algorithm = [jwtTypes+algorithm]::PSS
             $alg = [jwtTypes+cryptographyType]::new($algorithm, $encryption)
             $jwt = New-JWT -FilePath $key -Algorithm $alg -Payload $claim
+            $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
+        }
+        It "With DER and SHA384" {
+            $encryption = [jwtTypes+encryption]::SHA384
+            $algorithm = [jwtTypes+algorithm]::PSS
+            $alg = [jwtTypes+cryptographyType]::new($algorithm, $encryption)
+            $jwt = New-JWT -FilePath $keyDer -Algorithm $alg -Payload $claim
             $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
         }
         It "With String and SHA384" {
@@ -256,11 +272,18 @@ Describe "New-JWT" {
             $jwt = New-JWT -Secret $content -Algorithm $alg -Payload $claim
             $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
         }
-        It "With SHA512" {
+        It "With PEM and SHA512" {
             $encryption = [jwtTypes+encryption]::SHA512
             $algorithm = [jwtTypes+algorithm]::PSS
             $alg = [jwtTypes+cryptographyType]::new($algorithm, $encryption)
             $jwt = New-JWT -FilePath $key -Algorithm $alg -Payload $claim
+            $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
+        }
+        It "With DER and SHA512" {
+            $encryption = [jwtTypes+encryption]::SHA512
+            $algorithm = [jwtTypes+algorithm]::PSS
+            $alg = [jwtTypes+cryptographyType]::new($algorithm, $encryption)
+            $jwt = New-JWT -FilePath $keyDer -Algorithm $alg -Payload $claim
             $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
         }
         It "With String and SHA512" {
