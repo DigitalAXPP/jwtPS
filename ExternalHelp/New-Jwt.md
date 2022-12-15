@@ -12,20 +12,26 @@ The function creates a Json Web Token (JWT).
 
 ## SYNTAX
 
+### Key
 ```
 New-Jwt -Payload <Hashtable> -Algorithm <cryptographyType> -Secret <String> [<CommonParameters>]
 ```
 
+### FilePath
+```
+New-Jwt -Payload <Hashtable> -Algorithm <cryptographyType> -FilePath <FileInfo> [<CommonParameters>]
+```
+
 ## DESCRIPTION
-Three parts are required to create a JWT: the algorithm which decides how the body of the JWT will be encrypted, the claimset which carries the message and the secret (Password for HMAC encryption or private key for RSA or ECDsa). The private keys must be in PEM format.
+Three parts are required to create a JWT: the algorithm which decides how the body of the JWT will be encrypted, the claimset which carries the message, and the secret (Password for HMAC encryption or private key for RSA, ECDsa or Pss).
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> $algorithm = [jwtFunction+algorithm]::HMAC
-PS C:\> $encryption = [jwtFunction+encryption]::SHA256
-PS C:\> $cryptoType = [jwtFunction+cryptographyType]::new($algorithm, $encryption)
+PS C:\> $algorithm = [jwtTypes+algorithm]::HMAC
+PS C:\> $encryption = [jwtTypes+encryption]::SHA256
+PS C:\> $cryptoType = [jwtTypes+cryptographyType]::new($algorithm, $encryption)
 PS C:\> New-Jwt -Payload @{'iat'=123456789} -Algorithm $cryptoType -Secret P@ssw0rd
 ```
 
@@ -33,20 +39,20 @@ This function returns a JWT with HMAC encryption.
 
 ### Example 2
 ```powershell
-PS C:\> $algorithm = [jwtFunction+algorithm]::RSA
-PS C:\> $encryption = [jwtFunction+encryption]::SHA384
-PS C:\> $cryptoType = [jwtFunction+cryptographyType]::new($algorithm, $encryption)
-PS C:\> New-Jwt -Payload @{'iat'=123456789} -Algorithm $cryptoType -Secret Path\To\File.pem
+PS C:\> $algorithm = [jwtTypes+algorithm]::RSA
+PS C:\> $encryption = [jwtTypes+encryption]::SHA384
+PS C:\> $cryptoType = [jwtTypes+cryptographyType]::new($algorithm, $encryption)
+PS C:\> New-Jwt -Payload @{'iat'=123456789} -Algorithm $cryptoType -FilePath Path\To\File.pem
 ```
 
 This function returns a JWT with RSA encryption and SHA386.
 
 ### Example 3
 ```powershell
-PS C:\> $algorithm = [jwtFunction+algorithm]::ECDsa
-PS C:\> $encryption = [jwtFunction+encryption]::SHA512
-PS C:\> $cryptoType = [jwtFunction+cryptographyType]::new($algorithm, $encryption)
-PS C:\> New-Jwt -Payload @{'iat'=123456789} -Algorithm $cryptoType -Secret Path\To\File.pem
+PS C:\> $algorithm = [jwtTypes+algorithm]::ECDsa
+PS C:\> $encryption = [jwtTypes+encryption]::SHA512
+PS C:\> $cryptoType = [jwtTypes+cryptographyType]::new($algorithm, $encryption)
+PS C:\> New-Jwt -Payload @{'iat'=123456789} -Algorithm $cryptoType -FilePath Path\To\File.pem
 ```
 
 This function returns a JWT with ECDsa encryption and SHA512.
@@ -84,11 +90,26 @@ Accept wildcard characters: False
 ```
 
 ### -Secret
-The secret is a password for HMAC encryption and a private key for RSA or ECDsa algorithms.
+The secret is a password for HMAC encryption and a private key for RSA, ECDsa or Pss algorithms.
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: Key
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: True (ByPropertyName)
+Accept wildcard characters: False
+```
+
+### -FilePath
+Provide the path to the key.
+
+```yaml
+Type: FileInfo
+Parameter Sets: FilePath
 Aliases:
 
 Required: True

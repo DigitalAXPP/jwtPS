@@ -11,21 +11,25 @@ open jwtTypes
 type NewJwtCommand () =
     inherit PSCmdlet ()
     [<Parameter(
+        HelpMessage="Provide the claimset of the JWT in hashtable.",
         Mandatory=true,
         ValueFromPipelineByPropertyName=true)>]
     [<ValidateNotNullOrEmpty>]
     member val Payload : Hashtable = Hashtable () with get, set
     [<Parameter(
+        HelpMessage="Set the Algorithm how you want your JWT to be signed.",
         Mandatory=true,
         ValueFromPipelineByPropertyName=true)>]
     member val Algorithm : cryptographyType = { Algorithm = HMAC; Encryption = SHA256 } with get, set
     [<Parameter(
+        HelpMessage="Provide the key file content or HMAC secret.",
         ParameterSetName="Key",
         Mandatory=true,
         ValueFromPipelineByPropertyName=true)>]
     [<ValidateNotNullOrEmpty>]
     member val Secret : string = String.Empty with get, set
     [<Parameter(
+        HelpMessage="Provide the path to the key.",
         ParameterSetName="FilePath",
         Mandatory=true,
         ValueFromPipelineByPropertyName=true)>]
