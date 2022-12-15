@@ -40,25 +40,28 @@ type cryptographyType =
 ```
 To create this class in PowerShell you need to cast them like this:
 ```PowerShell
-$encryption = [jwtFunction+encryption]::SHA256
-$algorithm = [jwtFunction+algorithm]::HMAC
-$alg = [jwtFunction+cryptographyType]::new($algorithm, $encryption)
+$encryption = [jwtTypes+encryption]::SHA256
+$algorithm = [jwtTypes+algorithm]::HMAC
+$alg = [jwtTypes+cryptographyType]::new($algorithm, $encryption)
 ```
 Finally, you can see below the code to create a JWT using RSA encryption with SHA384.
 ```PowerShell
 $key = "C:\Users\Path\To\Private\Key.pem"
+# The content must be joined otherwise you would have a string array.
+$keyContent = (Get-Content -Path $key) -join ""
 $payload = @{
     aud = "jwtPS"        
     iss = "DigitalAXPP-$(Get-Random -Maximum 10000)"        
-    sub = "HS256 Test"        
+    sub = "RS384 Test"        
     nbf = "0"        
     exp = ([System.DateTimeOffset]::Now.AddHours(3)).ToUnixTimeSeconds()
     iat = ([System.DateTimeOffset]::Now).ToUnixTimeSeconds()
     jti = [guid]::NewGuid()
 }
-$encryption = [jwtFunction+encryption]::SHA384
-$algorithm = [jwtFunction+algorithm]::RSA
-$alg = [jwtFunction+cryptographyType]::new($algorithm, $encryption)
-$jwt = New-JWT -Secret $key -Algorithm $alg -Payload $payload
+$encryption = [jwtTypes+encryption]::SHA384
+$algorithm = [jwtTypes+algorithm]::RSA
+$alg = [jwtTypes+cryptographyType]::new($algorithm, $encryption)
+$jwt = New-JWT -Payload $payload -Algorithm $alg -FilePath $key
+$jwt = New-JWT -Payload $payload -Algorithm $alg -Secret $keyContent
 ```
-**Attention**, `New-Jwt` expects the private key to be in **PEM** format.
+**Attention**, `New-Jwt` accepts now either in **PEM** or **PKCS#8** format.

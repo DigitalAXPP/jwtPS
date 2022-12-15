@@ -41,10 +41,10 @@ type NewJwtCommand () =
                 match x.ParameterSetName with
                 | "Key" -> newJwtWithPemContent x.Algorithm x.Payload x.Secret
                 | "FilePath" -> if x.FilePath.Extension = ".pem" then
-                                    x.WriteDebug ("The file matches .pem")
+                                    x.WriteDebug ("The file extension matches .pem")
                                     newJwtWithPemFile x.Algorithm x.Payload x.FilePath.FullName
                                 else
-                                    x.WriteDebug ("The file doesn't match .pem")
+                                    x.WriteDebug ("The file extension doesn't match .pem")
                                     newJwtWithDerFile x.Algorithm x.Payload x.FilePath.FullName
                 | _ -> "Incorrect ParameterSet selected."
           
