@@ -39,29 +39,29 @@ module jwtFunction
             .Replace("/", "_")
             .Replace("=", "")
 
-    let newJwtHMAC (algorithm: encryption) (claimSet: Hashtable) (secret: string) =
-        let jHeader = createJwtHeader (algorithm.ToString())
-        let jClaimSet = createJwtClaimset claimSet
-        let jSignature = hashHS $"{jHeader}.{jClaimSet}" algorithm secret
-        $"{jHeader}.{jClaimSet}.{jSignature}"
+    // let newJwtHMAC (algorithm: encryption) (claimSet: Hashtable) (secret: string) =
+    //     let jHeader = createJwtHeader (algorithm.ToString())
+    //     let jClaimSet = createJwtClaimset claimSet
+    //     let jSignature = hashHS $"{jHeader}.{jClaimSet}" algorithm secret
+    //     $"{jHeader}.{jClaimSet}.{jSignature}"
 
-    let newJwtRS (algorithm: encryption) (claimSet: Hashtable) (keyPath: string) =
-        let jHeader = createJwtHeader (algorithm.ToString())
-        let jClaimSet = createJwtClaimset claimSet
-        let jSignature = hashRSWithPemFile $"{jHeader}.{jClaimSet}" algorithm keyPath
-        $"{jHeader}.{jClaimSet}.{jSignature}"
+    // let newJwtRS (algorithm: encryption) (claimSet: Hashtable) (keyPath: string) =
+    //     let jHeader = createJwtHeader (algorithm.ToString())
+    //     let jClaimSet = createJwtClaimset claimSet
+    //     let jSignature = hashRSWithPemFile $"{jHeader}.{jClaimSet}" algorithm keyPath
+    //     $"{jHeader}.{jClaimSet}.{jSignature}"
 
-    let newJwtES (algorithm: encryption) (claimSet: Hashtable) (keyPath: string) =
-        let jHeader = createJwtHeader (algorithm.ToString())
-        let jClaimSet = createJwtClaimset claimSet
-        let jSignature = hashESWithPemFile $"{jHeader}.{jClaimSet}" algorithm keyPath
-        $"{jHeader}.{jClaimSet}.{jSignature}"
+    // let newJwtES (algorithm: encryption) (claimSet: Hashtable) (keyPath: string) =
+    //     let jHeader = createJwtHeader (algorithm.ToString())
+    //     let jClaimSet = createJwtClaimset claimSet
+    //     let jSignature = hashESWithPemFile $"{jHeader}.{jClaimSet}" algorithm keyPath
+    //     $"{jHeader}.{jClaimSet}.{jSignature}"
 
-    let newJwtPS (algorithm: encryption) (claimSet: Hashtable) (keyPath: string) =
-        let jHeader = createJwtHeader (algorithm.ToString())
-        let jClaimSet = createJwtClaimset claimSet
-        let jSignature = hashPSWithPemFile $"{jHeader}.{jClaimSet}" algorithm keyPath
-        $"{jHeader}.{jClaimSet}.{jSignature}"
+    // let newJwtPS (algorithm: encryption) (claimSet: Hashtable) (keyPath: string) =
+    //     let jHeader = createJwtHeader (algorithm.ToString())
+    //     let jClaimSet = createJwtClaimset claimSet
+    //     let jSignature = hashPSWithPemFile $"{jHeader}.{jClaimSet}" algorithm keyPath
+    //     $"{jHeader}.{jClaimSet}.{jSignature}"
 
     let convertFromBase64 (jwt: string) =
         let str = match jwt.Length % 4 with
