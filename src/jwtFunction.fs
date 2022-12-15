@@ -2,41 +2,11 @@ module jwtFunction
     open System.Text.Json
     open System.Collections
     open System.Security.Cryptography
-
-    type jwtHeader = 
-        {
-            typ: string
-            alg: string
-        }
-
-    type encryption = 
-        | SHA256
-        | SHA384
-        | SHA512
-        member this.IdSuffix =
-            match this with
-            | SHA256 -> "256"
-            | SHA384 -> "384"
-            | SHA512 -> "512"
-
-    type algorithm = 
-        | HMAC
-        | RSA
-        | ECDsa
-        | PSS
-        member this.IdPrefix =
-            match this with
-            | HMAC -> "HS"
-            | RSA -> "RS"
-            | ECDsa -> "ES"
-            | PSS -> "PS"
-
-    type cryptographyType = 
-        {
-            Algorithm: algorithm
-            Encryption: encryption
-        } member this.Id = this.Algorithm.IdPrefix + this.Encryption.IdSuffix
-
+    open jwtTypes
+    open jwtRsaEncryption
+    open jwtEcdsaEncryption
+    open jwtPssEncryption
+    
     let createJwtHeader (algorithm: string) =
         let header = {typ = "JWT"; alg = algorithm}
         let jsonHeader = JsonSerializer.Serialize header
@@ -69,78 +39,6 @@ module jwtFunction
             .Replace("/", "_")
             .Replace("=", "")
 
-    let hashRS (msg: string) (algorithm: encryption) (privateKeyPath: string) =
-        let rsa = RSA.Create()
-        // let privKey = System.IO.File.ReadAllText @"C:\Users\Alexande.Piepenhagen\Documents\FSharp\privkey.pem"
-        let privKey = System.IO.File.ReadAllText privateKeyPath
-        rsa.ImportFromPem privKey
-        let dataInBytes = System.Text.Encoding.UTF8.GetBytes msg
-        let bytes = match algorithm with
-                    | SHA256 -> rsa.SignData(dataInBytes, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1)
-                    | SHA384 -> rsa.SignData(dataInBytes, HashAlgorithmName.SHA384, RSASignaturePadding.Pkcs1)
-                    | SHA512 -> rsa.SignData(dataInBytes, HashAlgorithmName.SHA512, RSASignaturePadding.Pkcs1)
-        let base64 = System.Convert.ToBase64String bytes
-        base64
-            .Replace("+", "-")
-            .Replace("/", "_")
-            .Replace("=", "")
-
-    let hashES (msg: string) (algorithm: encryption) (privateKeyPath: string) =
-        let rsa = ECDsa.Create()
-        // let privKey = System.IO.File.ReadAllText @"C:\Users\Alexande.Piepenhagen\Documents\FSharp\private_ec.pem"
-        let privKey = System.IO.File.ReadAllText privateKeyPath
-        rsa.ImportFromPem privKey
-        let dataInBytes = System.Text.Encoding.UTF8.GetBytes msg
-        let bytes = match algorithm with
-                    | SHA256 -> rsa.SignData(dataInBytes, HashAlgorithmName.SHA256)
-                    | SHA384 -> rsa.SignData(dataInBytes, HashAlgorithmName.SHA384)
-                    | SHA512 -> rsa.SignData(dataInBytes, HashAlgorithmName.SHA512)
-        let base64 = System.Convert.ToBase64String bytes
-        base64
-            .Replace("+", "-")
-            .Replace("/", "_")
-            .Replace("=", "")
-
-    let hashPS (msg: string) (algorithm: encryption) (privateKeyPath: string) =
-        let rsa = RSA.Create()
-        // let privKey = System.IO.File.ReadAllText @"C:\Users\Alexande.Piepenhagen\Documents\FSharp\privkey.pem"
-        let privKey = System.IO.File.ReadAllText privateKeyPath
-        rsa.ImportFromPem privKey
-        let dataInBytes = System.Text.Encoding.UTF8.GetBytes msg
-        let bytes = match algorithm with
-                    | SHA256 -> rsa.SignData(dataInBytes, HashAlgorithmName.SHA256, RSASignaturePadding.Pss)
-                    | SHA384 -> rsa.SignData(dataInBytes, HashAlgorithmName.SHA384, RSASignaturePadding.Pss)
-                    | SHA512 -> rsa.SignData(dataInBytes, HashAlgorithmName.SHA512, RSASignaturePadding.Pss)
-        let base64 = System.Convert.ToBase64String bytes
-        base64
-            .Replace("+", "-")
-            .Replace("/", "_")
-            .Replace("=", "")
-
-    let newJwtHMAC (algorithm: encryption) (claimSet: Hashtable) (secret: string) =
-        let jHeader = createJwtHeader (algorithm.ToString())
-        let jClaimSet = createJwtClaimset claimSet
-        let jSignature = hashHS $"{jHeader}.{jClaimSet}" algorithm secret
-        $"{jHeader}.{jClaimSet}.{jSignature}"
-
-    let newJwtRS (algorithm: encryption) (claimSet: Hashtable) (keyPath: string) =
-        let jHeader = createJwtHeader (algorithm.ToString())
-        let jClaimSet = createJwtClaimset claimSet
-        let jSignature = hashRS $"{jHeader}.{jClaimSet}" algorithm keyPath
-        $"{jHeader}.{jClaimSet}.{jSignature}"
-
-    let newJwtES (algorithm: encryption) (claimSet: Hashtable) (keyPath: string) =
-        let jHeader = createJwtHeader (algorithm.ToString())
-        let jClaimSet = createJwtClaimset claimSet
-        let jSignature = hashES $"{jHeader}.{jClaimSet}" algorithm keyPath
-        $"{jHeader}.{jClaimSet}.{jSignature}"
-
-    let newJwtPS (algorithm: encryption) (claimSet: Hashtable) (keyPath: string) =
-        let jHeader = createJwtHeader (algorithm.ToString())
-        let jClaimSet = createJwtClaimset claimSet
-        let jSignature = hashPS $"{jHeader}.{jClaimSet}" algorithm keyPath
-        $"{jHeader}.{jClaimSet}.{jSignature}"
-
     let convertFromBase64 (jwt: string) =
         let str = match jwt.Length % 4 with
                     | 1 -> jwt.Substring (1, jwt.Length - 1)
@@ -153,25 +51,47 @@ module jwtFunction
         let bytes = System.Convert.FromBase64String strReplaced
         System.Text.Encoding.UTF8.GetString bytes
 
-    let newJwt (algorithm: cryptographyType) (claimSet: Hashtable) (secretOrKeyPath: string) =
+    let newJwtWithPemFile (algorithm: cryptographyType) (claimSet: Hashtable) (secretOrKeyPath: string) =
         let jHeader = createJwtHeader (algorithm.Id)
         let jClaimSet = createJwtClaimset claimSet
         let jSignature = match algorithm.Algorithm with
                             | HMAC -> hashHS $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
-                            | RSA -> hashRS $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
-                            | ECDsa -> hashES $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
-                            | PSS -> hashPS $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
+                            | RSA -> hashRSWithPemFile $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
+                            | ECDsa -> hashESWithPemFile $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
+                            | PSS -> hashPSWithPemFile $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
         $"{jHeader}.{jClaimSet}.{jSignature}"
 
-    //let verifyJwt (jwt: string) =
-    //    let jwtSplit = x.Jwt.Split "."
-    //    let bodyBytes = System.Text.Encoding.UTF8.GetBytes $"{jwtSplit.[0]}.{jwtSplit.[1]}"
-    //    let signatureBytes = System.Text.Encoding.UTF8.GetBytes jwtSplit.[2]
+    let newJwtWithPemContent (algorithm: cryptographyType) (claimSet: Hashtable) (secretOrKeyPath: string) =
+        let jHeader = createJwtHeader (algorithm.Id)
+        let jClaimSet = createJwtClaimset claimSet
+        let jSignature = match algorithm.Algorithm with
+                            | HMAC -> hashHS $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
+                            | RSA -> hashRSWithPemContent $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
+                            | ECDsa -> hashESWithPemContnent $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
+                            | PSS -> hashPSWithPemContent $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
+        $"{jHeader}.{jClaimSet}.{jSignature}"
 
-    //    let rsa = RSA.Create()
+    let newJwtWithDerFile (algorithm: cryptographyType) (claimSet: Hashtable) (secretOrKeyPath: string) =
+        let jHeader = createJwtHeader (algorithm.Id)
+        let jClaimSet = createJwtClaimset claimSet
+        let jSignature = match algorithm.Algorithm with
+                            | HMAC -> hashHS $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
+                            | RSA -> hashRSWithDerFile $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
+                            | ECDsa -> hashESWithDerFile $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
+                            | PSS -> hashPSWithDerFile $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
+        $"{jHeader}.{jClaimSet}.{jSignature}"
+
+    let verifyJwt (jwt: string) =
+       let jwtSplit = jwt.Split "."
+       let bodyBytes = System.Text.Encoding.UTF8.GetBytes $"{jwtSplit.[0]}.{jwtSplit.[1]}"
+       let signatureBytes = System.Text.Encoding.UTF8.GetBytes jwtSplit.[2]
+
+       let rsa = RSA.Create()
         
     //    let pubKey = System.IO.File.ReadAllText @"C:\Users\alexande.piepenhagen\Documents\FSharp\pubkey.pem"
+       let pubKey = System.IO.File.ReadAllBytes @"C:\Users\apiep\Documents\keys\rsapubkey.der"
     //    let pubKeyBytes = System.Text.Encoding.UTF8.GetBytes pubKey
     //    rsa.ImportFromPem pubKey
+       rsa.ImportSubjectPublicKeyInfo pubKey |> ignore
 
-    //    rsa.VerifyData(bodyBytes, signatureBytes, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1)
+       rsa.VerifyData(bodyBytes, signatureBytes, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1)

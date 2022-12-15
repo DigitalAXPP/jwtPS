@@ -4,28 +4,54 @@ open System.Collections
 open System.Collections.Generic
 open System.Management.Automation
 open jwtFunction
+open jwtTypes
 
 [<Cmdlet("New", "Jwt")>]
 [<OutputType(typeof<string>)>]
 type NewJwtCommand () =
     inherit PSCmdlet ()
     [<Parameter(
+        HelpMessage="Provide the claimset of the JWT in hashtable.",
         Mandatory=true,
         ValueFromPipelineByPropertyName=true)>]
     [<ValidateNotNullOrEmpty>]
     member val Payload : Hashtable = Hashtable () with get, set
     [<Parameter(
+        HelpMessage="Set the Algorithm how you want your JWT to be signed.",
         Mandatory=true,
         ValueFromPipelineByPropertyName=true)>]
     member val Algorithm : cryptographyType = { Algorithm = HMAC; Encryption = SHA256 } with get, set
     [<Parameter(
+        HelpMessage="Provide the key file content or HMAC secret.",
+        ParameterSetName="Key",
         Mandatory=true,
         ValueFromPipelineByPropertyName=true)>]
     [<ValidateNotNullOrEmpty>]
     member val Secret : string = String.Empty with get, set
+    [<Parameter(
+        HelpMessage="Provide the path to the key.",
+        ParameterSetName="FilePath",
+        Mandatory=true,
+        ValueFromPipelineByPropertyName=true)>]
+    [<ValidateNotNullOrEmpty>]
+    member val FilePath : System.IO.FileInfo = null with get, set
+
+    override x.BeginProcessing () =
+        x.WriteDebug ($"Parameter set: {x.ParameterSetName}")
+        base.BeginProcessing()
 
     override x.ProcessRecord () =
-        let jwt = newJwt x.Algorithm x.Payload x.Secret
+        let jwt = 
+                match x.ParameterSetName with
+                | "Key" -> newJwtWithPemContent x.Algorithm x.Payload x.Secret
+                | "FilePath" -> if x.FilePath.Extension = ".pem" then
+                                    x.WriteDebug ("The file extension matches .pem")
+                                    newJwtWithPemFile x.Algorithm x.Payload x.FilePath.FullName
+                                else
+                                    x.WriteDebug ("The file extension doesn't match .pem")
+                                    newJwtWithDerFile x.Algorithm x.Payload x.FilePath.FullName
+                | _ -> "Incorrect ParameterSet selected."
+          
         x.WriteObject (jwt)
         base.ProcessRecord ()
 
