@@ -44,7 +44,7 @@ jobs:
           Set-PSRepository psgallery -InstallationPolicy trusted
           Install-Module -Name Pester -Confirm:$false -Force
           Install-Module -Name PSScriptAnalyzer -Force
-          Import-Module -Name ([IO.Path]::Combine("$env:GITHUB_WORKSPACE", 's', 'src', 'bin', 'Debug', 'net6.0', 'publish', 'jwtPS.dll')) -Force
+          Import-Module -Name ([IO.Path]::Combine("$env:GITHUB_WORKSPACE", 'src', 'bin', 'Debug', 'net6.0', 'publish', 'jwtPS.dll')) -Force
 
       # Runs a single command using the runners shell
       - name: Run Pester tests
