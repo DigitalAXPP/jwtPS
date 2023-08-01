@@ -19,7 +19,7 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ${{ matrix.os }}
     # If any job fails, all jobs that are in progress or queued will be cancelled
-    continue-on-error: true
+    continue-on-error: false
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -38,12 +38,13 @@ jobs:
       - name: Publish project
         run: dotnet publish
         
-      - name: Install PowerShell modules
+      - name: Prepare PowerShell modules
         shell: pwsh
         run: |
           Set-PSRepository psgallery -InstallationPolicy trusted
           Install-Module -Name Pester -Confirm:$false -Force
           Install-Module -Name PSScriptAnalyzer -Force
+          Import-Module -Name ([IO.Path]::Combine('$env:GITHUB_WORKSPACE', 's', 'src', 'bin', 'Debug', 'net6.0', 'publish', 'jwtPS.dll')) -Force
 
       # Runs a single command using the runners shell
       - name: Run Pester tests
