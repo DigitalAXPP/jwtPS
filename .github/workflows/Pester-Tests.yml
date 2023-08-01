@@ -45,11 +45,12 @@ jobs:
           Install-Module -Name Pester -Confirm:$false -Force
           Install-Module -Name PSScriptAnalyzer -Force
           Import-Module -Name ([IO.Path]::Combine("$env:GITHUB_WORKSPACE", 'src', 'bin', 'Debug', 'net6.0', 'publish', 'jwtPS.dll')) -Force
+          Invoke-Pester -Path "Tests"
 
       # Runs a single command using the runners shell
-      - name: Run Pester tests
-        shell: pwsh
-        run: Invoke-Pester -Path "Tests"
+      # - name: Run Pester tests
+      #   shell: pwsh
+      #   run: Invoke-Pester -Path "Tests"
       
       # Runs the PSScriptAnalyzer
       - name: Run PSScriptAnalyzer
