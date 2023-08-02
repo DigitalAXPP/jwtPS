@@ -1,12 +1,4 @@
 Describe "New-JWT" {
-    BeforeAll {
-        if ($IsLinux -or $IsMacOS) {
-            Import-Module -Global "$env:GITHUB_WORKSPACE/src/bin/Debug/net6.0/publish/jwtPS.dll"
-        }
-        elseif ($IsWindows) {
-            Import-Module -Global "$env:GITHUB_WORKSPACE\src\bin\Debug\net6.0\publish\jwtPS.dll"
-        }
-    }
     Context "Verify parameter" {
         $mandatoryParameter = @(
             @{ parameter = 'Secret' },
@@ -21,14 +13,9 @@ Describe "New-JWT" {
     }
     Context "Creating RSA signature" {
         BeforeEach {
-            if ($IsLinux -or $IsMacOS) {
-                $keyPem = "$env:GITHUB_WORKSPACE/.github/workflows/privkey.pem"
-                $keyDer = "$env:GITHUB_WORKSPACE/.github/workflows/rsaprivkey.der"
-            }
-            elseif ($IsWindows) {
-                $keyPem = "$env:GITHUB_WORKSPACE\.github\workflows\privkey.pem"
-                $keyDer = "$env:GITHUB_WORKSPACE\.github\workflows\rsaprivkey.der"
-            }
+            $keyPem = [IO.Path]::Combine("$env:GITHUB_WORKSPACE", '.github', 'workflows', 'privkey.pem')
+            $keyDer = [IO.Path]::Combine("$env:GITHUB_WORKSPACE", '.github', 'workflows', 'rsaprivkey.der')
+            
             $claim = @{
                 aud = "jwtPS"
                 iss = "DigitalAXPP"
@@ -108,22 +95,13 @@ Describe "New-JWT" {
     }
     Context "Creating ECDSA signature" {
         BeforeEach {
-            if ($IsLinux -or $IsMacOS) {
-                $key_256 = "$env:GITHUB_WORKSPACE/.github/workflows/private_es256.pem"
-                $key_256_DER = "$env:GITHUB_WORKSPACE/.github/workflows/private_ES256_pkcs8.der"
-                $key_384 = "$env:GITHUB_WORKSPACE/.github/workflows/private_es384.pem"
-                $key_384_DER = "$env:GITHUB_WORKSPACE/.github/workflows/private_ES384_pkcs8.der"
-                $key_512 = "$env:GITHUB_WORKSPACE/.github/workflows/private_es512.pem"
-                $key_512_DER = "$env:GITHUB_WORKSPACE/.github/workflows/private_ES512_pkcs8.der"
-            }
-            elseif ($IsWindows) {
-                $key_256 = "$env:GITHUB_WORKSPACE\.github\workflows\private_es256.pem"
-                $key_256_DER = "$env:GITHUB_WORKSPACE\.github\workflows\private_ES256_pkcs8.der"
-                $key_384 = "$env:GITHUB_WORKSPACE\.github\workflows\private_es384.pem"
-                $key_384_DER = "$env:GITHUB_WORKSPACE\.github\workflows\private_ES384_pkcs8.der"
-                $key_512 = "$env:GITHUB_WORKSPACE\.github\workflows\private_es512.pem"
-                $key_512_DER = "$env:GITHUB_WORKSPACE\.github\workflows\private_ES512_pkcs8.der"
-            }
+            $key_256 = [IO.Path]::Combine("$env:GITHUB_WORKSPACE", '.github', 'workflows', 'private_es256.pem')
+            $key_256_DER = [IO.Path]::Combine("$env:GITHUB_WORKSPACE", '.github', 'workflows', 'private_ES256_pkcs8.der')
+            $key_384 = [IO.Path]::Combine("$env:GITHUB_WORKSPACE", '.github', 'workflows', 'private_es384.pem')
+            $key_384_DER = [IO.Path]::Combine("$env:GITHUB_WORKSPACE", '.github', 'workflows', 'private_ES384_pkcs8.der')
+            $key_512 = [IO.Path]::Combine("$env:GITHUB_WORKSPACE", '.github', 'workflows', 'private_es512.pem')
+            $key_512_DER = [IO.Path]::Combine("$env:GITHUB_WORKSPACE", '.github', 'workflows', 'private_ES512_pkcs8.der')
+            
             $claim = @{
                 aud = "jwtPS"
                 iss = "DigitalAXPP"
@@ -237,14 +215,9 @@ Describe "New-JWT" {
     }
     Context "Creating RSA-PSS signature" {
         BeforeEach {
-            if ($IsLinux -or $IsMacOS) {
-                $key = "$env:GITHUB_WORKSPACE/.github/workflows/privkey.pem"
-                $keyDer = "$env:GITHUB_WORKSPACE/.github/workflows/rsaprivkey.der"
-            }
-            elseif ($IsWindows) {
-                $key = "$env:GITHUB_WORKSPACE\.github\workflows\privkey.pem"
-                $keyDer = "$env:GITHUB_WORKSPACE\.github\workflows\rsaprivkey.der"
-            }
+            $key = [IO.Path]::Combine("$env:GITHUB_WORKSPACE", '.github', 'workflows', 'privkey.pem')
+            $keyDer = [IO.Path]::Combine("$env:GITHUB_WORKSPACE", '.github', 'workflows', 'rsaprivkey.der')
+            
             $claim = @{
                 aud = "jwtPS"
                 iss = "DigitalAXPP"
