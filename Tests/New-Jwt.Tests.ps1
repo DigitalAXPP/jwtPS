@@ -1,4 +1,4 @@
-# Describe "New-JWT" {
+Describe "New-JWT" {
 #     BeforeAll {
 #         if ($IsLinux -or $IsMacOS) {
 #             Import-Module -Global "$env:GITHUB_WORKSPACE/src/bin/Debug/net6.0/publish/jwtPS.dll"
