@@ -32,3 +32,11 @@ module jwtTypes
             Algorithm: algorithm
             Encryption: encryption
         } member this.Id = this.Algorithm.IdPrefix + this.Encryption.IdSuffix
+
+    // new Header type to allow in the future a dynamic JWT header in jwtFunction.
+    type Header = Header of System.Collections.Hashtable
+
+    let createHD (algorithm : cryptographyType) (etc : System.Collections.Hashtable) : Header =
+        etc.Add("alg", algorithm.Id)
+        etc.Add("type", "JWT")
+        Header etc
