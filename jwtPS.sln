@@ -7,6 +7,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{DB040E56-0C5
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "jwtPS", "src\jwtPS.fsproj", "{A8824EC4-108F-40BC-BBE8-2999D454B70E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{CD7EF47C-4368-4C55-8E8C-33DBDE6FD365}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Fsharp.Tests", "Tests\Fsharp.Tests\Fsharp.Tests.fsproj", "{DFD2F998-5A94-4ED3-AF83-616283E4B007}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,8 +24,13 @@ Global
 		{A8824EC4-108F-40BC-BBE8-2999D454B70E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8824EC4-108F-40BC-BBE8-2999D454B70E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8824EC4-108F-40BC-BBE8-2999D454B70E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DFD2F998-5A94-4ED3-AF83-616283E4B007}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DFD2F998-5A94-4ED3-AF83-616283E4B007}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DFD2F998-5A94-4ED3-AF83-616283E4B007}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DFD2F998-5A94-4ED3-AF83-616283E4B007}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{A8824EC4-108F-40BC-BBE8-2999D454B70E} = {DB040E56-0C53-43E8-AB22-0EFF1D37E6AD}
+		{DFD2F998-5A94-4ED3-AF83-616283E4B007} = {CD7EF47C-4368-4C55-8E8C-33DBDE6FD365}
 	EndGlobalSection
 EndGlobal
