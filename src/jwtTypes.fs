@@ -39,14 +39,14 @@ open Microsoft.FSharp.Collections
     // new Header type to allow in the future a dynamic JWT header in jwtFunction.
     type Header = Header of System.Collections.Hashtable
 
-    let createHeader (algorithm : cryptographyType) (headerTable : System.Collections.Hashtable) : Header =
+    let createHeader (algorithm : cryptographyType) (headerTable : System.Collections.Hashtable) =
         [ ("alg", algorithm.Id); ("type", "JWT") ]
         |> List.iter (fun item -> 
                         match item with
                         | (k, _) when headerTable.ContainsKey k -> ()
                         | (k, v) -> headerTable.Add(k, v)
                      )
-        Header headerTable
+        headerTable
 
     let convertToBase64UrlString (content: byte[]) =
         let base64 = System.Convert.ToBase64String content

@@ -22,6 +22,11 @@ type NewJwtCommand () =
         ValueFromPipelineByPropertyName=true)>]
     member val Algorithm : cryptographyType = { Algorithm = HMAC; Encryption = SHA256 } with get, set
     [<Parameter(
+        HelpMessage="Here you can provide a hashtable with additional parameters for the JWT header.",
+        Mandatory=false,
+        ValueFromPipelineByPropertyName=true)>]
+    member val Header : Hashtable = Hashtable () with get, set
+    [<Parameter(
         HelpMessage="Provide the key file content or HMAC secret.",
         ParameterSetName="Key",
         Mandatory=true,
