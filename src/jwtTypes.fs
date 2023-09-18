@@ -1,6 +1,7 @@
 module jwtTypes
 
 open Microsoft.FSharp.Collections
+open System.Text.Json
 
     type jwtHeader = 
         {
@@ -40,7 +41,7 @@ open Microsoft.FSharp.Collections
     type Header = Header of System.Collections.Hashtable
 
     let createHeader (algorithm : cryptographyType) (headerTable : System.Collections.Hashtable) =
-        [ ("alg", algorithm.Id); ("type", "JWT") ]
+        [ ("alg", algorithm.Id); ("typ", "JWT") ]
         |> List.iter (fun item -> 
                         match item with
                         | (k, _) when headerTable.ContainsKey k -> ()
@@ -48,9 +49,14 @@ open Microsoft.FSharp.Collections
                      )
         headerTable
 
-    let convertToBase64UrlString (content: byte[]) =
-        let base64 = System.Convert.ToBase64String content
+    let convertToBase64UrlString (content: string) =
+        let contentBytes = System.Text.Encoding.UTF8.GetBytes content
+        let base64 = System.Convert.ToBase64String contentBytes
         base64
             .Replace("+", "-")
             .Replace("/", "_")
             .Replace("=", "")
+
+    let convertTableToBase64 (table: System.Collections.Hashtable) =
+        let jsonPayload = JsonSerializer.Serialize table
+        convertToBase64UrlString jsonPayload
