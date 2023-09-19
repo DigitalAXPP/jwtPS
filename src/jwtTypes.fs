@@ -49,7 +49,7 @@ open System.Text.Json
                      )
         headerTable
 
-    let convertToBase64UrlString (content: string) =
+    let convertStringToBase64UrlString (content: string) =
         let contentBytes = System.Text.Encoding.UTF8.GetBytes content
         let base64 = System.Convert.ToBase64String contentBytes
         base64
@@ -57,6 +57,13 @@ open System.Text.Json
             .Replace("/", "_")
             .Replace("=", "")
 
+    let convertBytesToBase64UrlString (content: byte[]) =
+        let base64 = System.Convert.ToBase64String content
+        base64
+            .Replace("+", "-")
+            .Replace("/", "_")
+            .Replace("=", "")
+
     let convertTableToBase64 (table: System.Collections.Hashtable) =
         let jsonPayload = JsonSerializer.Serialize table
-        convertToBase64UrlString jsonPayload
+        convertStringToBase64UrlString jsonPayload
