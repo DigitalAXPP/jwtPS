@@ -67,7 +67,7 @@ module jwtFunction
         let jSignature = match algorithm.Algorithm with
                             | HMAC -> hashHS $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
                             | RSA -> hashRSWithPemContent $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
-                            | ECDsa -> hashESWithPemContnent $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
+                            | ECDsa -> hashESWithPemContent $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
                             | PSS -> hashPSWithPemContent $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
         $"{jHeader}.{jClaimSet}.{jSignature}"
 
