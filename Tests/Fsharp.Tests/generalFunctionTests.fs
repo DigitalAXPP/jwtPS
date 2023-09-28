@@ -33,6 +33,19 @@ type TestClass () =
         Assert.True (jwtHeader.ContainsKey "enc")
         Assert.True (jwtHeader.ContainsKey "typ")
         Assert.True (jwtHeader.ContainsKey "alg")
+        Assert.True (jwtHeader.ContainsValue "RS256")
+
+    [<Test>]
+    member this.TestJwtHeaderWithEmptyTable () =
+        let cryptoType = {Algorithm = RSA; Encryption = SHA256}
+
+        let customHashtable = System.Collections.Hashtable ()
+        let jwtHeader = createHeader cryptoType customHashtable
+        
+        Assert.True (jwtHeader.ContainsKey "typ")
+        Assert.True (jwtHeader.ContainsKey "alg")
+        Assert.True (jwtHeader.ContainsValue "RS256")
+        Assert.True (jwtHeader.ContainsValue "JWT")
 
     [<Test>]
     member this.TestTableConversion () =
