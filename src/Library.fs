@@ -51,7 +51,7 @@ type NewJwtCommand () =
                 | "Key" -> newJwtWithPemContent x.Algorithm x.Payload x.Secret
                 | "FilePath" -> if x.FilePath.Extension = ".pem" then
                                     x.WriteDebug ("The file extension matches .pem")
-                                    newJwtWithPemFile x.Algorithm x.Payload x.FilePath.FullName
+                                    newJwtWithPemFile x.Algorithm x.Payload x.FilePath.FullName x.Header
                                 else
                                     x.WriteDebug ("The file extension doesn't match .pem")
                                     newJwtWithDerFile x.Algorithm x.Payload x.FilePath.FullName
