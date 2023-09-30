@@ -54,7 +54,7 @@ type NewJwtCommand () =
                                     newJwtWithPemFile x.Algorithm x.Payload x.FilePath.FullName x.Header
                                 else
                                     x.WriteDebug ("The file extension doesn't match .pem")
-                                    newJwtWithDerFile x.Algorithm x.Payload x.FilePath.FullName
+                                    newJwtWithDerFile x.Algorithm x.Payload x.FilePath.FullName x.Header
                 | _ -> "Incorrect ParameterSet selected."
           
         x.WriteObject (jwt)

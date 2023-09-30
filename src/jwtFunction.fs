@@ -7,11 +7,11 @@ module jwtFunction
     open jwtEcdsaEncryption
     open jwtPssEncryption
     
-    let createJwtHeader (algorithm: string) =
-        let header = {typ = "JWT"; alg = algorithm}
-        let jsonHeader = JsonSerializer.Serialize header
-        let bytes = System.Text.Encoding.UTF8.GetBytes jsonHeader
-        convertBytesToBase64Url bytes
+    //let createJwtHeader (algorithm: string) =
+    //    let header = {typ = "JWT"; alg = algorithm}
+    //    let jsonHeader = JsonSerializer.Serialize header
+    //    let bytes = System.Text.Encoding.UTF8.GetBytes jsonHeader
+    //    convertBytesToBase64Url bytes
 
     let createJwtClaimset (payload: Hashtable) =
         let jsonPayload = JsonSerializer.Serialize payload
@@ -40,7 +40,7 @@ module jwtFunction
         System.Text.Encoding.UTF8.GetString bytes
 
     let newJwtWithPemFile (algorithm: cryptographyType) (claimSet: Hashtable) (secretOrKeyPath: string) (customHeader: Hashtable) =
-        let jHeader = createJHeader algorithm customHeader
+        let jHeader = createJwtHeader algorithm customHeader
         let jClaimSet = createJwtClaimset claimSet
         let jSignature = match algorithm.Algorithm with
                             | HMAC -> hashHS $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
@@ -50,7 +50,7 @@ module jwtFunction
         $"{jHeader}.{jClaimSet}.{jSignature}"
 
     let newJwtWithPemContent (algorithm: cryptographyType) (claimSet: Hashtable) (secretOrKeyPath: string) (customHeader: Hashtable)=
-        let jHeader = createJHeader algorithm customHeader
+        let jHeader = createJwtHeader algorithm customHeader
         let jClaimSet = createJwtClaimset claimSet
         let jSignature = match algorithm.Algorithm with
                             | HMAC -> hashHS $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
@@ -59,8 +59,8 @@ module jwtFunction
                             | PSS -> hashPSWithPemContent $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath
         $"{jHeader}.{jClaimSet}.{jSignature}"
 
-    let newJwtWithDerFile (algorithm: cryptographyType) (claimSet: Hashtable) (secretOrKeyPath: string) =
-        let jHeader = createJwtHeader (algorithm.Id)
+    let newJwtWithDerFile (algorithm: cryptographyType) (claimSet: Hashtable) (secretOrKeyPath: string) (customHeader: Hashtable) =
+        let jHeader = createJwtHeader algorithm customHeader
         let jClaimSet = createJwtClaimset claimSet
         let jSignature = match algorithm.Algorithm with
                             | HMAC -> hashHS $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath

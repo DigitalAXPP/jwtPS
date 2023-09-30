@@ -55,7 +55,7 @@ open System.Text.Json
         let jsonPayload = JsonSerializer.Serialize table
         convertStringToBase64Url jsonPayload
 
-    let createJHeader (algorithm : cryptographyType) (headerTable : System.Collections.Hashtable) =
+    let createJwtHeader (algorithm : cryptographyType) (headerTable : System.Collections.Hashtable) =
         [ ("alg", algorithm.Id); ("typ", "JWT") ]
         |> List.iter (fun item -> 
                         match item with

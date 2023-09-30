@@ -27,7 +27,7 @@ type TestClass () =
         let customHashtable = System.Collections.Hashtable ()
         customHashtable.Add("cty", "JWT")
         customHashtable.Add("enc", "A128CBC-HS256")
-        let jwtHeader = createJHeader cryptoType customHashtable
+        let jwtHeader = createJwtHeader cryptoType customHashtable
         let assertHashTable = convertFromBase64 jwtHeader
         match assertHashTable with
         | x when x.Contains "RS256" &&
@@ -44,7 +44,7 @@ type TestClass () =
         let cryptoType = {Algorithm = RSA; Encryption = SHA256}
 
         let customHashtable = System.Collections.Hashtable ()
-        let jwtHeader = createJHeader cryptoType customHashtable
+        let jwtHeader = createJwtHeader cryptoType customHashtable
         let assertHashTable = convertFromBase64 jwtHeader
         match assertHashTable with
         | x when x.Contains "RS256" &&
