@@ -29,13 +29,14 @@ type TestClass () =
         customHashtable.Add("enc", "A128CBC-HS256")
         let jwtHeader = createJHeader cryptoType customHashtable
         let assertHashTable = convertFromBase64 jwtHeader
-        //Assert.True (jwtHeader.ContainsKey "cty")
-        //Assert.True (jwtHeader.ContainsKey "enc")
-        //Assert.True (jwtHeader.ContainsKey "typ")
-        //Assert.True (jwtHeader.ContainsKey "alg")
-        //Assert.True (jwtHeader.ContainsValue "RS256")
         match assertHashTable with
-        | x when x.Contains "RS256" -> Assert.True (x.Contains "RS256")
+        | x when x.Contains "RS256" &&
+                 x.Contains "JWT" &&
+                 x.Contains "cty" &&
+                 x.Contains "enc" &&
+                 x.Contains "typ" &&
+                 x.Contains "alg" &&
+                 x.Contains "A128CBC-HS256" -> Assert.True (true)
         | _ -> Assert.True (false)
 
     [<Test>]
@@ -45,12 +46,11 @@ type TestClass () =
         let customHashtable = System.Collections.Hashtable ()
         let jwtHeader = createJHeader cryptoType customHashtable
         let assertHashTable = convertFromBase64 jwtHeader
-        //Assert.True (jwtHeader.ContainsKey "typ")
-        //Assert.True (jwtHeader.ContainsKey "alg")
-        //Assert.True (jwtHeader.ContainsValue "RS256")
-        //Assert.True (jwtHeader.ContainsValue "JWT")
         match assertHashTable with
-        | x when x.Contains "RS256" -> Assert.True (x.Contains "RS256")
+        | x when x.Contains "RS256" &&
+                 x.Contains "typ" &&
+                 x.Contains "alg" &&
+                 x.Contains "JWT" -> Assert.True (true)
         | _ -> Assert.True (false)
 
     [<Test>]
