@@ -40,7 +40,7 @@ module jwtFunction
         System.Text.Encoding.UTF8.GetString bytes
 
     let newJwtWithPemFile (algorithm: cryptographyType) (claimSet: Hashtable) (secretOrKeyPath: string) (customHeader: Hashtable) =
-        let jHeader = createHeader algorithm customHeader
+        let jHeader = createJHeader algorithm customHeader
         let jClaimSet = createJwtClaimset claimSet
         let jSignature = match algorithm.Algorithm with
                             | HMAC -> hashHS $"{jHeader}.{jClaimSet}" algorithm.Encryption secretOrKeyPath

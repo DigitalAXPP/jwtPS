@@ -40,15 +40,6 @@ open System.Text.Json
     // new Header type to allow in the future a dynamic JWT header in jwtFunction.
     type Header = Header of System.Collections.Hashtable
 
-    let createHeader (algorithm : cryptographyType) (headerTable : System.Collections.Hashtable) =
-        [ ("alg", algorithm.Id); ("typ", "JWT") ]
-        |> List.iter (fun item -> 
-                        match item with
-                        | (k, _) when headerTable.ContainsKey k -> ()
-                        | (k, v) -> headerTable.Add(k, v)
-                     )
-        headerTable
-
     let convertBytesToBase64Url (content: byte[]) =
         let base64 = System.Convert.ToBase64String content
         base64
@@ -63,3 +54,13 @@ open System.Text.Json
     let convertTableToBase64 (table: System.Collections.Hashtable) =
         let jsonPayload = JsonSerializer.Serialize table
         convertStringToBase64Url jsonPayload
+
+    let createJHeader (algorithm : cryptographyType) (headerTable : System.Collections.Hashtable) =
+        [ ("alg", algorithm.Id); ("typ", "JWT") ]
+        |> List.iter (fun item -> 
+                        match item with
+                        | (k, _) when headerTable.ContainsKey k -> ()
+                        | (k, v) -> headerTable.Add(k, v)
+                     )
+        convertTableToBase64 headerTable
+
