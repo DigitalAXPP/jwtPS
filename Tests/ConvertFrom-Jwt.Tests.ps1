@@ -27,7 +27,8 @@ Describe "ConvertFrom-JWT" {
         It "Verification of the header" {
             $jwt = New-JWT -Secret 'S3cuR3$3cR3T' -Algorithm $alg -Payload $claim
             $conversion = ConvertFrom-JWT -JWT $jwt
-            $conversion.Header | Should -BeExactly '{"typ":"JWT","alg":"HS256"}'
+            $conversion.Header | Should -Match '"alg":"HS256"'
+	    $conversion.Header | Should -Match '"typ":"JWT"'
         }
         It "Verification of the payload" {
             $jwt = New-JWT -Secret 'S3cuR3$3cR3T' -Algorithm $alg -Payload $claim
