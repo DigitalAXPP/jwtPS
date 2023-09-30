@@ -48,7 +48,7 @@ type NewJwtCommand () =
     override x.ProcessRecord () =
         let jwt = 
                 match x.ParameterSetName with
-                | "Key" -> newJwtWithPemContent x.Algorithm x.Payload x.Secret
+                | "Key" -> newJwtWithPemContent x.Algorithm x.Payload x.Secret x.Header
                 | "FilePath" -> if x.FilePath.Extension = ".pem" then
                                     x.WriteDebug ("The file extension matches .pem")
                                     newJwtWithPemFile x.Algorithm x.Payload x.FilePath.FullName x.Header
