@@ -48,6 +48,15 @@ Describe "New-JWT" {
             $jwt = New-JWT -Secret $content -Algorithm $alg -Payload $claim
             $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
         }
+        It "With String + custom header and SHA256" {
+            $content = (Get-Content -Path $keyPem) -join ""
+            $encryption = [jwtTypes+encryption]::SHA256
+            $algorithm = [jwtTypes+algorithm]::RSA
+            $alg = [jwtTypes+cryptographyType]::new($algorithm, $encryption)
+            $customHeader = @{"enc" = "A128CBC-HS256"}
+            $jwt = New-JWT -Secret $content -Algorithm $alg -Payload $claim -Header $customHeader
+            $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
+        }
         It "With PEM and SHA384" {
             $encryption = [jwtTypes+encryption]::SHA384
             $algorithm = [jwtTypes+algorithm]::RSA
