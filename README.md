@@ -64,4 +64,10 @@ $alg = [jwtTypes+cryptographyType]::new($algorithm, $encryption)
 $jwt = New-JWT -Payload $payload -Algorithm $alg -FilePath $key
 $jwt = New-JWT -Payload $payload -Algorithm $alg -Secret $keyContent
 ```
-**Attention**, `New-Jwt` accepts now either in **PEM** or **PKCS#8** format.
+**Attention**, `New-Jwt` accepts the secret now either in **PEM** or **PKCS#8** format.
+
+> [!IMPORTANT]  
+> You can use now the `Header` property to provide a hashtable with custom keys for your JWT header.
+> The hashtable you provide is accepted **as-is**.
+> That is in particular relevant in regards to the algorithm.
+> The function will use the algorithm you set in `-Algorithm`!
