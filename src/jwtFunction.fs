@@ -6,12 +6,7 @@ module jwtFunction
     open jwtRsaEncryption
     open jwtEcdsaEncryption
     open jwtPssEncryption
-    
-    //let createJwtHeader (algorithm: string) =
-    //    let header = {typ = "JWT"; alg = algorithm}
-    //    let jsonHeader = JsonSerializer.Serialize header
-    //    let bytes = System.Text.Encoding.UTF8.GetBytes jsonHeader
-    //    convertBytesToBase64Url bytes
+
 
     let createJwtClaimset (payload: Hashtable) =
         let jsonPayload = JsonSerializer.Serialize payload

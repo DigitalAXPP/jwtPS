@@ -130,6 +130,18 @@
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName)" position="named" aliases="none">
+          <maml:name>Header</maml:name>
+          <maml:description>
+            <maml:para>Here you can provide a hashtable with additional parameters for the JWT header.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Hashtable</command:parameterValue>
+          <dev:type>
+            <maml:name>Hashtable</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
       </command:syntaxItem>
       <command:syntaxItem>
         <maml:name>New-Jwt</maml:name>
@@ -165,6 +177,18 @@
           <command:parameterValue required="true" variableLength="false">FileInfo</command:parameterValue>
           <dev:type>
             <maml:name>FileInfo</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName)" position="named" aliases="none">
+          <maml:name>Header</maml:name>
+          <maml:description>
+            <maml:para>Here you can provide a hashtable with additional parameters for the JWT header.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Hashtable</command:parameterValue>
+          <dev:type>
+            <maml:name>Hashtable</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -220,6 +244,18 @@
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName)" position="named" aliases="none">
+        <maml:name>Header</maml:name>
+        <maml:description>
+          <maml:para>Here you can provide a hashtable with additional parameters for the JWT header.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">Hashtable</command:parameterValue>
+        <dev:type>
+          <maml:name>Hashtable</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
     </command:parameters>
     <command:inputTypes>
       <command:inputType>
@@ -262,9 +298,10 @@ PS C:\&gt; New-Jwt -Payload @{'iat'=123456789} -Algorithm $cryptoType -Secret P@
         <dev:code>PS C:\&gt; $algorithm = [jwtTypes+algorithm]::RSA
 PS C:\&gt; $encryption = [jwtTypes+encryption]::SHA384
 PS C:\&gt; $cryptoType = [jwtTypes+cryptographyType]::new($algorithm, $encryption)
-PS C:\&gt; New-Jwt -Payload @{'iat'=123456789} -Algorithm $cryptoType -FilePath Path\To\File.pem</dev:code>
+PS C:\&gt; $customJwtHeader = @{"enc" = "A128CBC-HS256"}
+PS C:\&gt; New-Jwt -Payload @{'iat'=123456789} -Algorithm $cryptoType -FilePath Path\To\File.pem -Header $customJwtHeader</dev:code>
         <dev:remarks>
-          <maml:para>This function returns a JWT with RSA encryption and SHA386.</maml:para>
+          <maml:para>This function returns a JWT with RSA encryption and SHA386 and a custom header.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
