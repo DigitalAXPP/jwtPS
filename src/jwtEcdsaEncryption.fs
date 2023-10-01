@@ -17,7 +17,7 @@ module jwtEcdsaEncryption
             .Replace("/", "_")
             .Replace("=", "")
 
-    let hashESWithPemContnent (msg: string) (algorithm: encryption) (privateKey: string) =
+    let hashESWithPemContent (msg: string) (algorithm: encryption) (privateKey: string) =
         let es = ECDsa.Create()
         es.ImportFromPem privateKey
         let dataInBytes = System.Text.Encoding.UTF8.GetBytes msg

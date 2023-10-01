@@ -1,4 +1,8 @@
 module jwtTypes
+
+open Microsoft.FSharp.Collections
+open System.Text.Json
+
     type jwtHeader = 
         {
             typ: string
@@ -32,3 +36,31 @@ module jwtTypes
             Algorithm: algorithm
             Encryption: encryption
         } member this.Id = this.Algorithm.IdPrefix + this.Encryption.IdSuffix
+
+    // new Header type to allow in the future a dynamic JWT header in jwtFunction.
+    type Header = Header of System.Collections.Hashtable
+
+    let convertBytesToBase64Url (content: byte[]) =
+        let base64 = System.Convert.ToBase64String content
+        base64
+            .Replace("+", "-")
+            .Replace("/", "_")
+            .Replace("=", "")
+
+    let convertStringToBase64Url (content: string) =
+        let contentBytes = System.Text.Encoding.UTF8.GetBytes content
+        convertBytesToBase64Url contentBytes
+
+    let convertTableToBase64 (table: System.Collections.Hashtable) =
+        let jsonPayload = JsonSerializer.Serialize table
+        convertStringToBase64Url jsonPayload
+
+    let createJwtHeader (algorithm : cryptographyType) (headerTable : System.Collections.Hashtable) =
+        [ ("alg", algorithm.Id); ("typ", "JWT") ]
+        |> List.iter (fun item -> 
+                        match item with
+                        | (k, _) when headerTable.ContainsKey k -> ()
+                        | (k, v) -> headerTable.Add(k, v)
+                     )
+        convertTableToBase64 headerTable
+

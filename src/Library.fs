@@ -22,6 +22,11 @@ type NewJwtCommand () =
         ValueFromPipelineByPropertyName=true)>]
     member val Algorithm : cryptographyType = { Algorithm = HMAC; Encryption = SHA256 } with get, set
     [<Parameter(
+        HelpMessage="Here you can provide a hashtable with additional parameters for the JWT header.",
+        Mandatory=false,
+        ValueFromPipelineByPropertyName=true)>]
+    member val Header : Hashtable = Hashtable () with get, set
+    [<Parameter(
         HelpMessage="Provide the key file content or HMAC secret.",
         ParameterSetName="Key",
         Mandatory=true,
@@ -43,13 +48,13 @@ type NewJwtCommand () =
     override x.ProcessRecord () =
         let jwt = 
                 match x.ParameterSetName with
-                | "Key" -> newJwtWithPemContent x.Algorithm x.Payload x.Secret
+                | "Key" -> newJwtWithPemContent x.Algorithm x.Payload x.Secret x.Header
                 | "FilePath" -> if x.FilePath.Extension = ".pem" then
                                     x.WriteDebug ("The file extension matches .pem")
-                                    newJwtWithPemFile x.Algorithm x.Payload x.FilePath.FullName
+                                    newJwtWithPemFile x.Algorithm x.Payload x.FilePath.FullName x.Header
                                 else
                                     x.WriteDebug ("The file extension doesn't match .pem")
-                                    newJwtWithDerFile x.Algorithm x.Payload x.FilePath.FullName
+                                    newJwtWithDerFile x.Algorithm x.Payload x.FilePath.FullName x.Header
                 | _ -> "Incorrect ParameterSet selected."
           
         x.WriteObject (jwt)
