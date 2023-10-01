@@ -79,6 +79,15 @@ Describe "New-JWT" {
             $jwt = New-JWT -Secret $content -Algorithm $alg -Payload $claim
             $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
         }
+        It "With String + custom header and SHA384" {
+            $content = (Get-Content -Path $keyPem) -join ""
+            $encryption = [jwtTypes+encryption]::SHA384
+            $algorithm = [jwtTypes+algorithm]::RSA
+            $alg = [jwtTypes+cryptographyType]::new($algorithm, $encryption)
+            $customHeader = @{"enc" = "A128CBC-HS256"}
+            $jwt = New-JWT -Secret $content -Algorithm $alg -Payload $claim -Header $customHeader
+            $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
+        }
         It "With PEM and SHA512" {
             $encryption = [jwtTypes+encryption]::SHA512
             $algorithm = [jwtTypes+algorithm]::RSA
@@ -99,6 +108,15 @@ Describe "New-JWT" {
             $algorithm = [jwtTypes+algorithm]::RSA
             $alg = [jwtTypes+cryptographyType]::new($algorithm, $encryption)
             $jwt = New-JWT -Secret $content -Algorithm $alg -Payload $claim
+            $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
+        }
+        It "With String + custom header and SHA512" {
+            $content = (Get-Content -Path $keyPem) -join ""
+            $encryption = [jwtTypes+encryption]::SHA512
+            $algorithm = [jwtTypes+algorithm]::RSA
+            $alg = [jwtTypes+cryptographyType]::new($algorithm, $encryption)
+            $customHeader = @{"enc" = "A128CBC-HS256"}
+            $jwt = New-JWT -Secret $content -Algorithm $alg -Payload $claim -Header $customHeader
             $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
         }
     }
@@ -143,6 +161,15 @@ Describe "New-JWT" {
             $jwt = New-JWT -FilePath $key_256_DER -Algorithm $alg -Payload $claim
             $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
         }
+        It "With String + custom header and SHA256" {
+            $content = (Get-Content -Path $key_256) -join ""
+            $encryption = [jwtTypes+encryption]::SHA256
+            $algorithm = [jwtTypes+algorithm]::ECDsa
+            $alg = [jwtTypes+cryptographyType]::new($algorithm, $encryption)
+            $customHeader = @{"enc" = "A128CBC-HS256"}
+            $jwt = New-JWT -Secret $content -Algorithm $alg -Payload $claim -Header $customHeader
+            $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
+        }
         It "With PEM and SHA384" {
             $encryption = [jwtTypes+encryption]::SHA384
             $algorithm = [jwtTypes+algorithm]::ECDsa
@@ -163,6 +190,15 @@ Describe "New-JWT" {
             $algorithm = [jwtTypes+algorithm]::ECDsa
             $alg = [jwtTypes+cryptographyType]::new($algorithm, $encryption)
             $jwt = New-JWT -FilePath $key_384_DER -Algorithm $alg -Payload $claim
+            $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
+        }
+        It "With String + custom header and SHA384" {
+            $content = (Get-Content -Path $key_384) -join ""
+            $encryption = [jwtTypes+encryption]::SHA384
+            $algorithm = [jwtTypes+algorithm]::ECDsa
+            $alg = [jwtTypes+cryptographyType]::new($algorithm, $encryption)
+            $customHeader = @{"enc" = "A128CBC-HS256"}
+            $jwt = New-JWT -Secret $content -Algorithm $alg -Payload $claim -Header $customHeader
             $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
         }
         It "With PEM and SHA512" {
@@ -187,6 +223,15 @@ Describe "New-JWT" {
             $jwt = New-JWT -FilePath $key_512_DER -Algorithm $alg -Payload $claim
             $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
         }
+        It "With String + custom header and SHA512" {
+            $content = (Get-Content -Path $key_512) -join ""
+            $encryption = [jwtTypes+encryption]::SHA512
+            $algorithm = [jwtTypes+algorithm]::ECDsa
+            $alg = [jwtTypes+cryptographyType]::new($algorithm, $encryption)
+            $customHeader = @{"enc" = "A128CBC-HS256"}
+            $jwt = New-JWT -Secret $content -Algorithm $alg -Payload $claim -Header $customHeader
+            $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
+        }
     }
     Context "Creating HMAC signature" {
         BeforeEach {
@@ -207,6 +252,14 @@ Describe "New-JWT" {
             $jwt = New-JWT -Algorithm $alg -Payload $claim -Secret 'P@ssw0rd'
             $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
         }
+        It "With SHA256 + custom header" {
+            $encryption = [jwtTypes+encryption]::SHA256
+            $algorithm = [jwtTypes+algorithm]::HMAC
+            $alg = [jwtTypes+cryptographyType]::new($algorithm, $encryption)
+            $customHeader = @{"enc" = "A128CBC-HS256"}
+            $jwt = New-JWT -Algorithm $alg -Payload $claim -Secret 'P@ssw0rd' -Header $customHeader
+            $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
+        }
         It "With SHA384" {
             $encryption = [jwtTypes+encryption]::SHA384
             $algorithm = [jwtTypes+algorithm]::HMAC
@@ -214,11 +267,27 @@ Describe "New-JWT" {
             $jwt = New-JWT -Algorithm $alg -Payload $claim -Secret 'P@ssw0rd'
             $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
         }
+        It "With SHA384 + custom header" {
+            $encryption = [jwtTypes+encryption]::SHA384
+            $algorithm = [jwtTypes+algorithm]::HMAC
+            $alg = [jwtTypes+cryptographyType]::new($algorithm, $encryption)
+            $customHeader = @{"enc" = "A128CBC-HS256"}
+            $jwt = New-JWT -Algorithm $alg -Payload $claim -Secret 'P@ssw0rd' -Header $customHeader
+            $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
+        }
         It "With SHA512" {
             $encryption = [jwtTypes+encryption]::SHA512
             $algorithm = [jwtTypes+algorithm]::HMAC
             $alg = [jwtTypes+cryptographyType]::new($algorithm, $encryption)
             $jwt = New-JWT -Algorithm $alg -Payload $claim -Secret 'P@ssw0rd'
+            $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
+        }
+        It "With SHA512 + custom header" {
+            $encryption = [jwtTypes+encryption]::SHA512
+            $algorithm = [jwtTypes+algorithm]::HMAC
+            $alg = [jwtTypes+cryptographyType]::new($algorithm, $encryption)
+            $customHeader = @{"enc" = "A128CBC-HS256"}
+            $jwt = New-JWT -Algorithm $alg -Payload $claim -Secret 'P@ssw0rd' -Header $customHeader
             $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
         }
     }
@@ -259,6 +328,15 @@ Describe "New-JWT" {
             $jwt = New-JWT -Secret $content -Algorithm $alg -Payload $claim
             $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
         }
+        It "With String + custom header and SHA256" {
+            $content = (Get-Content -Path $key) -join ""
+            $encryption = [jwtTypes+encryption]::SHA256
+            $algorithm = [jwtTypes+algorithm]::PSS
+            $alg = [jwtTypes+cryptographyType]::new($algorithm, $encryption)
+            $customHeader = @{"enc" = "A128CBC-HS256"}
+            $jwt = New-JWT -Secret $content -Algorithm $alg -Payload $claim -Header $customHeader
+            $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
+        }
         It "With PEM and SHA384" {
             $encryption = [jwtTypes+encryption]::SHA384
             $algorithm = [jwtTypes+algorithm]::PSS
@@ -281,6 +359,15 @@ Describe "New-JWT" {
             $jwt = New-JWT -Secret $content -Algorithm $alg -Payload $claim
             $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
         }
+        It "With String + custom header and SHA384" {
+            $content = (Get-Content -Path $key) -join ""
+            $encryption = [jwtTypes+encryption]::SHA384
+            $algorithm = [jwtTypes+algorithm]::PSS
+            $alg = [jwtTypes+cryptographyType]::new($algorithm, $encryption)
+            $customHeader = @{"enc" = "A128CBC-HS256"}
+            $jwt = New-JWT -Secret $content -Algorithm $alg -Payload $claim -Header $customHeader
+            $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
+        }
         It "With PEM and SHA512" {
             $encryption = [jwtTypes+encryption]::SHA512
             $algorithm = [jwtTypes+algorithm]::PSS
@@ -301,6 +388,15 @@ Describe "New-JWT" {
             $algorithm = [jwtTypes+algorithm]::PSS
             $alg = [jwtTypes+cryptographyType]::new($algorithm, $encryption)
             $jwt = New-JWT -Secret $content -Algorithm $alg -Payload $claim
+            $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
+        }
+        It "With String + custom header and SHA512" {
+            $content = (Get-Content -Path $key) -join ""
+            $encryption = [jwtTypes+encryption]::SHA512
+            $algorithm = [jwtTypes+algorithm]::PSS
+            $alg = [jwtTypes+cryptographyType]::new($algorithm, $encryption)
+            $customHeader = @{"enc" = "A128CBC-HS256"}
+            $jwt = New-JWT -Secret $content -Algorithm $alg -Payload $claim -Header $customHeader
             $jwt | Should -Match -RegularExpression '(^[\w-]+\.[\w-]+\.[\w-]+$)'
         }
     }
