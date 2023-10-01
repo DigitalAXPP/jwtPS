@@ -70,5 +70,5 @@ $jwt = New-JWT -Payload $payload -Algorithm $alg -Secret $keyContent
 > You can use now the `Header` property to provide a hashtable with custom keys for your JWT header.
 > The hashtable you provide is accepted **as-is**. The function searches for `alg` and `typ`.
 > If the keys are included in your hashtable, the values will not be overriden. If they are missing,
-> `alg` will be added with the value from your `alg.Id` and `typ` gets added with `JWT`.
-> Nevertheless, _the function will use the algorithm you set in `-Algorithm`_!
+> `alg` will be added with the value from your `alg.Id` and `typ` gets added with `JWT`. <br>
+> Nevertheless, _the content will be encrypted with the algorithm you set in `-Algorithm`_!
