@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="PowerShellFunctionTests.fs" />
     <Compile Include="generalFunctionTests.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
