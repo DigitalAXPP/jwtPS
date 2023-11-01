@@ -66,7 +66,7 @@ open System
                      )
         convertTableToBase64 headerTable
 
-    let getMissingRegisteredKeys (claimset : IDictionary) =
+    let getMissingRegisteredKeys (claimset : seq<string>) =
         let registeredKeys =
                 seq {
                     "iss";
@@ -78,9 +78,8 @@ open System
                     "jti"
                 }
         try
-            claimset
-            |> Seq.cast<string>
-            |> Seq.except registeredKeys
+            registeredKeys
+            |> Seq.except claimset
             |> Seq.toList
         with
-        | :? InvalidCastException as ice -> raise (ArgumentException(nameof(claimset), "Table must only have string keys"))
+        | :? InvalidCastException as ice -> raise (ArgumentException(nameof(claimset), "Set must only have string keys"))
