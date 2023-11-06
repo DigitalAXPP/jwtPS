@@ -57,6 +57,10 @@ open System
         let jsonPayload = JsonSerializer.Serialize table
         convertStringToBase64Url jsonPayload
 
+    let convertTableToSequence (table: IDictionary) =
+        table.Keys
+        |> Seq.cast<string>
+
     let createJwtHeader (algorithm : cryptographyType) (headerTable : Hashtable) =
         [ ("alg", algorithm.Id); ("typ", "JWT") ]
         |> List.iter (fun item -> 
