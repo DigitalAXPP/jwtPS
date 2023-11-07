@@ -7,6 +7,7 @@ open jwtFunction
 open jwtTypes
 
 [<Cmdlet("New", "Jwt")>]
+[<CmdletBinding>]
 [<OutputType(typeof<string>)>]
 type NewJwtCommand () =
     inherit PSCmdlet ()
