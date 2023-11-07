@@ -43,6 +43,10 @@ type NewJwtCommand () =
 
     override x.BeginProcessing () =
         x.WriteDebug ($"Parameter set: {x.ParameterSetName}")
+        if x.MyInvocation.BoundParameters["Verbose"].Equals true then
+            let claimSetSequence = convertTableToSequence x.Payload
+            let missingClaimsetKeys = getMissingRegisteredKeys claimSetSequence
+            x.WriteVerbose $"""Missing registered keys are: {String.Join ("\n", missingClaimsetKeys)}"""
         base.BeginProcessing()
 
     override x.ProcessRecord () =
