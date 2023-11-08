@@ -7,7 +7,6 @@ open jwtFunction
 open jwtTypes
 
 [<Cmdlet("New", "Jwt")>]
-[<CmdletBinding>]
 [<OutputType(typeof<string>)>]
 type NewJwtCommand () =
     inherit PSCmdlet ()
@@ -41,13 +40,17 @@ type NewJwtCommand () =
         ValueFromPipelineByPropertyName=true)>]
     [<ValidateNotNullOrEmpty>]
     member val FilePath : System.IO.FileInfo = null with get, set
+    [<Parameter(
+        HelpMessage="Verbose message which registered claimset keys are missing.")>]
+    member val CheckClaimset : SwitchParameter = SwitchParameter(false) with get, set
 
     override x.BeginProcessing () =
         x.WriteDebug ($"Parameter set: {x.ParameterSetName}")
-        if x.MyInvocation.BoundParameters["Verbose"].Equals true then
+        if x.CheckClaimset.IsPresent then
             let claimSetSequence = convertTableToSequence x.Payload
             let missingClaimsetKeys = getMissingRegisteredKeys claimSetSequence
             x.WriteVerbose $"""Missing registered keys are: {String.Join ("\n", missingClaimsetKeys)}"""
+        
         base.BeginProcessing()
 
     override x.ProcessRecord () =
