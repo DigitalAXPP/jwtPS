@@ -142,6 +142,17 @@
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>CheckClaimset</maml:name>
+          <maml:description>
+            <maml:para>Verbose message listing which registered claimset keys are missing. This paramter must be used with -Verbose.</maml:para>
+          </maml:description>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
       </command:syntaxItem>
       <command:syntaxItem>
         <maml:name>New-Jwt</maml:name>
@@ -192,6 +203,17 @@
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>CheckClaimset</maml:name>
+          <maml:description>
+            <maml:para>Verbose message listing which registered claimset keys are missing. This paramter must be used with -Verbose.</maml:para>
+          </maml:description>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
         </command:parameter>
       </command:syntaxItem>
     </command:syntax>
@@ -256,6 +278,18 @@
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>CheckClaimset</maml:name>
+        <maml:description>
+          <maml:para>Verbose message listing which registered claimset keys are missing. This paramter must be used with -Verbose.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
     </command:parameters>
     <command:inputTypes>
       <command:inputType>
@@ -309,9 +343,9 @@ PS C:\&gt; New-Jwt -Payload @{'iat'=123456789} -Algorithm $cryptoType -FilePath 
         <dev:code>PS C:\&gt; $algorithm = [jwtTypes+algorithm]::ECDsa
 PS C:\&gt; $encryption = [jwtTypes+encryption]::SHA512
 PS C:\&gt; $cryptoType = [jwtTypes+cryptographyType]::new($algorithm, $encryption)
-PS C:\&gt; New-Jwt -Payload @{'iat'=123456789} -Algorithm $cryptoType -FilePath Path\To\File.pem</dev:code>
+PS C:\&gt; New-Jwt -Payload @{'iat'=123456789} -Algorithm $cryptoType -FilePath Path\To\File.pem -CheckClaimset -Verbose</dev:code>
         <dev:remarks>
-          <maml:para>This function returns a JWT with ECDsa encryption and SHA512.</maml:para>
+          <maml:para>This function returns a VERBOSE message listing: aud, iss, sub, nbf, exp, jti. This function returns a JWT with ECDsa encryption and SHA512.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>

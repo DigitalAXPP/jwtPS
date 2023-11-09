@@ -15,13 +15,13 @@ The function creates a Json Web Token (JWT).
 ### Key
 ```
 New-Jwt -Payload <Hashtable> -Algorithm <cryptographyType> [-Header <Hashtable>] -Secret <String>
- [<CommonParameters>]
+ [-CheckClaimset] [<CommonParameters>]
 ```
 
 ### FilePath
 ```
 New-Jwt -Payload <Hashtable> -Algorithm <cryptographyType> [-Header <Hashtable>] -FilePath <FileInfo>
- [<CommonParameters>]
+ [-CheckClaimset] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -55,9 +55,10 @@ This function returns a JWT with RSA encryption and SHA386 and a custom header.
 PS C:\> $algorithm = [jwtTypes+algorithm]::ECDsa
 PS C:\> $encryption = [jwtTypes+encryption]::SHA512
 PS C:\> $cryptoType = [jwtTypes+cryptographyType]::new($algorithm, $encryption)
-PS C:\> New-Jwt -Payload @{'iat'=123456789} -Algorithm $cryptoType -FilePath Path\To\File.pem
+PS C:\> New-Jwt -Payload @{'iat'=123456789} -Algorithm $cryptoType -FilePath Path\To\File.pem -CheckClaimset -Verbose
 ```
 
+This function returns a VERBOSE message listing: aud, iss, sub, nbf, exp, jti.
 This function returns a JWT with ECDsa encryption and SHA512.
 
 ## PARAMETERS
@@ -134,6 +135,22 @@ Required: False
 Position: Named
 Default value: None
 Accept pipeline input: True (ByPropertyName)
+Accept wildcard characters: False
+```
+
+### -CheckClaimset
+Verbose message listing which registered claimset keys are missing.
+This paramter must be used with -Verbose.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
 Accept wildcard characters: False
 ```
 

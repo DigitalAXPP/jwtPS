@@ -40,9 +40,18 @@ type NewJwtCommand () =
         ValueFromPipelineByPropertyName=true)>]
     [<ValidateNotNullOrEmpty>]
     member val FilePath : System.IO.FileInfo = null with get, set
+    [<Parameter(
+        HelpMessage="Verbose message which registered claimset keys are missing.")>]
+    member val CheckClaimset : SwitchParameter = SwitchParameter(false) with get, set
 
     override x.BeginProcessing () =
         x.WriteDebug ($"Parameter set: {x.ParameterSetName}")
+        if x.CheckClaimset.IsPresent then
+            let claimSetSequence = convertTableToSequence x.Payload
+            let missingClaimsetKeys = getMissingRegisteredKeys claimSetSequence
+            let message = $"""Missing registered keys are: {String.Join (",", missingClaimsetKeys)}"""
+            x.WriteVerbose message
+        
         base.BeginProcessing()
 
     override x.ProcessRecord () =

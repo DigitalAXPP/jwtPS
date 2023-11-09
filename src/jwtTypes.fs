@@ -2,12 +2,14 @@ module jwtTypes
 
 open Microsoft.FSharp.Collections
 open System.Text.Json
+open System.Collections
+open System
 
-    type jwtHeader = 
-        {
-            typ: string
-            alg: string
-        }
+    //type jwtHeader = 
+    //    {
+    //        typ: string
+    //        alg: string
+    //    }
 
     type encryption = 
         | SHA256
@@ -51,11 +53,15 @@ open System.Text.Json
         let contentBytes = System.Text.Encoding.UTF8.GetBytes content
         convertBytesToBase64Url contentBytes
 
-    let convertTableToBase64 (table: System.Collections.Hashtable) =
+    let convertTableToBase64 (table: Hashtable) =
         let jsonPayload = JsonSerializer.Serialize table
         convertStringToBase64Url jsonPayload
 
-    let createJwtHeader (algorithm : cryptographyType) (headerTable : System.Collections.Hashtable) =
+    let convertTableToSequence (table: IDictionary) =
+        table.Keys
+        |> Seq.cast<string>
+
+    let createJwtHeader (algorithm : cryptographyType) (headerTable : Hashtable) =
         [ ("alg", algorithm.Id); ("typ", "JWT") ]
         |> List.iter (fun item -> 
                         match item with
@@ -64,3 +70,20 @@ open System.Text.Json
                      )
         convertTableToBase64 headerTable
 
+    let getMissingRegisteredKeys (claimset : seq<string>) =
+        let registeredKeys =
+                seq {
+                    "iss";
+                    "sub";
+                    "aud";
+                    "exp";
+                    "nbf";
+                    "iat";
+                    "jti"
+                }
+        try
+            registeredKeys
+            |> Seq.except claimset
+            |> Seq.toList
+        with
+        | :? InvalidCastException as ice -> raise (ArgumentException(nameof(claimset), "Set must only have string keys"))
