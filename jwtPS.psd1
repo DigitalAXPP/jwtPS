@@ -12,7 +12,7 @@
 RootModule = 'jwtPS.dll'
 
 # Version number of this module.
-ModuleVersion = '1.1.3'
+ModuleVersion = '1.1.3.2'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()

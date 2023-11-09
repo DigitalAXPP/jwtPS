@@ -49,7 +49,7 @@ type NewJwtCommand () =
         if x.CheckClaimset.IsPresent then
             let claimSetSequence = convertTableToSequence x.Payload
             let missingClaimsetKeys = getMissingRegisteredKeys claimSetSequence
-            let message = $"""Missing registered keys are:\n {String.Join ("\n", missingClaimsetKeys)}"""
+            let message = $"""Missing registered keys are: {String.Join (",", missingClaimsetKeys)}"""
             x.WriteVerbose message
         
         base.BeginProcessing()
