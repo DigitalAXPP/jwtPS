@@ -57,7 +57,7 @@ jobs:
             Write-Error -Message "The script analysis found at least one error." -ErrorAction Stop
           }
           else {
-            $issues | Export-Clixml -Path ScriptAnalysis.xml
+            $issues | Export-Clixml -Path ${{ github.workspace }}/.github/workflows/ScriptAnalysis.xml
           }
           
       # Uploading the XML report created by the PSScriptAnalyzer
