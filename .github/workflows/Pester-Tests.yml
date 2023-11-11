@@ -13,6 +13,10 @@ on:
 jobs:
   # This workflow contains a single job called "PowerShell_Tests"
   PowerShell_Tests:
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
