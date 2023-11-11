@@ -48,22 +48,39 @@ jobs:
           Invoke-Pester -Path "Tests"
       
       # Runs the PSScriptAnalyzer
-      - name: Run PSScriptAnalyzer
-        shell: pwsh
-        run: |
-          Invoke-ScriptAnalyzer -Path . -Recurse -OutVariable issues
-          $err = $issues.Where( { $_.Severity -eq 'Error' })
-          if ($err) {
-            Write-Error -Message "The script analysis found at least one error." -ErrorAction Stop
-          }
-          else {
-            $issues | Export-Clixml -Path ${{ github.workspace }}/.github/workflows/ScriptAnalysis.xml
-          }
+      #- name: Run PSScriptAnalyzer
+      #  shell: pwsh
+      #  run: |
+      #    Invoke-ScriptAnalyzer -Path . -Recurse -OutVariable issues
+      #    $err = $issues.Where( { $_.Severity -eq 'Error' })
+      #    if ($err) {
+      #      Write-Error -Message "The script analysis found at least one error." -ErrorAction Stop
+      #    }
+      #    else {
+      #      $issues | Export-Clixml -Path ${{ github.workspace }}/.github/workflows/ScriptAnalysis.xml
+      #    }
           
       # Uploading the XML report created by the PSScriptAnalyzer
-      - name: Upload Report
-        uses: actions/upload-artifact@v2
+      #- name: Upload Report
+      #  uses: actions/upload-artifact@v2
+      #  with:
+      #    name: Script Analysis
+      #    path: ${{ github.workspace }}/.github/workflows/ScriptAnalysis.xml
+      #    retention-days: 10
+
+      - name: Run PSScriptAnalyzer
+        uses: microsoft/psscriptanalyzer-action@6b2948b1944407914a58661c49941824d149734f
         with:
-          name: Script Analysis
-          path: ${{ github.workspace }}/.github/workflows/ScriptAnalysis.xml
-          retention-days: 10
+          # Check https://github.com/microsoft/action-psscriptanalyzer for more info about the options.
+          # The below set up runs PSScriptAnalyzer to your entire repository and runs some basic security rules.
+          path: .\
+          recurse: true
+          # Include your own basic security rules. Removing this option will run all the rules
+          includeRule: '"PSAvoidGlobalAliases", "PSAvoidUsingConvertToSecureStringWithPlainText"'
+          output: results.sarif
+
+      # Upload the SARIF file generated in the previous step
+      - name: Upload SARIF results file
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: results.sarif
