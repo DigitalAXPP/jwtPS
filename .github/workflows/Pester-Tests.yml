@@ -34,6 +34,7 @@ jobs:
       - name: Print path
         run: echo "The workflow path is $env:GITHUB_WORKSPACE"
         shell: pwsh
+
       - name: Setup dotnet
         uses: actions/setup-dotnet@v3
         with:
@@ -44,6 +45,8 @@ jobs:
         run: dotnet build --configuration Release --no-restore
       - name: Publish project
         run: dotnet publish
+      - name: Test project
+        run: dotnet test
         
       - name: Run Pester
         shell: pwsh
