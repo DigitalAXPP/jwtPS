@@ -30,6 +30,7 @@ type TestClass () =
                 (fun dir -> getFiles dir )
 
     let files = getDirHierarchy (Array.toList allDir)
+    let flatfiles = files |> List.concat
     
     [<Test>]
     member this.TestMethodPassing () =
@@ -95,7 +96,7 @@ type TestClass () =
         //let sourcePath = System.Environment.GetEnvironmentVariable ("GITHUB_WORKSPACE")
         
         //let a = files |> List.contains "C:\Users\apiep\AppData\Local\Temp\wctBBC7.tmp"
-        let path = files |> List.find (fun x -> x.EndsWith "privkey.pem")
+        let path = flatfiles |> List.find (fun x -> x.EndsWith "privkey.pem")
         //let path = System.IO.Path.Combine ("home", "runner", "work", "jwtPS", "jwtPS", ".github", "workflows", "privkey.pem")
         let result256 = "soVkOOKzIHIgJH9bdSMghMEOCO8hFd4saHvvvme2iAoeykLsnbdTgvOfdQ1cd135y3XbkVV3Di29wbB33u_QlpcYeYj1Zdwb_AHniISV9X1xT1MIVRpEL_Te7cBwtQNigacsqQekxsulXNr98W4WnuWVTNZ9vABqBaQBAHcgUAo8vWsieL-Ay4t7Z2YU8dG3Lw0lIFaph6caFFZC3UFqcxYGvW7tLRtKdiEqhLahul0MWBYycuNrKPlO8_-WSulyJevNIeN8je3gzemFnsACs8f4hlrv1PYKhwBgtTM4AbUkdtu0ys4mYK57wgjAvWMY_Y0jbWCwt71-BWxKwd-_d56tm5zNPHl4kcHqr-nj_zAudK1I_bs4qQXF2C3q39ip5rLzcQ_gB70K1ByBJf7syPBd6tP1D53i1NFpf2OX3zKCDLPRYIfCvAM6NWDg2kmnNRxg8VeRq3xmvUSP1spXP3dBd2coRIjSwOOpM-Yg4YBAvMNu7oYNGmftOIZsLdVe"
         let result384 = "SsXf-Ih_4JrYNvNmH_tlE7L8G_0MRU2ys93o34DhwFLkv00vxlnrZN-qMty7Tz9NN0MxSHz-2iCir7fuF84MDTAzczTICx84tYgjnrN7q2b_g1kWC1VaW4Jgrn450hBxmNZybOJyNVfpkvL1SlNOrILNJW1ia9Kurd379YO4JOiE_FdYx-_YkjKA97C6ZlMBtI22DsYGKy7QTpMYJgXxfejhdHVaLyUV40D-3luCJZuBUHWlVu0OSGPEqAjyzAh52q0xNIMTBZtM1A9NTn1LKrPjIU8arXRTmRruIrRJCQxErK6nzPQPvWItP1NE7EIBXgNkNTCrEUbki8RcfsNx1dsDSjypA-lhdfmgdBSA_feO4hL0AZ-5cNz7F4XGD00v0-f0nF8MGaHhj7jzbPjDl5SeKjiR76KZeVOhWqn66nYmuDbJdLPT-lfpXYMEN-slxbJxoF46vVrnk4HGvy0GJMXmh7jfTCi9B68o92gKgvpAIDMl6WuPCeq94WOuzQes"
